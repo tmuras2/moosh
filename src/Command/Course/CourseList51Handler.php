@@ -31,7 +31,6 @@ class CourseList51Handler implements CourseListHandlerInterface
         $visible = $input->getOption('visible');
         $empty = $input->getOption('empty');
         $fieldsRaw = $input->getOption('fields');
-        $format = $input->getOption('output');
         $searchFragments = $input->getArgument('search');
 
         $fields = $fieldsRaw ? array_map('trim', explode(',', $fieldsRaw)) : null;
@@ -95,7 +94,7 @@ class CourseList51Handler implements CourseListHandlerInterface
             }
         }
 
-        $this->displayCourses($courses, $output, $idOnly, $visible, $fields, $format);
+        $this->displayCourses($courses, $input, $output, $idOnly, $visible, $fields);
 
         return Command::SUCCESS;
     }

@@ -66,6 +66,13 @@ final class Application extends SymfonyApplication
                 InputOption::VALUE_NONE,
                 'Show performance information including timings',
             ),
+            new InputOption(
+                'output',
+                'o',
+                InputOption::VALUE_REQUIRED,
+                'Output format: table, csv, json',
+                'table',
+            ),
         ]);
 
         return $definition;
