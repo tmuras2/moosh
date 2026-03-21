@@ -9,6 +9,7 @@
 namespace Moosh2\Command\Course;
 
 use Moosh2\Command\BaseHandler;
+use Moosh2\Command\BooleanFilterTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,6 +25,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CourseList52Handler extends BaseHandler
 {
     use CourseListHelperTrait;
+    use BooleanFilterTrait;
+
+    protected function supportedBooleanFlags(): array
+    {
+        return [
+            'visible' => 'Course is visible',
+            'empty' => 'Course has no content',
+        ];
+    }
 
     public function configureCommand(Command $command): void
     {
@@ -36,10 +46,9 @@ class CourseList52Handler extends BaseHandler
             ->addOption('idnumber', null, InputOption::VALUE_NONE, 'Include the idnumber column')
             ->addOption('id-only', 'i', InputOption::VALUE_NONE, 'Display only course IDs')
             ->addOption('category', 'c', InputOption::VALUE_REQUIRED, 'Limit to courses in this category ID (includes subcategories)')
-            ->addOption('visible', null, InputOption::VALUE_REQUIRED, 'Filter by visibility: all, yes, no', 'all')
-            ->addOption('empty', null, InputOption::VALUE_REQUIRED, 'Filter by empty courses: all, yes, no', 'all')
             ->addOption('fields', 'f', InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to show')
             ->addOption('stdin', null, InputOption::VALUE_NONE, 'Read space-separated course IDs from stdin to filter results');
+        $this->configureBooleanFilters($command);
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -51,10 +60,12 @@ class CourseList52Handler extends BaseHandler
         $showIdnumber = $input->getOption('idnumber');
         $idOnly = $input->getOption('id-only');
         $categoryId = $input->getOption('category');
-        $visible = $input->getOption('visible');
-        $empty = $input->getOption('empty');
         $fieldsRaw = $input->getOption('fields');
         $searchFragments = $input->getArgument('search');
+
+        $filters = $this->parseBooleanFilters($input);
+        $visible = $filters['visible'];
+        $empty = $filters['empty'];
 
         $fields = $fieldsRaw ? array_map('trim', explode(',', $fieldsRaw)) : null;
 
@@ -63,7 +74,7 @@ class CourseList52Handler extends BaseHandler
         if ($showIdnumber) {
             $select[] = 'c.idnumber';
         }
-        if ($empty === 'yes' || $empty === 'no') {
+        if ($empty !== null) {
             $select[] = 'COUNT(c.id) AS modules';
         }
         $select[] = 'c.shortname';
@@ -72,7 +83,7 @@ class CourseList52Handler extends BaseHandler
 
         $sql = 'SELECT ' . implode(', ', $select) . ' FROM {course} c';
 
-        if ($empty === 'yes' || $empty === 'no') {
+        if ($empty !== null) {
             $sql .= ' LEFT JOIN {course_modules} m ON c.id = m.course';
         }
 
@@ -93,9 +104,9 @@ class CourseList52Handler extends BaseHandler
 
         $sql .= ' WHERE ' . implode(' AND ', $where);
 
-        if ($empty === 'yes') {
+        if ($empty === true) {
             $sql .= ' GROUP BY c.id HAVING COUNT(c.id) < 2';
-        } elseif ($empty === 'no') {
+        } elseif ($empty === false) {
             $sql .= ' GROUP BY c.id HAVING COUNT(c.id) > 1';
         }
 
@@ -107,7 +118,7 @@ class CourseList52Handler extends BaseHandler
         $courses = $DB->get_records_sql($sql, $params ?: null);
 
         // Secondary filter for truly empty courses (no non-empty sections).
-        if ($empty === 'yes') {
+        if ($empty === true) {
             $sectionSql = "SELECT COUNT(*) AS c FROM {course_sections} WHERE course = ? AND summary <> ''";
             foreach ($courses as $id => $course) {
                 $sections = $DB->get_record_sql($sectionSql, [$course->id]);

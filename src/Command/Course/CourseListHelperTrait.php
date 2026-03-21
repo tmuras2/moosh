@@ -78,7 +78,7 @@ trait CourseListHelperTrait
         InputInterface $input,
         OutputInterface $output,
         bool $idOnly,
-        string $visible,
+        ?bool $visible,
         ?array $fields,
     ): void {
         $headers = [];
@@ -86,10 +86,10 @@ trait CourseListHelperTrait
         $headersBuilt = false;
 
         foreach ($courses as $course) {
-            if ($visible === 'yes' && !$course->visible) {
+            if ($visible === true && !$course->visible) {
                 continue;
             }
-            if ($visible === 'no' && $course->visible) {
+            if ($visible === false && $course->visible) {
                 continue;
             }
 
