@@ -47,6 +47,11 @@ class CourseListCommand extends BaseCommand
         $this->handler->configureCommand($this);
     }
 
+    protected function getActiveHandler(): BaseHandler
+    {
+        return $this->handler;
+    }
+
     protected function handle(InputInterface $input, OutputInterface $output): int
     {
         return $this->handler->handle($input, $output);

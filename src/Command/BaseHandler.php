@@ -8,6 +8,7 @@
 
 namespace Moosh2\Command;
 
+use Moosh2\Bootstrap\BootstrapLevel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,6 +21,17 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class BaseHandler
 {
+    /**
+     * Return a bootstrap level to override the command's default.
+     *
+     * Return null to use the command's bootstrap level. Override in
+     * subclasses when a specific handler needs a different level.
+     */
+    public function getBootstrapLevel(): ?BootstrapLevel
+    {
+        return null;
+    }
+
     /**
      * Register handler-specific arguments and options on the command.
      *
