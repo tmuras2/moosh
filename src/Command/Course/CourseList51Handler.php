@@ -10,6 +10,7 @@ namespace Moosh2\Command\Course;
 
 use Moosh2\Command\BaseHandler;
 use Moosh2\Command\BooleanFilterTrait;
+use Moosh2\Service\ClockInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,11 +25,17 @@ class CourseList51Handler extends BaseHandler
     use CourseListHelperTrait;
     use BooleanFilterTrait;
 
+    public function __construct(
+        private readonly ClockInterface $clock,
+    ) {
+    }
+
     protected function supportedBooleanFlags(): array
     {
         return [
             'visible' => 'Course is visible',
             'empty' => 'Course has no content',
+            'active' => 'Course has log activity in the last month',
         ];
     }
 
@@ -63,6 +70,7 @@ class CourseList51Handler extends BaseHandler
         $filters = $this->parseBooleanFilters($input);
         $visible = $filters['visible'];
         $empty = $filters['empty'];
+        $active = $filters['active'];
 
         $fields = $fieldsRaw ? array_map('trim', explode(',', $fieldsRaw)) : null;
 
@@ -97,6 +105,13 @@ class CourseList51Handler extends BaseHandler
 
         if ($searchFragments) {
             $where[] = '(' . implode(' ', $searchFragments) . ')';
+        }
+
+        if ($active !== null) {
+            $cutoff = $this->clock->now()->modify('-1 month')->getTimestamp();
+            $existsSql = 'EXISTS (SELECT 1 FROM {logstore_standard_log} l WHERE l.courseid = c.id AND l.timecreated >= ?)';
+            $where[] = $active ? $existsSql : "NOT $existsSql";
+            $params[] = $cutoff;
         }
 
         $sql .= ' WHERE ' . implode(' AND ', $where);

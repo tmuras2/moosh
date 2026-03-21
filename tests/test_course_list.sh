@@ -126,12 +126,27 @@ echo "$output"
 assert_output_contains "Custom fields header" '"id","shortname","fullname"' "$output"
 echo ""
 
-# Test 7: Help output
+# Test 7: Active filter (--is active)
+echo "--- Test: Active courses (--is active) ---"
+output=$(php "$MOOSH" -p "$MOODLE_PATH" course:list --is active 2>&1)
+echo "$output"
+assert_output_not_empty "Active filter produces output" "$output"
+echo ""
+
+# Test 8: Inactive filter (--is-not active)
+echo "--- Test: Inactive courses (--is-not active) ---"
+output=$(php "$MOOSH" -p "$MOODLE_PATH" course:list --is-not active 2>&1)
+echo "$output"
+assert_output_not_empty "Inactive filter produces output" "$output"
+echo ""
+
+# Test 9: Help output
 echo "--- Test: Help output ---"
 output=$(php "$MOOSH" -p "$MOODLE_PATH" course:list --help 2>&1)
 assert_output_contains "Help shows description" "List Moodle courses" "$output"
 assert_output_contains "Help shows visible option" "--visible" "$output"
 assert_output_contains "Help shows category option" "--category" "$output"
+assert_output_contains "Help mentions active flag" "active" "$output"
 echo ""
 
 # Summary

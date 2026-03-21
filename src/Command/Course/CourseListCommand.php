@@ -12,6 +12,8 @@ use Moosh2\Bootstrap\BootstrapLevel;
 use Moosh2\Bootstrap\MoodleVersion;
 use Moosh2\Command\BaseCommand;
 use Moosh2\Command\BaseHandler;
+use Moosh2\Service\ClockInterface;
+use Moosh2\Service\SystemClock;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -30,9 +32,9 @@ class CourseListCommand extends BaseCommand
 
     private BaseHandler $handler;
 
-    public function __construct(?MoodleVersion $moodleVersion)
+    public function __construct(?MoodleVersion $moodleVersion, ?ClockInterface $clock = null)
     {
-        $this->handler = $this->resolveHandler($moodleVersion);
+        $this->handler = $this->resolveHandler($moodleVersion, $clock ?? new SystemClock());
         parent::__construct();
     }
 
@@ -57,12 +59,12 @@ class CourseListCommand extends BaseCommand
         return $this->handler->handle($input, $output);
     }
 
-    private function resolveHandler(?MoodleVersion $moodleVersion): BaseHandler
+    private function resolveHandler(?MoodleVersion $moodleVersion, ClockInterface $clock): BaseHandler
     {
         if ($moodleVersion !== null && $moodleVersion->isAtLeast('5.2')) {
-            return new CourseList52Handler();
+            return new CourseList52Handler($clock);
         }
 
-        return new CourseList51Handler();
+        return new CourseList51Handler($clock);
     }
 }
