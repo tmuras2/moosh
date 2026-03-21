@@ -32,6 +32,45 @@ trait CourseListHelperTrait
     }
 
     /**
+     * Read space-separated course IDs from stdin.
+     *
+     * @return int[]|null  Array of IDs when --stdin is active, null otherwise.
+     */
+    private function readStdinIds(InputInterface $input): ?array
+    {
+        if (!$input->getOption('stdin')) {
+            return null;
+        }
+
+        $raw = file_get_contents('php://stdin');
+        $ids = array_filter(
+            array_map('intval', preg_split('/\s+/', trim($raw))),
+            fn(int $id) => $id > 0,
+        );
+
+        return $ids;
+    }
+
+    /**
+     * Filter courses to only those whose IDs appear in the given list.
+     *
+     * @param int[]|null $stdinIds
+     */
+    private function filterByStdinIds(array $courses, ?array $stdinIds): array
+    {
+        if ($stdinIds === null) {
+            return $courses;
+        }
+
+        $allowed = array_flip($stdinIds);
+
+        return array_filter(
+            $courses,
+            fn(object $course) => isset($allowed[(int) $course->id]),
+        );
+    }
+
+    /**
      * Render the course list to the console.
      */
     private function displayCourses(
