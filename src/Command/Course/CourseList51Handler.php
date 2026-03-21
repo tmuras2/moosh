@@ -8,16 +8,35 @@
 
 namespace Moosh2\Command\Course;
 
+use Moosh2\Command\BaseHandler;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * course:list implementation for Moodle 5.1.
  */
-class CourseList51Handler implements CourseListHandlerInterface
+class CourseList51Handler extends BaseHandler
 {
     use CourseListHelperTrait;
+
+    public function configureCommand(Command $command): void
+    {
+        $command
+            ->addArgument(
+                'search',
+                InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
+                'SQL WHERE fragments to filter courses',
+            )
+            ->addOption('idnumber', null, InputOption::VALUE_NONE, 'Include the idnumber column')
+            ->addOption('id-only', 'i', InputOption::VALUE_NONE, 'Display only course IDs')
+            ->addOption('category', 'c', InputOption::VALUE_REQUIRED, 'Limit to courses in this category ID (includes subcategories)')
+            ->addOption('visible', null, InputOption::VALUE_REQUIRED, 'Filter by visibility: all, yes, no', 'all')
+            ->addOption('empty', null, InputOption::VALUE_REQUIRED, 'Filter by empty courses: all, yes, no', 'all')
+            ->addOption('fields', 'f', InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to show');
+    }
 
     public function handle(InputInterface $input, OutputInterface $output): int
     {

@@ -21,6 +21,8 @@ final class Application extends SymfonyApplication
 {
     public const VERSION = '2.0.0-dev';
 
+    private ?string $moodlePath = null;
+    private ?MoodleVersion $moodleVersion = null;
     private ?MoodleBootstrapper $bootstrapper = null;
     private bool $bootstrapperResolved = false;
 
@@ -28,7 +30,19 @@ final class Application extends SymfonyApplication
     {
         parent::__construct('moosh', self::VERSION);
 
+        $this->resolveVersionEarly();
         $this->registerCommands();
+    }
+
+    /**
+     * Return the Moodle version detected at startup.
+     *
+     * Available before Symfony input parsing — safe to call during configure().
+     * Returns null if no Moodle installation was found.
+     */
+    public function getMoodleVersion(): ?MoodleVersion
+    {
+        return $this->moodleVersion;
     }
 
     protected function getDefaultInputDefinition(): \Symfony\Component\Console\Input\InputDefinition
@@ -81,7 +95,8 @@ final class Application extends SymfonyApplication
     /**
      * Resolve (and cache) the MoodleBootstrapper for the current invocation.
      *
-     * Returns null if no Moodle directory can be found (commands with
+     * Uses the Moodle path/version already detected in the constructor.
+     * Returns null if no Moodle directory was found (commands with
      * BootstrapLevel::None can still run).
      */
     public function getBootstrapper(InputInterface $input, OutputInterface $output): ?MoodleBootstrapper
@@ -92,33 +107,79 @@ final class Application extends SymfonyApplication
 
         $this->bootstrapperResolved = true;
 
-        $moodlePath = $input->getOption('moodle-path');
+        if ($this->moodlePath === null || $this->moodleVersion === null) {
+            return null;
+        }
+
+        if ($output->isVerbose()) {
+            $output->writeln(sprintf(
+                'Moodle directory: %s (branch %s)',
+                $this->moodlePath,
+                $this->moodleVersion->getBranch(),
+            ));
+        }
+
+        $this->bootstrapper = new MoodleBootstrapper($this->moodlePath, $this->moodleVersion, $output);
+
+        return $this->bootstrapper;
+    }
+
+    /**
+     * Detect the Moodle installation path and version early, before commands
+     * are registered. This allows commands to select version-specific handlers
+     * during Symfony's configure() phase.
+     *
+     * Scans $_SERVER['argv'] for --moodle-path / -p since Symfony input
+     * parsing has not happened yet at this point.
+     */
+    private function resolveVersionEarly(): void
+    {
+        $moodlePath = $this->extractMoodlePathFromArgv();
+
         if ($moodlePath === null) {
             $resolver = new MoodlePathResolver();
             $moodlePath = $resolver->resolve();
         }
 
         if ($moodlePath === null) {
-            return null;
+            return;
         }
 
-        $version = MoodleVersion::fromMoodleDir($moodlePath);
-
-        if ($output->isVerbose()) {
-            $output->writeln(sprintf(
-                'Moodle directory: %s (branch %s)',
-                $moodlePath,
-                $version->getBranch(),
-            ));
+        $versionFile = $moodlePath . '/version.php';
+        if (!file_exists($versionFile)) {
+            return;
         }
 
-        $this->bootstrapper = new MoodleBootstrapper($moodlePath, $version, $output);
+        $this->moodlePath = $moodlePath;
+        $this->moodleVersion = MoodleVersion::fromMoodleDir($moodlePath);
+    }
 
-        return $this->bootstrapper;
+    /**
+     * Extract --moodle-path / -p value from raw argv before Symfony parses input.
+     */
+    private function extractMoodlePathFromArgv(): ?string
+    {
+        $argv = $_SERVER['argv'] ?? [];
+
+        for ($i = 0, $count = count($argv); $i < $count; $i++) {
+            $arg = $argv[$i];
+
+            // --moodle-path=/some/path
+            if (str_starts_with($arg, '--moodle-path=')) {
+                return substr($arg, strlen('--moodle-path='));
+            }
+
+            // --moodle-path /some/path or -p /some/path
+            if (($arg === '--moodle-path' || $arg === '-p') && isset($argv[$i + 1])) {
+                return $argv[$i + 1];
+            }
+        }
+
+        return null;
     }
 
     private function registerCommands(): void
     {
-        $this->add(new CourseListCommand());
+        $this->add(new CourseListCommand($this->moodleVersion));
     }
 }
