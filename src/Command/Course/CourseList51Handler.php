@@ -35,7 +35,8 @@ class CourseList51Handler extends BaseHandler
             ->addOption('category', 'c', InputOption::VALUE_REQUIRED, 'Limit to courses in this category ID (includes subcategories)')
             ->addOption('visible', null, InputOption::VALUE_REQUIRED, 'Filter by visibility: all, yes, no', 'all')
             ->addOption('empty', null, InputOption::VALUE_REQUIRED, 'Filter by empty courses: all, yes, no', 'all')
-            ->addOption('fields', 'f', InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to show');
+            ->addOption('fields', 'f', InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to show')
+            ->addOption('stdin', null, InputOption::VALUE_NONE, 'Read space-separated course IDs from stdin to filter results');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -112,6 +113,9 @@ class CourseList51Handler extends BaseHandler
                 }
             }
         }
+
+        $stdinIds = $this->readStdinIds($input);
+        $courses = $this->filterByStdinIds($courses, $stdinIds);
 
         $this->displayCourses($courses, $input, $output, $idOnly, $visible, $fields);
 
