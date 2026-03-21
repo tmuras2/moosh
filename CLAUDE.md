@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**moosh2** is a rewrite of Moosh (Moodle Shell) using Symfony Console 7.x. It provides CLI commands for managing Moodle installations. Licensed under GNU GPL v3+.
+**moosh2** is a rewrite of [Moosh (Moodle Shell)](https://github.com/tmuras/moosh) using Symfony Console 7.x. It provides CLI commands for managing Moodle installations. Licensed under GNU GPL v3+.
 
 - **PHP**: >= 8.2
 - **Main dependency**: symfony/console ^7.0
