@@ -76,6 +76,8 @@ Commands declare a `BootstrapLevel` enum value controlling how deeply Moodle is 
 - `DbOnly` — database only
 - `FullNoAdminCheck` — full without admin check
 
+Handlers can override the command's bootstrap level by implementing `getBootstrapLevel()` on `BaseHandler` (returns `?BootstrapLevel`, default `null`). When a handler returns a non-null value, it takes precedence over the command's `$bootstrapLevel` property. Commands must override `getActiveHandler()` on `BaseCommand` for this to work.
+
 ### Output Formatting
 
 `ResultFormatter` supports three formats via `--output` / `-o`:

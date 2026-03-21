@@ -37,12 +37,35 @@ abstract class BaseCommand extends Command
     abstract protected function handle(InputInterface $input, OutputInterface $output): int;
 
     /**
+     * Return the active handler for this command, if any.
+     *
+     * Override in subclasses that delegate to version-specific handlers
+     * so the base class can query handler-specific settings (e.g. bootstrap level).
+     */
+    protected function getActiveHandler(): ?BaseHandler
+    {
+        return null;
+    }
+
+    /**
+     * Resolve the effective bootstrap level.
+     *
+     * Uses the handler's level when the active handler specifies one,
+     * otherwise falls back to the command's own bootstrapLevel property.
+     */
+    protected function getEffectiveBootstrapLevel(): BootstrapLevel
+    {
+        return $this->getActiveHandler()?->getBootstrapLevel() ?? $this->bootstrapLevel;
+    }
+
+    /**
      * Symfony Console entry point — bootstraps Moodle then delegates to handle().
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Check class-level #[SinceVersion].
         $bootstrapper = $this->getBootstrapper($input, $output);
+        $effectiveLevel = $this->getEffectiveBootstrapLevel();
 
         if ($bootstrapper !== null) {
             if (!$this->meetsVersionRequirement($bootstrapper->getVersion())) {
@@ -55,7 +78,7 @@ abstract class BaseCommand extends Command
             }
 
             $bootstrapper->bootstrap(
-                $this->bootstrapLevel,
+                $effectiveLevel,
                 $input->getOption('user'),
                 $input->getOption('no-login'),
             );
@@ -99,7 +122,7 @@ abstract class BaseCommand extends Command
 
         $bootstrapper = $app->getBootstrapper($input, $output);
 
-        if ($bootstrapper === null && $this->bootstrapLevel !== BootstrapLevel::None) {
+        if ($bootstrapper === null && $this->getEffectiveBootstrapLevel() !== BootstrapLevel::None) {
             throw new \RuntimeException(
                 'Could not find a Moodle installation. '
                 . 'Run moosh from within a Moodle directory or use --moodle-path.',
