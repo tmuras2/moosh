@@ -77,6 +77,22 @@ if (!\$DB->record_exists('course', ['shortname' => 'TC101'])) {
 } else {
     echo 'Test courses already exist.' . PHP_EOL;
 }
+
+// Enrol admin user into TC101 for --number tests
+\$tc101 = \$DB->get_record('course', ['shortname' => 'TC101'], '*', MUST_EXIST);
+\$enrol = \$DB->get_record('enrol', ['courseid' => \$tc101->id, 'enrol' => 'manual']);
+if (!\$enrol) {
+    \$plugin = enrol_get_plugin('manual');
+    \$plugin->add_instance(\$tc101);
+    \$enrol = \$DB->get_record('enrol', ['courseid' => \$tc101->id, 'enrol' => 'manual']);
+}
+if (!\$DB->record_exists('user_enrolments', ['enrolid' => \$enrol->id, 'userid' => 2])) {
+    \$plugin = enrol_get_plugin('manual');
+    \$plugin->enrol_user(\$enrol, 2);
+    echo 'Admin enrolled into TC101.' . PHP_EOL;
+} else {
+    echo 'Admin already enrolled into TC101.' . PHP_EOL;
+}
 "
 echo ""
 
@@ -212,6 +228,43 @@ else
     echo "  FAIL: Expected single line, got $line_count lines"
     ((FAIL++))
 fi
+echo ""
+
+# Test 14: --number users-enrolled>0 (TC101 has admin enrolled)
+echo "--- Test: --number users-enrolled>0 ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number users-enrolled\>0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Enrolled course TC101 present" "TC101" "$output"
+echo ""
+
+# Test 15: --number users-enrolled=0 (MATH201 has no enrolments)
+echo "--- Test: --number users-enrolled=0 ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number users-enrolled=0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Zero-enrolment course present" "MATH201" "$output"
+# TC101 should be excluded since it has 1 enrolled user
+if printf '%s' "$output" | grep -qF 'TC101'; then
+    echo "  FAIL: users-enrolled=0 should have excluded TC101"
+    ((FAIL++))
+else
+    echo "  PASS: users-enrolled=0 correctly excluded TC101"
+    ((PASS++))
+fi
+echo ""
+
+# Test 16: --number combined with --id-only pipe
+echo "--- Test: --number with pipe ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number users-enrolled\>0 -i 2>&1 \
+    | $PHP "$MOOSH" -p "$MOODLE_PATH" course:list --stdin -o csv 2>&1)
+echo "$output"
+assert_output_contains "Piped --number output contains TC101" "TC101" "$output"
+echo ""
+
+# Test 17: Help output shows --number
+echo "--- Test: Help shows --number ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --help 2>&1)
+assert_output_contains "Help shows --number option" "--number" "$output"
+assert_output_contains "Help shows users-enrolled metric" "users-enrolled" "$output"
 echo ""
 
 # Summary
