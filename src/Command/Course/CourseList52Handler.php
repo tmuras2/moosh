@@ -30,9 +30,27 @@ class CourseList52Handler extends BaseHandler
     use BooleanFilterTrait;
     use NumericFilterTrait;
 
+    /** @var string[]|null Cached list of installed module names. */
+    private ?array $installedModules = null;
+
     public function __construct(
         private readonly ClockInterface $clock,
     ) {
+    }
+
+    /**
+     * Return installed Moodle module names, cached for the lifetime of the handler.
+     *
+     * @return string[]
+     */
+    private function getInstalledModules(): array
+    {
+        if ($this->installedModules === null) {
+            global $DB;
+            $this->installedModules = $DB->get_fieldset_select('modules', 'name', '');
+        }
+
+        return $this->installedModules;
     }
 
     protected function supportedBooleanFlags(): array
@@ -57,7 +75,9 @@ class CourseList52Handler extends BaseHandler
     protected function isMetricSupported(string $metric): bool
     {
         if (str_starts_with($metric, 'mod-') && strlen($metric) > 4) {
-            return true;
+            $modName = substr($metric, 4);
+
+            return in_array($modName, $this->getInstalledModules(), true);
         }
 
         return parent::isMetricSupported($metric);

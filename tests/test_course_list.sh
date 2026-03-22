@@ -149,8 +149,14 @@ if (\$existingCount < 2) {
 
 // Create a forum activity in TC101 for --number activities tests
 require_once(\$CFG->dirroot . '/mod/forum/lib.php');
-\$existingActivities = \$DB->count_records('course_modules', ['course' => \$tc101->id]);
-if (\$existingActivities == 0) {
+\$existingForums = \$DB->count_records_sql(
+    \"SELECT COUNT(cm.id)
+       FROM {course_modules} cm
+       JOIN {modules} m ON m.id = cm.module
+      WHERE cm.course = ? AND m.name = ?\",
+    [\$tc101->id, 'forum']
+);
+if (\$existingForums == 0) {
     \$forum = new stdClass();
     \$forum->course = \$tc101->id;
     \$forum->type = 'general';
@@ -172,7 +178,19 @@ if (\$existingActivities == 0) {
     course_add_cm_to_section(\$tc101->id, \$cmid, 0);
     echo 'Forum activity created in TC101.' . PHP_EOL;
 } else {
-    echo \"Activities already exist in TC101 (\$existingActivities).\" . PHP_EOL;
+    echo \"Forum already exists in TC101 (\$existingForums).\" . PHP_EOL;
+}
+
+// Ensure MATH201 has no course modules (clean state for activities=0 tests)
+\$math201 = \$DB->get_record('course', ['shortname' => 'MATH201'], '*', MUST_EXIST);
+\$math201cms = \$DB->get_records('course_modules', ['course' => \$math201->id]);
+if (\$math201cms) {
+    foreach (\$math201cms as \$cm) {
+        course_delete_module(\$cm->id);
+    }
+    echo 'Removed ' . count(\$math201cms) . ' unexpected module(s) from MATH201.' . PHP_EOL;
+} else {
+    echo 'MATH201 has no course modules (clean).' . PHP_EOL;
 }
 "
 echo ""
