@@ -46,6 +46,7 @@ class CourseList51Handler extends BaseHandler
         return [
             'users-enrolled' => 'Number of enrolled users',
             'questions' => 'Number of Question Bank questions',
+            'activities' => 'Number of course activities (forum, assign, quiz, etc.)',
         ];
     }
 
@@ -70,6 +71,7 @@ class CourseList51Handler extends BaseHandler
                     AND ctx.instanceid = ?",
                 [$courseId],
             ),
+            'activities' => (int) $DB->count_records('course_modules', ['course' => $courseId]),
             default => throw new \InvalidArgumentException("Unknown metric '$metric'"),
         };
     }
