@@ -49,12 +49,35 @@ class CourseList52Handler extends BaseHandler
         return [
             'users-enrolled' => 'Number of enrolled users',
             'questions' => 'Number of Question Bank questions',
+            'activities' => 'Number of course activities (forum, assign, quiz, etc.)',
+            'mod-NAME' => 'Number of a specific activity type (e.g. mod-forum, mod-quiz, mod-assign)',
         ];
+    }
+
+    protected function isMetricSupported(string $metric): bool
+    {
+        if (str_starts_with($metric, 'mod-') && strlen($metric) > 4) {
+            return true;
+        }
+
+        return parent::isMetricSupported($metric);
     }
 
     protected function resolveNumericMetric(string $metric, int $courseId): int
     {
         global $DB;
+
+        if (str_starts_with($metric, 'mod-')) {
+            $modName = substr($metric, 4);
+            return (int) $DB->count_records_sql(
+                "SELECT COUNT(cm.id)
+                   FROM {course_modules} cm
+                   JOIN {modules} m ON m.id = cm.module
+                  WHERE cm.course = ?
+                    AND m.name = ?",
+                [$courseId, $modName],
+            );
+        }
 
         return match ($metric) {
             'users-enrolled' => (int) $DB->count_records_sql(
@@ -73,6 +96,7 @@ class CourseList52Handler extends BaseHandler
                     AND ctx.instanceid = ?",
                 [$courseId],
             ),
+            'activities' => (int) $DB->count_records('course_modules', ['course' => $courseId]),
             default => throw new \InvalidArgumentException("Unknown metric '$metric'"),
         };
     }

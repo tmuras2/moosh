@@ -146,6 +146,34 @@ if (\$existingCount < 2) {
 } else {
     echo \"Questions already exist in TC101 (\$existingCount).\" . PHP_EOL;
 }
+
+// Create a forum activity in TC101 for --number activities tests
+require_once(\$CFG->dirroot . '/mod/forum/lib.php');
+\$existingActivities = \$DB->count_records('course_modules', ['course' => \$tc101->id]);
+if (\$existingActivities == 0) {
+    \$forum = new stdClass();
+    \$forum->course = \$tc101->id;
+    \$forum->type = 'general';
+    \$forum->name = 'Test Forum';
+    \$forum->intro = 'A test forum for integration testing';
+    \$forum->introformat = FORMAT_HTML;
+    \$forum->assessed = 0;
+    \$forum->timemodified = time();
+    \$forum->id = \$DB->insert_record('forum', \$forum);
+
+    \$mod = new stdClass();
+    \$mod->course = \$tc101->id;
+    \$mod->module = \$DB->get_field('modules', 'id', ['name' => 'forum']);
+    \$mod->instance = \$forum->id;
+    \$mod->section = 0;
+    \$mod->added = time();
+    \$mod->visible = 1;
+    \$cmid = add_course_module(\$mod);
+    course_add_cm_to_section(\$tc101->id, \$cmid, 0);
+    echo 'Forum activity created in TC101.' . PHP_EOL;
+} else {
+    echo \"Activities already exist in TC101 (\$existingActivities).\" . PHP_EOL;
+}
 "
 echo ""
 
@@ -362,6 +390,100 @@ output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --help 2>&1)
 assert_output_contains "Help shows --number option" "--number" "$output"
 assert_output_contains "Help shows users-enrolled metric" "users-enrolled" "$output"
 assert_output_contains "Help shows questions metric" "questions" "$output"
+assert_output_contains "Help shows activities metric" "activities" "$output"
+assert_output_contains "Help shows mod-NAME metric" "mod-NAME" "$output"
+echo ""
+
+# Test 21: --number activities>0 (TC101 has a forum)
+echo "--- Test: --number activities>0 ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number activities\>0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Course with activities TC101 present" "TC101" "$output"
+if printf '%s' "$output" | grep -qF 'MATH201'; then
+    echo "  FAIL: activities>0 should have excluded MATH201"
+    ((FAIL++))
+else
+    echo "  PASS: activities>0 correctly excluded MATH201"
+    ((PASS++))
+fi
+echo ""
+
+# Test 22: --number activities=0 (MATH201 has no activities)
+echo "--- Test: --number activities=0 ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number activities=0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Course with no activities MATH201 present" "MATH201" "$output"
+if printf '%s' "$output" | grep -qF 'TC101'; then
+    echo "  FAIL: activities=0 should have excluded TC101"
+    ((FAIL++))
+else
+    echo "  PASS: activities=0 correctly excluded TC101"
+    ((PASS++))
+fi
+echo ""
+
+# Test 23: --number combining three metrics
+echo "--- Test: --number with three metrics ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number users-enrolled\>0 --number questions\>0 --number activities\>0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Three combined metrics returns TC101" "TC101" "$output"
+if printf '%s' "$output" | grep -qF 'MATH201'; then
+    echo "  FAIL: Three combined metrics should have excluded MATH201"
+    ((FAIL++))
+else
+    echo "  PASS: Three combined metrics correctly excluded MATH201"
+    ((PASS++))
+fi
+echo ""
+
+# Test 24: --number mod-forum>0 (TC101 has a forum)
+echo "--- Test: --number mod-forum>0 ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number mod-forum\>0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Course with forum TC101 present" "TC101" "$output"
+if printf '%s' "$output" | grep -qF 'MATH201'; then
+    echo "  FAIL: mod-forum>0 should have excluded MATH201"
+    ((FAIL++))
+else
+    echo "  PASS: mod-forum>0 correctly excluded MATH201"
+    ((PASS++))
+fi
+echo ""
+
+# Test 25: --number mod-forum=0 (MATH201 has no forum)
+echo "--- Test: --number mod-forum=0 ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number mod-forum=0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Course with no forum MATH201 present" "MATH201" "$output"
+if printf '%s' "$output" | grep -qF 'TC101'; then
+    echo "  FAIL: mod-forum=0 should have excluded TC101"
+    ((FAIL++))
+else
+    echo "  PASS: mod-forum=0 correctly excluded TC101"
+    ((PASS++))
+fi
+echo ""
+
+# Test 26: --number mod-quiz=0 (no course has quizzes)
+echo "--- Test: --number mod-quiz=0 (no quizzes anywhere) ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number mod-quiz=0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "TC101 present with no quizzes" "TC101" "$output"
+assert_output_contains "MATH201 present with no quizzes" "MATH201" "$output"
+echo ""
+
+# Test 27: --number combining mod-forum with activities
+echo "--- Test: --number mod-forum>0 with activities>0 ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number mod-forum\>0 --number activities\>0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Combined mod-forum+activities returns TC101" "TC101" "$output"
+if printf '%s' "$output" | grep -qF 'MATH201'; then
+    echo "  FAIL: Combined mod-forum+activities should have excluded MATH201"
+    ((FAIL++))
+else
+    echo "  PASS: Combined mod-forum+activities correctly excluded MATH201"
+    ((PASS++))
+fi
 echo ""
 
 # Summary

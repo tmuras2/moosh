@@ -43,6 +43,17 @@ trait NumericFilterTrait
     abstract protected function resolveNumericMetric(string $metric, int $courseId): int;
 
     /**
+     * Check whether a metric name is valid.
+     *
+     * Override to support dynamic/pattern-based metrics (e.g. mod-forum).
+     * The default implementation checks against supportedNumericMetrics().
+     */
+    protected function isMetricSupported(string $metric): bool
+    {
+        return array_key_exists($metric, $this->supportedNumericMetrics());
+    }
+
+    /**
      * Register --number option on the command.
      */
     protected function configureNumericFilters(Command $command): void
@@ -81,7 +92,7 @@ trait NumericFilterTrait
             $operator = $m[2];
             $value = (int) $m[3];
 
-            if (!array_key_exists($metric, $supported)) {
+            if (!$this->isMetricSupported($metric)) {
                 throw new \InvalidArgumentException(
                     "Unknown metric '$metric' for --number. Supported: " . implode(', ', array_keys($supported))
                 );
