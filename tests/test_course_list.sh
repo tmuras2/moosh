@@ -156,9 +156,41 @@ assert_output_contains "Help shows description" "List Moodle courses" "$output"
 assert_output_contains "Help shows is/is-not options" "--is=" "$output"
 assert_output_contains "Help shows category option" "--category" "$output"
 assert_output_contains "Help mentions active flag" "active" "$output"
+assert_output_contains "Help shows --sql option" "--sql" "$output"
 echo ""
 
-# Test 10: Pipe --id-only into --stdin
+# Test 10: --sql option filters courses
+echo "--- Test: --sql option ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --sql "c.shortname = 'TC101'" -o csv 2>&1)
+echo "$output"
+assert_output_contains "SQL filter returns TC101" "TC101" "$output"
+# Ensure MATH201 is excluded
+if printf '%s' "$output" | grep -qF 'MATH201'; then
+    echo "  FAIL: --sql filter should have excluded MATH201"
+    ((FAIL++))
+else
+    echo "  PASS: --sql filter correctly excluded MATH201"
+    ((PASS++))
+fi
+echo ""
+
+# Test 11: Pipe --sql -i into --stdin
+echo "--- Test: Pipe --sql -i into course:list --stdin ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --sql "c.shortname = 'TC101'" -i 2>&1 \
+    | $PHP "$MOOSH" -p "$MOODLE_PATH" course:list --stdin -o csv 2>&1)
+echo "$output"
+assert_output_contains "Piped SQL output has header" "id,category,shortname,fullname,visible" "$output"
+assert_output_contains "Piped SQL output contains TC101" "TC101" "$output"
+if printf '%s' "$output" | grep -qF 'MATH201'; then
+    echo "  FAIL: Piped SQL should have excluded MATH201"
+    ((FAIL++))
+else
+    echo "  PASS: Piped SQL correctly excluded MATH201"
+    ((PASS++))
+fi
+echo ""
+
+# Test 12: Pipe --id-only into --stdin
 echo "--- Test: Pipe course:list -i into course:list --stdin ---"
 output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --is visible -i 2>&1 \
     | $PHP "$MOOSH" -p "$MOODLE_PATH" course:list --stdin -o csv 2>&1)
@@ -167,7 +199,7 @@ assert_output_contains "Piped output has header" "id,category,shortname,fullname
 assert_output_contains "Piped output contains TC101" "TC101" "$output"
 echo ""
 
-# Test 11: --output=oneline
+# Test 13: --output=oneline
 echo "--- Test: --output=oneline ---"
 output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list -f id -o oneline 2>&1)
 echo "$output"
