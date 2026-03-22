@@ -125,6 +125,11 @@ trait CourseListHelperTrait
         ?bool $visible,
         ?array $fields,
     ): void {
+        // --id-only is equivalent to --output=oneline --fields=id
+        if ($idOnly) {
+            $fields = ['id'];
+        }
+
         $headers = [];
         $rows = [];
         $headersBuilt = false;
@@ -134,11 +139,6 @@ trait CourseListHelperTrait
                 continue;
             }
             if ($visible === false && $course->visible) {
-                continue;
-            }
-
-            if ($idOnly) {
-                $output->writeln((string) $course->id);
                 continue;
             }
 
@@ -156,11 +156,7 @@ trait CourseListHelperTrait
             $headersBuilt = true;
         }
 
-        if ($idOnly) {
-            return;
-        }
-
-        $format = $input->getOption('output');
+        $format = $idOnly ? 'oneline' : $input->getOption('output');
         $formatter = new ResultFormatter($output, $format);
         $formatter->display($headers, $rows);
     }

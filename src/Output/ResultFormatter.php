@@ -35,6 +35,7 @@ class ResultFormatter
         match ($this->format) {
             'json' => $this->renderJson($headers, $rows),
             'csv' => $this->renderCsv($headers, $rows),
+            'oneline' => $this->renderOneline($headers, $rows),
             default => $this->renderTable($headers, $rows),
         };
     }
@@ -57,6 +58,12 @@ class ResultFormatter
         rewind($stream);
         $this->output->write(stream_get_contents($stream));
         fclose($stream);
+    }
+
+    private function renderOneline(array $headers, array $rows): void
+    {
+        $values = array_map(fn(array $row) => $row[0] ?? '', $rows);
+        $this->output->writeln(implode(' ', $values));
     }
 
     private function renderJson(array $headers, array $rows): void
