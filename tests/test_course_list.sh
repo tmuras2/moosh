@@ -90,12 +90,20 @@ assert_output_contains "Test course listed" 'TC101' "$output"
 assert_output_contains "Hidden course listed" 'MATH201' "$output"
 echo ""
 
-# Test 2: ID-only output
+# Test 2: ID-only output (space-separated single line)
 echo "--- Test: ID-only output ---"
 output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list -i 2>&1)
 echo "$output"
 assert_output_contains "Contains course ID 1" "1" "$output"
 assert_output_not_empty "Output is not empty" "$output"
+line_count=$(printf '%s' "$output" | wc -l)
+if [ "$line_count" -le 1 ]; then
+    echo "  PASS: Output is a single line"
+    ((PASS++))
+else
+    echo "  FAIL: Expected single line, got $line_count lines"
+    ((FAIL++))
+fi
 echo ""
 
 # Test 3: Visible filter (yes)
@@ -148,6 +156,30 @@ assert_output_contains "Help shows description" "List Moodle courses" "$output"
 assert_output_contains "Help shows is/is-not options" "--is=" "$output"
 assert_output_contains "Help shows category option" "--category" "$output"
 assert_output_contains "Help mentions active flag" "active" "$output"
+echo ""
+
+# Test 10: Pipe --id-only into --stdin
+echo "--- Test: Pipe course:list -i into course:list --stdin ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --is visible -i 2>&1 \
+    | $PHP "$MOOSH" -p "$MOODLE_PATH" course:list --stdin -o csv 2>&1)
+echo "$output"
+assert_output_contains "Piped output has header" "id,category,shortname,fullname,visible" "$output"
+assert_output_contains "Piped output contains TC101" "TC101" "$output"
+echo ""
+
+# Test 11: --output=oneline
+echo "--- Test: --output=oneline ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list -f id -o oneline 2>&1)
+echo "$output"
+assert_output_not_empty "Oneline output is not empty" "$output"
+line_count=$(printf '%s' "$output" | wc -l)
+if [ "$line_count" -le 1 ]; then
+    echo "  PASS: Oneline output is a single line"
+    ((PASS++))
+else
+    echo "  FAIL: Expected single line, got $line_count lines"
+    ((FAIL++))
+fi
 echo ""
 
 # Summary
