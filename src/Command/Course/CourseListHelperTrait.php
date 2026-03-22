@@ -38,7 +38,8 @@ trait CourseListHelperTrait
      */
     private function readStdinIds(InputInterface $input): ?array
     {
-        if (!$input->getOption('stdin')) {
+        $stdinPiped = !stream_isatty(STDIN);
+        if (!$input->getOption('stdin') && !$stdinPiped) {
             return null;
         }
 

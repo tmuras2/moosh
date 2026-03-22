@@ -1,4 +1,4 @@
-#!/usr/bin/env php
+#!/usr/bin/php
 <?php
 /**
  * moosh2 — Moodle Shell

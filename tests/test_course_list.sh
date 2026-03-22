@@ -10,6 +10,7 @@ set -uo pipefail
 
 MOOSH="$(cd "$(dirname "$0")/.." && pwd)/moosh.php"
 MOODLE_PATH="${MOODLE_PATH:-/tmp/moodle}"
+PHP="${PHP:-php}"
 PASS=0
 FAIL=0
 
@@ -47,7 +48,7 @@ echo ""
 
 # Create test courses if they don't exist
 echo "--- Setting up test data ---"
-php -r "
+$PHP -r "
 define('CLI_SCRIPT', true);
 require('${MOODLE_PATH}/config.php');
 require_once(\$CFG->dirroot . '/course/lib.php');
@@ -81,17 +82,17 @@ echo ""
 
 # Test 1: Basic listing (CSV output)
 echo "--- Test: Basic course listing ---"
-output=$(php "$MOOSH" -p "$MOODLE_PATH" course:list 2>&1)
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list -o csv 2>&1)
 echo "$output"
-assert_output_contains "Header row present" '"id","category","shortname","fullname","visible"' "$output"
-assert_output_contains "Site course listed" '"testmoodle"' "$output"
-assert_output_contains "Test course listed" '"TC101"' "$output"
-assert_output_contains "Hidden course listed" '"MATH201"' "$output"
+assert_output_contains "Header row present" 'id,category,shortname,fullname,visible' "$output"
+assert_output_contains "Site course listed" 'Moodle 5.1' "$output"
+assert_output_contains "Test course listed" 'TC101' "$output"
+assert_output_contains "Hidden course listed" 'MATH201' "$output"
 echo ""
 
 # Test 2: ID-only output
 echo "--- Test: ID-only output ---"
-output=$(php "$MOOSH" -p "$MOODLE_PATH" course:list -i 2>&1)
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list -i 2>&1)
 echo "$output"
 assert_output_contains "Contains course ID 1" "1" "$output"
 assert_output_not_empty "Output is not empty" "$output"
@@ -99,21 +100,21 @@ echo ""
 
 # Test 3: Visible filter (yes)
 echo "--- Test: Visible courses only ---"
-output=$(php "$MOOSH" -p "$MOODLE_PATH" course:list --visible=yes 2>&1)
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --is visible 2>&1)
 echo "$output"
-assert_output_contains "Visible course present" '"TC101"' "$output"
+assert_output_contains "Visible course present" 'TC101' "$output"
 echo ""
 
 # Test 4: Visible filter (no = hidden)
 echo "--- Test: Hidden courses only ---"
-output=$(php "$MOOSH" -p "$MOODLE_PATH" course:list --visible=no 2>&1)
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --is-not visible 2>&1)
 echo "$output"
-assert_output_contains "Hidden course present" '"MATH201"' "$output"
+assert_output_contains "Hidden course present" 'MATH201' "$output"
 echo ""
 
 # Test 5: Tab output with idnumber
 echo "--- Test: Tab output with idnumber ---"
-output=$(php "$MOOSH" -p "$MOODLE_PATH" course:list --idnumber -o tab 2>&1)
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --idnumber -o tab 2>&1)
 echo "$output"
 assert_output_contains "Tab header has idnumber" "idnumber" "$output"
 assert_output_contains "TC-101 idnumber present" "TC-101" "$output"
@@ -121,30 +122,30 @@ echo ""
 
 # Test 6: Custom fields
 echo "--- Test: Custom fields ---"
-output=$(php "$MOOSH" -p "$MOODLE_PATH" course:list -f id,shortname,fullname 2>&1)
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list -f id,shortname,fullname -o csv 2>&1)
 echo "$output"
-assert_output_contains "Custom fields header" '"id","shortname","fullname"' "$output"
+assert_output_contains "Custom fields header" 'id,shortname,fullname' "$output"
 echo ""
 
 # Test 7: Active filter (--is active)
 echo "--- Test: Active courses (--is active) ---"
-output=$(php "$MOOSH" -p "$MOODLE_PATH" course:list --is active 2>&1)
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --is active 2>&1)
 echo "$output"
 assert_output_not_empty "Active filter produces output" "$output"
 echo ""
 
 # Test 8: Inactive filter (--is-not active)
 echo "--- Test: Inactive courses (--is-not active) ---"
-output=$(php "$MOOSH" -p "$MOODLE_PATH" course:list --is-not active 2>&1)
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --is-not active 2>&1)
 echo "$output"
 assert_output_not_empty "Inactive filter produces output" "$output"
 echo ""
 
 # Test 9: Help output
 echo "--- Test: Help output ---"
-output=$(php "$MOOSH" -p "$MOODLE_PATH" course:list --help 2>&1)
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --help 2>&1)
 assert_output_contains "Help shows description" "List Moodle courses" "$output"
-assert_output_contains "Help shows visible option" "--visible" "$output"
+assert_output_contains "Help shows is/is-not options" "--is=" "$output"
 assert_output_contains "Help shows category option" "--category" "$output"
 assert_output_contains "Help mentions active flag" "active" "$output"
 echo ""
