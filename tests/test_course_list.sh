@@ -391,6 +391,7 @@ assert_output_contains "Help shows --number option" "--number" "$output"
 assert_output_contains "Help shows users-enrolled metric" "users-enrolled" "$output"
 assert_output_contains "Help shows questions metric" "questions" "$output"
 assert_output_contains "Help shows activities metric" "activities" "$output"
+assert_output_contains "Help shows mod-NAME metric" "mod-NAME" "$output"
 echo ""
 
 # Test 21: --number activities>0 (TC101 has a forum)
@@ -431,6 +432,56 @@ if printf '%s' "$output" | grep -qF 'MATH201'; then
     ((FAIL++))
 else
     echo "  PASS: Three combined metrics correctly excluded MATH201"
+    ((PASS++))
+fi
+echo ""
+
+# Test 24: --number mod-forum>0 (TC101 has a forum)
+echo "--- Test: --number mod-forum>0 ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number mod-forum\>0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Course with forum TC101 present" "TC101" "$output"
+if printf '%s' "$output" | grep -qF 'MATH201'; then
+    echo "  FAIL: mod-forum>0 should have excluded MATH201"
+    ((FAIL++))
+else
+    echo "  PASS: mod-forum>0 correctly excluded MATH201"
+    ((PASS++))
+fi
+echo ""
+
+# Test 25: --number mod-forum=0 (MATH201 has no forum)
+echo "--- Test: --number mod-forum=0 ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number mod-forum=0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Course with no forum MATH201 present" "MATH201" "$output"
+if printf '%s' "$output" | grep -qF 'TC101'; then
+    echo "  FAIL: mod-forum=0 should have excluded TC101"
+    ((FAIL++))
+else
+    echo "  PASS: mod-forum=0 correctly excluded TC101"
+    ((PASS++))
+fi
+echo ""
+
+# Test 26: --number mod-quiz=0 (no course has quizzes)
+echo "--- Test: --number mod-quiz=0 (no quizzes anywhere) ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number mod-quiz=0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "TC101 present with no quizzes" "TC101" "$output"
+assert_output_contains "MATH201 present with no quizzes" "MATH201" "$output"
+echo ""
+
+# Test 27: --number combining mod-forum with activities
+echo "--- Test: --number mod-forum>0 with activities>0 ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number mod-forum\>0 --number activities\>0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Combined mod-forum+activities returns TC101" "TC101" "$output"
+if printf '%s' "$output" | grep -qF 'MATH201'; then
+    echo "  FAIL: Combined mod-forum+activities should have excluded MATH201"
+    ((FAIL++))
+else
+    echo "  PASS: Combined mod-forum+activities correctly excluded MATH201"
     ((PASS++))
 fi
 echo ""
