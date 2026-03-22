@@ -51,6 +51,7 @@ class CourseList51Handler extends BaseHandler
             ->addOption('id-only', 'i', InputOption::VALUE_NONE, 'Display only course IDs')
             ->addOption('category', 'c', InputOption::VALUE_REQUIRED, 'Limit to courses in this category ID (includes subcategories)')
             ->addOption('fields', 'f', InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to show')
+            ->addOption('sql', null, InputOption::VALUE_REQUIRED, 'SQL WHERE fragment to filter courses (e.g. "shortname = \'TC101\'")')
             ->addOption('stdin', null, InputOption::VALUE_NONE, 'Read space-separated course IDs from stdin to filter results');
         $this->configureBooleanFilters($command);
     }
@@ -65,7 +66,11 @@ class CourseList51Handler extends BaseHandler
         $idOnly = $input->getOption('id-only');
         $categoryId = $input->getOption('category');
         $fieldsRaw = $input->getOption('fields');
+        $sqlOption = $input->getOption('sql');
         $searchFragments = $input->getArgument('search');
+        if ($sqlOption !== null) {
+            $searchFragments[] = $sqlOption;
+        }
 
         $filters = $this->parseBooleanFilters($input);
         $visible = $filters['visible'];
