@@ -45,6 +45,7 @@ class CourseList51Handler extends BaseHandler
     {
         return [
             'users-enrolled' => 'Number of enrolled users',
+            'questions' => 'Number of Question Bank questions',
         ];
     }
 
@@ -58,6 +59,15 @@ class CourseList51Handler extends BaseHandler
                    FROM {user_enrolments} ue
                    JOIN {enrol} e ON e.id = ue.enrolid
                   WHERE e.courseid = ?",
+                [$courseId],
+            ),
+            'questions' => (int) $DB->count_records_sql(
+                "SELECT COUNT(qbe.id)
+                   FROM {question_bank_entries} qbe
+                   JOIN {question_categories} qc ON qc.id = qbe.questioncategoryid
+                   JOIN {context} ctx ON ctx.id = qc.contextid
+                  WHERE ctx.contextlevel = 50
+                    AND ctx.instanceid = ?",
                 [$courseId],
             ),
             default => throw new \InvalidArgumentException("Unknown metric '$metric'"),
