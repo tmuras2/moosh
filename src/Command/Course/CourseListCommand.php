@@ -12,10 +12,11 @@ use Moosh2\Bootstrap\BootstrapLevel;
 use Moosh2\Bootstrap\MoodleVersion;
 use Moosh2\Command\BaseCommand;
 use Moosh2\Command\BaseHandler;
+use Moosh2\Console\CommandDefinition;
+use Moosh2\Console\InputInterface;
+use Moosh2\Console\OutputInterface;
 use Moosh2\Service\ClockInterface;
 use Moosh2\Service\SystemClock;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * List courses matching optional search criteria.
@@ -35,18 +36,31 @@ class CourseListCommand extends BaseCommand
     public function __construct(?MoodleVersion $moodleVersion, ?ClockInterface $clock = null)
     {
         $this->handler = $this->resolveHandler($moodleVersion, $clock ?? new SystemClock());
-        parent::__construct();
     }
 
-    protected function configure(): void
+    public function getName(): string
     {
-        $this
-            ->setName('course:list')
-            ->setAliases(['course-list'])
-            ->setDescription('List Moodle courses')
-            ->setHelp('Lists courses matching optional search criteria with configurable output fields and format.');
+        return 'course:list';
+    }
 
-        $this->handler->configureCommand($this);
+    public function getAliases(): array
+    {
+        return ['course-list'];
+    }
+
+    public function getDescription(): string
+    {
+        return 'List Moodle courses';
+    }
+
+    public function getHelp(): string
+    {
+        return 'Lists courses matching optional search criteria with configurable output fields and format.';
+    }
+
+    public function configure(CommandDefinition $definition): void
+    {
+        $this->handler->configureCommand($definition);
     }
 
     protected function getActiveHandler(): BaseHandler

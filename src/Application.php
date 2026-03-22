@@ -12,10 +12,11 @@ use Moosh2\Bootstrap\MoodleBootstrapper;
 use Moosh2\Bootstrap\MoodlePathResolver;
 use Moosh2\Bootstrap\MoodleVersion;
 use Moosh2\Command\Course\CourseListCommand;
+use Moosh2\Console\Adapter\SymfonyCommandAdapter;
+use Moosh2\Console\InputInterface;
+use Moosh2\Console\OutputInterface;
 use Symfony\Component\Console\Application as SymfonyApplication;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 
 final class Application extends SymfonyApplication
 {
@@ -180,6 +181,8 @@ final class Application extends SymfonyApplication
 
     private function registerCommands(): void
     {
-        $this->add(new CourseListCommand($this->moodleVersion));
+        $command = new CourseListCommand($this->moodleVersion);
+        $command->setApplication($this);
+        $this->add(new SymfonyCommandAdapter($command));
     }
 }

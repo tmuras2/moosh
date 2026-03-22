@@ -9,9 +9,9 @@
 namespace Moosh2\Command;
 
 use Moosh2\Bootstrap\BootstrapLevel;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Moosh2\Console\CommandDefinition;
+use Moosh2\Console\InputInterface;
+use Moosh2\Console\OutputInterface;
 
 /**
  * Abstract base class for all version-specific command handlers.
@@ -35,10 +35,10 @@ abstract class BaseHandler
     /**
      * Register handler-specific arguments and options on the command.
      *
-     * Called during Symfony's configure() phase. Override in subclasses
+     * Called during the configure phase. Override in subclasses
      * to add arguments and options.
      */
-    public function configureCommand(Command $command): void
+    public function configureCommand(CommandDefinition $definition): void
     {
         // No-op by default.
     }

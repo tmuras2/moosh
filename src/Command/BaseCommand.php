@@ -8,13 +8,15 @@
 
 namespace Moosh2\Command;
 
+use Moosh2\Application;
 use Moosh2\Attribute\SinceVersion;
 use Moosh2\Bootstrap\BootstrapLevel;
 use Moosh2\Bootstrap\MoodleBootstrapper;
 use Moosh2\Bootstrap\MoodleVersion;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Moosh2\Console\CommandDefinition;
+use Moosh2\Console\ExitCode;
+use Moosh2\Console\InputInterface;
+use Moosh2\Console\OutputInterface;
 
 /**
  * Abstract base for all moosh2 commands.
@@ -22,8 +24,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Subclasses declare their bootstrap level and implement handle().
  * The base class takes care of bootstrapping Moodle before handle() is called
  * and checks #[SinceVersion] constraints.
+ *
+ * This class is framework-agnostic. The Symfony adapter
+ * (SymfonyCommandAdapter) bridges it to Symfony Console.
  */
-abstract class BaseCommand extends Command
+abstract class BaseCommand
 {
     /**
      * The bootstrap level this command requires.
@@ -31,10 +36,59 @@ abstract class BaseCommand extends Command
      */
     protected BootstrapLevel $bootstrapLevel = BootstrapLevel::FullNoAdminCheck;
 
+    private ?Application $application = null;
+
+    /**
+     * Canonical command name (e.g. "course:list").
+     */
+    abstract public function getName(): string;
+
+    /**
+     * Alternative command names.
+     *
+     * @return string[]
+     */
+    public function getAliases(): array
+    {
+        return [];
+    }
+
+    /**
+     * Short description shown in the command list.
+     */
+    abstract public function getDescription(): string;
+
+    /**
+     * Extended help text.
+     */
+    public function getHelp(): string
+    {
+        return '';
+    }
+
+    /**
+     * Register command-specific arguments and options.
+     *
+     * Override in subclasses (or delegate to handlers) to add
+     * arguments and options via the CommandDefinition interface.
+     */
+    public function configure(CommandDefinition $definition): void
+    {
+        // No-op by default.
+    }
+
     /**
      * Implement the actual command logic here.
      */
     abstract protected function handle(InputInterface $input, OutputInterface $output): int;
+
+    /**
+     * Set the owning Application instance.
+     */
+    public function setApplication(Application $application): void
+    {
+        $this->application = $application;
+    }
 
     /**
      * Return the active handler for this command, if any.
@@ -59,9 +113,9 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     * Symfony Console entry point — bootstraps Moodle then delegates to handle().
+     * Entry point — bootstraps Moodle then delegates to handle().
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         // Check class-level #[SinceVersion].
         $bootstrapper = $this->getBootstrapper($input, $output);
@@ -74,7 +128,7 @@ abstract class BaseCommand extends Command
                     '<error>This command requires Moodle %s or later.</error>',
                     $attr->version,
                 ));
-                return Command::FAILURE;
+                return ExitCode::FAILURE;
             }
 
             $bootstrapper->bootstrap(
@@ -117,10 +171,7 @@ abstract class BaseCommand extends Command
      */
     private function getBootstrapper(InputInterface $input, OutputInterface $output): ?MoodleBootstrapper
     {
-        /** @var \Moosh2\Application $app */
-        $app = $this->getApplication();
-
-        $bootstrapper = $app->getBootstrapper($input, $output);
+        $bootstrapper = $this->application->getBootstrapper($input, $output);
 
         if ($bootstrapper === null && $this->getEffectiveBootstrapLevel() !== BootstrapLevel::None) {
             throw new \RuntimeException(

@@ -8,9 +8,9 @@
 
 namespace Moosh2\Command;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
+use Moosh2\Console\CommandDefinition;
+use Moosh2\Console\InputInterface;
+use Moosh2\Console\OptionMode;
 
 /**
  * Adds --number numeric comparison filter to a command.
@@ -56,14 +56,14 @@ trait NumericFilterTrait
     /**
      * Register --number option on the command.
      */
-    protected function configureNumericFilters(Command $command): void
+    protected function configureNumericFilters(CommandDefinition $definition): void
     {
         $metrics = implode(', ', array_keys($this->supportedNumericMetrics()));
 
-        $command->addOption(
+        $definition->addOption(
             'number',
             null,
-            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+            OptionMode::VALUE_REQUIRED | OptionMode::VALUE_IS_ARRAY,
             "Numeric filter: metric{>|<|=}N ($metrics). E.g. --number users-enrolled>10",
         );
     }

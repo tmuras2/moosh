@@ -1,6 +1,6 @@
 {
     "name": "tmuras2/moosh",
-    "description": "moosh2 — Moodle Shell, rewritten with Symfony Console",
+    "description": "moosh2 — Moodle Shell",
     "license": "GPL-3.0-or-later",
     "homepage": "https://github.com/tmuras2/moosh",
     "keywords": ["moodle", "shell", "cli"],

@@ -8,7 +8,7 @@
 
 namespace Moosh2\Bootstrap;
 
-use Symfony\Component\Console\Output\OutputInterface;
+use Moosh2\Console\OutputInterface;
 
 /**
  * Handles Moodle require/login at the correct bootstrap level.

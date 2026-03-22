@@ -8,9 +8,9 @@
 
 namespace Moosh2\Command;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
+use Moosh2\Console\CommandDefinition;
+use Moosh2\Console\InputInterface;
+use Moosh2\Console\OptionMode;
 
 /**
  * Adds --is and --is-not boolean filter options to a command.
@@ -32,13 +32,13 @@ trait BooleanFilterTrait
     /**
      * Register --is and --is-not options on the command.
      */
-    protected function configureBooleanFilters(Command $command): void
+    protected function configureBooleanFilters(CommandDefinition $definition): void
     {
         $flags = implode(', ', array_keys($this->supportedBooleanFlags()));
 
-        $command
-            ->addOption('is', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, "Include items matching a flag ($flags)")
-            ->addOption('is-not', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, "Exclude items matching a flag ($flags)");
+        $definition
+            ->addOption('is', null, OptionMode::VALUE_REQUIRED | OptionMode::VALUE_IS_ARRAY, "Include items matching a flag ($flags)")
+            ->addOption('is-not', null, OptionMode::VALUE_REQUIRED | OptionMode::VALUE_IS_ARRAY, "Exclude items matching a flag ($flags)");
     }
 
     /**

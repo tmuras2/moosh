@@ -11,12 +11,13 @@ namespace Moosh2\Command\Course;
 use Moosh2\Command\BaseHandler;
 use Moosh2\Command\BooleanFilterTrait;
 use Moosh2\Command\NumericFilterTrait;
+use Moosh2\Console\ArgumentMode;
+use Moosh2\Console\CommandDefinition;
+use Moosh2\Console\ExitCode;
+use Moosh2\Console\InputInterface;
+use Moosh2\Console\OptionMode;
+use Moosh2\Console\OutputInterface;
 use Moosh2\Service\ClockInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * course:list implementation for Moodle 5.1.
@@ -118,22 +119,22 @@ class CourseList51Handler extends BaseHandler
         };
     }
 
-    public function configureCommand(Command $command): void
+    public function configureCommand(CommandDefinition $definition): void
     {
-        $command
+        $definition
             ->addArgument(
                 'search',
-                InputArgument::OPTIONAL | InputArgument::IS_ARRAY,
+                ArgumentMode::OPTIONAL | ArgumentMode::IS_ARRAY,
                 'SQL WHERE fragments to filter courses',
             )
-            ->addOption('idnumber', null, InputOption::VALUE_NONE, 'Include the idnumber column')
-            ->addOption('id-only', 'i', InputOption::VALUE_NONE, 'Display only course IDs')
-            ->addOption('category', 'c', InputOption::VALUE_REQUIRED, 'Limit to courses in this category ID (includes subcategories)')
-            ->addOption('fields', 'f', InputOption::VALUE_REQUIRED, 'Comma-separated list of fields to show')
-            ->addOption('sql', null, InputOption::VALUE_REQUIRED, 'SQL WHERE fragment to filter courses (e.g. "shortname = \'TC101\'")')
-            ->addOption('stdin', null, InputOption::VALUE_NONE, 'Read space-separated course IDs from stdin to filter results');
-        $this->configureBooleanFilters($command);
-        $this->configureNumericFilters($command);
+            ->addOption('idnumber', null, OptionMode::VALUE_NONE, 'Include the idnumber column')
+            ->addOption('id-only', 'i', OptionMode::VALUE_NONE, 'Display only course IDs')
+            ->addOption('category', 'c', OptionMode::VALUE_REQUIRED, 'Limit to courses in this category ID (includes subcategories)')
+            ->addOption('fields', 'f', OptionMode::VALUE_REQUIRED, 'Comma-separated list of fields to show')
+            ->addOption('sql', null, OptionMode::VALUE_REQUIRED, 'SQL WHERE fragment to filter courses (e.g. "shortname = \'TC101\'")')
+            ->addOption('stdin', null, OptionMode::VALUE_NONE, 'Read space-separated course IDs from stdin to filter results');
+        $this->configureBooleanFilters($definition);
+        $this->configureNumericFilters($definition);
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -235,6 +236,6 @@ class CourseList51Handler extends BaseHandler
 
         $this->displayCourses($courses, $input, $output, $idOnly, $visible, $fields);
 
-        return Command::SUCCESS;
+        return ExitCode::SUCCESS;
     }
 }

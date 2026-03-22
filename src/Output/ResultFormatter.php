@@ -8,8 +8,7 @@
 
 namespace Moosh2\Output;
 
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Output\OutputInterface;
+use Moosh2\Console\OutputInterface;
 
 /**
  * Shared output formatter for command results.
@@ -42,10 +41,40 @@ class ResultFormatter
 
     private function renderTable(array $headers, array $rows): void
     {
-        $table = new Table($this->output);
-        $table->setHeaders($headers);
-        $table->setRows($rows);
-        $table->render();
+        if ($headers === []) {
+            return;
+        }
+
+        // Calculate column widths.
+        $widths = array_map('mb_strlen', $headers);
+        foreach ($rows as $row) {
+            foreach ($row as $i => $cell) {
+                $widths[$i] = max($widths[$i] ?? 0, mb_strlen((string) $cell));
+            }
+        }
+
+        $separator = '+' . implode('+', array_map(
+            fn(int $w) => str_repeat('-', $w + 2),
+            $widths,
+        )) . '+';
+
+        $formatRow = function (array $cells) use ($widths): string {
+            $parts = [];
+            foreach ($cells as $i => $cell) {
+                $parts[] = ' ' . str_pad((string) $cell, $widths[$i]) . ' ';
+            }
+            return '|' . implode('|', $parts) . '|';
+        };
+
+        $this->output->writeln($separator);
+        $this->output->writeln($formatRow($headers));
+        $this->output->writeln($separator);
+
+        foreach ($rows as $row) {
+            $this->output->writeln($formatRow($row));
+        }
+
+        $this->output->writeln($separator);
     }
 
     private function renderCsv(array $headers, array $rows): void

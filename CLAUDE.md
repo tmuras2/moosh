@@ -2,10 +2,10 @@
 
 ## Project Overview
 
-**moosh2** is a rewrite of [Moosh (Moodle Shell)](https://github.com/tmuras/moosh) using Symfony Console 7.x. It provides CLI commands for managing Moodle installations. Licensed under GNU GPL v3+.
+**moosh2** is a rewrite of [Moosh (Moodle Shell)](https://github.com/tmuras/moosh). It provides CLI commands for managing Moodle installations. Licensed under GNU GPL v3+.
 
 - **PHP**: >= 8.2
-- **Main dependency**: symfony/console ^7.0
+- **Runtime adapter**: symfony/console ^7.0 (isolated behind `src/Console/Adapter/`)
 - **Entry points**: `php moosh.php` or `php bin/moosh`
 
 ## Repository Structure
@@ -28,6 +28,18 @@ src/
 │       ├── CourseList51Handler.php   # Moodle 5.1 implementation
 │       ├── CourseList52Handler.php   # Moodle 5.2 implementation
 │       └── CourseListHelperTrait.php # Shared course query helpers
+├── Console/
+│   ├── InputInterface.php       # Framework-agnostic input abstraction
+│   ├── OutputInterface.php      # Framework-agnostic output abstraction
+│   ├── CommandDefinition.php    # Interface for registering args/options
+│   ├── ArgumentMode.php         # Bitmask constants for argument modes
+│   ├── OptionMode.php           # Bitmask constants for option modes
+│   ├── ExitCode.php             # SUCCESS/FAILURE constants
+│   └── Adapter/
+│       ├── SymfonyCommandAdapter.php    # Wraps BaseCommand as Symfony Command
+│       ├── SymfonyCommandDefinition.php # Adapts CommandDefinition to Symfony
+│       ├── SymfonyInputAdapter.php      # Adapts Symfony Input to moosh Input
+│       └── SymfonyOutputAdapter.php     # Adapts Symfony Output to moosh Output
 └── Output/
     └── ResultFormatter.php      # Renders table/CSV/JSON output
 tests/
@@ -51,14 +63,22 @@ There is no unit test suite or linter configured yet. No Makefile.
 
 ## Architecture & Conventions
 
+### Framework Decoupling
+
+The domain layer (`Command/`, `Bootstrap/`, `Output/`) depends only on moosh-owned
+interfaces in `Console/` (`InputInterface`, `OutputInterface`, `CommandDefinition`).
+Symfony Console is isolated behind thin adapters in `Console/Adapter/`.
+`Application` is the sole class that extends Symfony directly.
+
 ### Command Pattern
 
 Every command follows this structure:
 
-1. **Command class** extends `BaseCommand` — sets name, description, bootstrap level
+1. **Command class** extends `BaseCommand` — implements `getName()`, `getDescription()`, bootstrap level
 2. **Handler classes** extend `BaseHandler` — implement version-specific logic
 3. Command delegates `configure()` and `handle()` to the appropriate handler based on detected Moodle version
 4. `BaseCommand::execute()` handles Moodle bootstrapping before calling `handle()`
+5. `SymfonyCommandAdapter` wraps `BaseCommand` for Symfony Console registration
 
 ### Version-Specific Dispatch
 
@@ -106,8 +126,10 @@ Handlers can override the command's bootstrap level by implementing `getBootstra
 ## Adding a New Command
 
 1. Create a directory under `src/Command/` for the command group (e.g., `User/`)
-2. Create `{Name}Command.php` extending `BaseCommand` — set bootstrap level, name, description
+2. Create `{Name}Command.php` extending `BaseCommand` — implement `getName()`, `getDescription()`, set bootstrap level
 3. Create version-specific handlers `{Name}{Version}Handler.php` extending `BaseHandler`
-4. Optionally create a helper trait for shared logic
-5. Register the command in `Application::registerCommands()`
-6. Add integration tests in `tests/`
+4. Use `CommandDefinition`, `InputInterface`, `OutputInterface` from `Moosh2\Console\` (not Symfony)
+5. Use `ArgumentMode`, `OptionMode`, `ExitCode` from `Moosh2\Console\` for constants
+6. Optionally create a helper trait for shared logic
+7. Register the command in `Application::registerCommands()` wrapped in `SymfonyCommandAdapter`
+8. Add integration tests in `tests/`

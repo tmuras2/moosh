@@ -8,9 +8,9 @@
 
 namespace Moosh2\Command\Course;
 
+use Moosh2\Console\InputInterface;
+use Moosh2\Console\OutputInterface;
 use Moosh2\Output\ResultFormatter;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Shared helpers for version-specific course:list handlers.
