@@ -10,6 +10,7 @@ namespace Moosh2\Command\Course;
 
 use Moosh2\Command\BaseHandler;
 use Moosh2\Command\BooleanFilterTrait;
+use Moosh2\Command\NumericFilterTrait;
 use Moosh2\Service\ClockInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -27,6 +28,7 @@ class CourseList52Handler extends BaseHandler
 {
     use CourseListHelperTrait;
     use BooleanFilterTrait;
+    use NumericFilterTrait;
 
     public function __construct(
         private readonly ClockInterface $clock,
@@ -40,6 +42,29 @@ class CourseList52Handler extends BaseHandler
             'empty' => 'Course has no content',
             'active' => 'Course has log activity in the last month',
         ];
+    }
+
+    protected function supportedNumericMetrics(): array
+    {
+        return [
+            'users-enrolled' => 'Number of enrolled users',
+        ];
+    }
+
+    protected function resolveNumericMetric(string $metric, int $courseId): int
+    {
+        global $DB;
+
+        return match ($metric) {
+            'users-enrolled' => (int) $DB->count_records_sql(
+                "SELECT COUNT(DISTINCT ue.userid)
+                   FROM {user_enrolments} ue
+                   JOIN {enrol} e ON e.id = ue.enrolid
+                  WHERE e.courseid = ?",
+                [$courseId],
+            ),
+            default => throw new \InvalidArgumentException("Unknown metric '$metric'"),
+        };
     }
 
     public function configureCommand(Command $command): void
@@ -57,6 +82,7 @@ class CourseList52Handler extends BaseHandler
             ->addOption('sql', null, InputOption::VALUE_REQUIRED, 'SQL WHERE fragment to filter courses (e.g. "shortname = \'TC101\'")')
             ->addOption('stdin', null, InputOption::VALUE_NONE, 'Read space-separated course IDs from stdin to filter results');
         $this->configureBooleanFilters($command);
+        $this->configureNumericFilters($command);
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -147,6 +173,9 @@ class CourseList52Handler extends BaseHandler
                 }
             }
         }
+
+        $numericFilters = $this->parseNumericFilters($input);
+        $courses = $this->applyNumericFilters($courses, $numericFilters);
 
         $stdinIds = $this->readStdinIds($input);
         $courses = $this->filterByStdinIds($courses, $stdinIds);
