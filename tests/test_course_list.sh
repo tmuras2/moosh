@@ -93,6 +93,59 @@ if (!\$DB->record_exists('user_enrolments', ['enrolid' => \$enrol->id, 'userid' 
 } else {
     echo 'Admin already enrolled into TC101.' . PHP_EOL;
 }
+
+// Create Question Bank questions in TC101 for --number questions tests
+\$tc101ctx = context_course::instance(\$tc101->id);
+require_once(\$CFG->dirroot . '/lib/questionlib.php');
+require_once(\$CFG->dirroot . '/question/editlib.php');
+
+// Get or create default question category for the course
+\$qcat = question_get_default_category(\$tc101ctx->id);
+if (!\$qcat) {
+    \$qcat = question_make_default_categories([\$tc101ctx]);
+    \$qcat = question_get_default_category(\$tc101ctx->id);
+}
+
+// Create 2 question bank entries if they don't already exist
+\$existingCount = \$DB->count_records_sql(
+    \"SELECT COUNT(qbe.id)
+       FROM {question_bank_entries} qbe
+       JOIN {question_categories} qc ON qc.id = qbe.questioncategoryid
+       JOIN {context} ctx ON ctx.id = qc.contextid
+      WHERE ctx.contextlevel = 50 AND ctx.instanceid = ?\",
+    [\$tc101->id]
+);
+
+if (\$existingCount < 2) {
+    \$gen = \$CFG->dirroot . '/question/type/shortanswer/tests/helper.php';
+    if (file_exists(\$gen)) {
+        require_once(\$gen);
+    }
+    require_once(\$CFG->dirroot . '/question/type/shortanswer/questiontype.php');
+    for (\$i = \$existingCount + 1; \$i <= 2; \$i++) {
+        \$q = new stdClass();
+        \$q->category = \$qcat->id;
+        \$q->name = \"Test Question \$i\";
+        \$q->questiontext = \"What is the answer to question \$i?\";
+        \$q->questiontextformat = FORMAT_HTML;
+        \$q->generalfeedback = '';
+        \$q->generalfeedbackformat = FORMAT_HTML;
+        \$q->qtype = 'shortanswer';
+        \$q->defaultmark = 1;
+        \$q->penalty = 0.3333333;
+        \$q->length = 1;
+        \$q->hidden = 0;
+        \$q->usecase = 0;
+        \$q->answer = ['answer'];
+        \$q->fraction = [1.0];
+        \$q->feedback = [''];
+        \$q->feedbackformat = [FORMAT_HTML];
+        \$q = question_bank::get_qtype('shortanswer')->save_question(\$q, \$q);
+        echo \"Created question: Test Question \$i\" . PHP_EOL;
+    }
+} else {
+    echo \"Questions already exist in TC101 (\$existingCount).\" . PHP_EOL;
+}
 "
 echo ""
 
@@ -260,11 +313,55 @@ echo "$output"
 assert_output_contains "Piped --number output contains TC101" "TC101" "$output"
 echo ""
 
-# Test 17: Help output shows --number
+# Test 17: --number questions>0 (TC101 has 2 questions)
+echo "--- Test: --number questions>0 ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number questions\>0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Course with questions TC101 present" "TC101" "$output"
+# MATH201 has no questions
+if printf '%s' "$output" | grep -qF 'MATH201'; then
+    echo "  FAIL: questions>0 should have excluded MATH201"
+    ((FAIL++))
+else
+    echo "  PASS: questions>0 correctly excluded MATH201"
+    ((PASS++))
+fi
+echo ""
+
+# Test 18: --number questions=0 (MATH201 has no questions)
+echo "--- Test: --number questions=0 ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number questions=0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Course with no questions MATH201 present" "MATH201" "$output"
+if printf '%s' "$output" | grep -qF 'TC101'; then
+    echo "  FAIL: questions=0 should have excluded TC101"
+    ((FAIL++))
+else
+    echo "  PASS: questions=0 correctly excluded TC101"
+    ((PASS++))
+fi
+echo ""
+
+# Test 19: --number combining two metrics
+echo "--- Test: --number with two metrics ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --number users-enrolled\>0 --number questions\>0 -o csv 2>&1)
+echo "$output"
+assert_output_contains "Combined metrics returns TC101" "TC101" "$output"
+if printf '%s' "$output" | grep -qF 'MATH201'; then
+    echo "  FAIL: Combined metrics should have excluded MATH201"
+    ((FAIL++))
+else
+    echo "  PASS: Combined metrics correctly excluded MATH201"
+    ((PASS++))
+fi
+echo ""
+
+# Test 20: Help output shows --number
 echo "--- Test: Help shows --number ---"
 output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --help 2>&1)
 assert_output_contains "Help shows --number option" "--number" "$output"
 assert_output_contains "Help shows users-enrolled metric" "users-enrolled" "$output"
+assert_output_contains "Help shows questions metric" "questions" "$output"
 echo ""
 
 # Summary
