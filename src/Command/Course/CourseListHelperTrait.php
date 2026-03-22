@@ -72,6 +72,49 @@ trait CourseListHelperTrait
     }
 
     /**
+     * Resolve a category ID to its full path (e.g. "Top / Parent / Child").
+     */
+    private function getCategoryPath(int $categoryId): string
+    {
+        global $DB;
+
+        $parts = [];
+        $id = $categoryId;
+
+        while ($id > 0) {
+            $cat = $DB->get_record('course_categories', ['id' => $id], 'id, name, parent');
+            if (!$cat) {
+                break;
+            }
+            array_unshift($parts, $cat->name);
+            $id = (int) $cat->parent;
+        }
+
+        return implode(' / ', $parts);
+    }
+
+    /**
+     * Replace raw category IDs with human-readable paths in course records.
+     */
+    private function resolveCategoryPaths(array $courses): array
+    {
+        $cache = [];
+
+        foreach ($courses as $course) {
+            if (!isset($course->category)) {
+                continue;
+            }
+            $catId = (int) $course->category;
+            if (!isset($cache[$catId])) {
+                $cache[$catId] = $this->getCategoryPath($catId);
+            }
+            $course->category = $cache[$catId];
+        }
+
+        return $courses;
+    }
+
+    /**
      * Render the course list to the console.
      */
     private function displayCourses(

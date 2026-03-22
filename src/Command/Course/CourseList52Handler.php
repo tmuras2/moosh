@@ -146,6 +146,8 @@ class CourseList52Handler extends BaseHandler
         $stdinIds = $this->readStdinIds($input);
         $courses = $this->filterByStdinIds($courses, $stdinIds);
 
+        $courses = $this->resolveCategoryPaths($courses);
+
         $this->displayCourses($courses, $input, $output, $idOnly, $visible, $fields);
 
         return Command::SUCCESS;
