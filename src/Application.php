@@ -12,6 +12,7 @@ use Moosh2\Bootstrap\MoodleBootstrapper;
 use Moosh2\Bootstrap\MoodlePathResolver;
 use Moosh2\Bootstrap\MoodleVersion;
 use Moosh2\Command\Course\CourseListCommand;
+use Moosh2\Output\VerboseLogger;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -107,17 +108,19 @@ final class Application extends SymfonyApplication
 
         $this->bootstrapperResolved = true;
 
+        $verbose = new VerboseLogger($output);
+
         if ($this->moodlePath === null || $this->moodleVersion === null) {
+            $verbose->warn('No Moodle installation detected — commands requiring bootstrap will fail');
             return null;
         }
 
-        if ($output->isVerbose()) {
-            $output->writeln(sprintf(
-                'Moodle directory: %s (branch %s)',
-                $this->moodlePath,
-                $this->moodleVersion->getBranch(),
-            ));
-        }
+        $verbose->section('Moodle Environment');
+        $verbose->detail('Moodle directory', $this->moodlePath);
+        $verbose->detail('Branch', $this->moodleVersion->getBranch());
+        $verbose->detail('Release', $this->moodleVersion->getRelease());
+        $verbose->detail('Numeric version', (string) $this->moodleVersion->getNumericVersion());
+        $verbose->done('Moodle installation detected');
 
         $this->bootstrapper = new MoodleBootstrapper($this->moodlePath, $this->moodleVersion, $output);
 

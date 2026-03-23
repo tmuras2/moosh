@@ -8,6 +8,7 @@
 
 namespace Moosh2\Bootstrap;
 
+use Moosh2\Output\VerboseLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -20,12 +21,14 @@ final class MoodleBootstrapper
     private string $moodleDir;
     private MoodleVersion $version;
     private OutputInterface $output;
+    private VerboseLogger $verbose;
 
     public function __construct(string $moodleDir, MoodleVersion $version, OutputInterface $output)
     {
         $this->moodleDir = $moodleDir;
         $this->version = $version;
         $this->output = $output;
+        $this->verbose = new VerboseLogger($output);
     }
 
     public function getMoodleDir(): string
@@ -51,15 +54,25 @@ final class MoodleBootstrapper
         bool $noLogin = false,
     ): void {
         if ($level === BootstrapLevel::None) {
+            $this->verbose->skip('Bootstrap level is None — skipping Moodle initialisation');
             return;
         }
 
+        $this->verbose->section('Moodle Bootstrap');
+        $this->verbose->detail('Level', $level->name);
+        $this->verbose->detail('User', $user ?? 'admin (default)');
+        $this->verbose->detail('No-login', $noLogin ? 'yes' : 'no');
+
         if ($level === BootstrapLevel::DbOnly) {
+            $this->verbose->step('Loading database-only bootstrap');
             $this->bootstrapDbOnly();
+            $this->verbose->done('Database connection established');
+            $this->verbose->end();
             return;
         }
 
         $this->bootstrapFull($level, $user, $noLogin);
+        $this->verbose->end();
     }
 
     /**
@@ -69,24 +82,27 @@ final class MoodleBootstrapper
     {
         global $CFG;
 
-        // Evaluate config.php to populate $CFG without full Moodle bootstrap.
         $configFile = $this->moodleDir . '/config.php';
         if (!file_exists($configFile)) {
             throw new \RuntimeException("config.php not found in {$this->moodleDir}");
         }
 
+        $this->verbose->step('Defining constants: MOODLE_INTERNAL, ABORT_AFTER_CONFIG, CLI_SCRIPT');
         define('MOODLE_INTERNAL', true);
         define('ABORT_AFTER_CONFIG', true);
         define('CLI_SCRIPT', true);
 
+        $this->verbose->step('Loading config.php');
         require_once($configFile);
 
         $libdir = $this->moodleDir . '/lib';
+        $this->verbose->step('Loading database libraries (dmllib, setuplib, moodlelib, weblib)');
         require_once($libdir . '/dmllib.php');
         require_once($libdir . '/setuplib.php');
         require_once($libdir . '/moodlelib.php');
         require_once($libdir . '/weblib.php');
 
+        $this->verbose->step('Calling setup_DB()');
         setup_DB();
     }
 
@@ -100,8 +116,8 @@ final class MoodleBootstrapper
     ): void {
         global $CFG;
 
-        // Set up server globals for non-CLI context.
         if ($level === BootstrapLevel::FullNoCli) {
+            $this->verbose->step('Setting up browser-context server globals (FullNoCli)');
             $_SERVER['REMOTE_ADDR'] = 'localhost';
             $_SERVER['SERVER_PORT'] = 80;
             $_SERVER['SERVER_PROTOCOL'] = 'HTTP 1.1';
@@ -109,12 +125,14 @@ final class MoodleBootstrapper
             $_SERVER['REQUEST_URI'] = '/';
             $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         } else {
+            $this->verbose->step('Defining CLI_SCRIPT constant');
             if (!defined('CLI_SCRIPT')) {
                 define('CLI_SCRIPT', true);
             }
         }
 
         if ($level === BootstrapLevel::Config) {
+            $this->verbose->step('Defining ABORT_AFTER_CONFIG (config-only bootstrap)');
             if (!defined('ABORT_AFTER_CONFIG')) {
                 define('ABORT_AFTER_CONFIG', true);
             }
@@ -124,9 +142,11 @@ final class MoodleBootstrapper
             define('MOODLE_INTERNAL', true);
         }
 
+        $this->verbose->step('Loading Moodle config.php');
         require_once($this->moodleDir . '/config.php');
+        $this->verbose->done('config.php loaded — $CFG populated');
 
-        // Set up debugging.
+        $this->verbose->step('Enabling full debug output (E_ALL)');
         $CFG->debug = E_ALL;
         $CFG->debugdisplay = 1;
         @error_reporting(E_ALL);
@@ -137,7 +157,16 @@ final class MoodleBootstrapper
             && $level !== BootstrapLevel::FullNoAdminCheck
             && !$noLogin
         ) {
+            $this->verbose->step('Logging in user: ' . ($user ?? 'admin'));
             $this->loginUser($user);
+            $this->verbose->done('User session established');
+        } else {
+            $reason = match (true) {
+                $level === BootstrapLevel::Config => 'config-only bootstrap',
+                $level === BootstrapLevel::FullNoAdminCheck => 'no-admin-check mode',
+                $noLogin => '--no-login flag',
+            };
+            $this->verbose->skip('Skipping user login — ' . $reason);
         }
     }
 

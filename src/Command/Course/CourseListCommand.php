@@ -12,6 +12,7 @@ use Moosh2\Bootstrap\BootstrapLevel;
 use Moosh2\Bootstrap\MoodleVersion;
 use Moosh2\Command\BaseCommand;
 use Moosh2\Command\BaseHandler;
+use Moosh2\Output\VerboseLogger;
 use Moosh2\Service\ClockInterface;
 use Moosh2\Service\SystemClock;
 use Symfony\Component\Console\Input\InputInterface;
@@ -56,6 +57,8 @@ class CourseListCommand extends BaseCommand
 
     protected function handle(InputInterface $input, OutputInterface $output): int
     {
+        $verbose = new VerboseLogger($output);
+        $verbose->step('Delegating to handler: ' . get_class($this->handler));
         return $this->handler->handle($input, $output);
     }
 
