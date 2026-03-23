@@ -8,6 +8,8 @@
 
 namespace Moosh2\Bootstrap;
 
+use Moosh2\Output\VerboseLogger;
+
 /**
  * Locates a Moodle installation by walking up the directory tree.
  *
@@ -16,6 +18,13 @@ namespace Moosh2\Bootstrap;
 final class MoodlePathResolver
 {
     private const MAX_DEPTH = 10;
+
+    private ?VerboseLogger $verbose;
+
+    public function __construct(?VerboseLogger $verbose = null)
+    {
+        $this->verbose = $verbose;
+    }
 
     /**
      * Walk up from $startDir looking for a Moodle root (config.php + version.php).
@@ -29,18 +38,24 @@ final class MoodlePathResolver
             return null;
         }
 
+        $this->verbose?->step('Searching for Moodle root (up to ' . self::MAX_DEPTH . ' levels)');
+        $this->verbose?->detail('Start directory', $dir);
+
         for ($i = 0; $i <= self::MAX_DEPTH; $i++) {
+            $this->verbose?->info('Checking: ' . $dir);
             if ($this->isMoodleRoot($dir)) {
+                $this->verbose?->done('Found Moodle root at ' . $dir);
                 return $dir;
             }
             $parent = dirname($dir);
             if ($parent === $dir) {
-                // Reached filesystem root.
+                $this->verbose?->warn('Reached filesystem root without finding Moodle');
                 break;
             }
             $dir = $parent;
         }
 
+        $this->verbose?->warn('Moodle root not found after scanning ' . self::MAX_DEPTH . ' levels');
         return null;
     }
 

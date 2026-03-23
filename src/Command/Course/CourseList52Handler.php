@@ -11,6 +11,7 @@ namespace Moosh2\Command\Course;
 use Moosh2\Command\BaseHandler;
 use Moosh2\Command\BooleanFilterTrait;
 use Moosh2\Command\NumericFilterTrait;
+use Moosh2\Output\VerboseLogger;
 use Moosh2\Service\ClockInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -143,6 +144,9 @@ class CourseList52Handler extends BaseHandler
     {
         global $CFG, $DB;
 
+        $verbose = new VerboseLogger($output);
+
+        $verbose->step('Loading Moodle course library');
         require_once $CFG->dirroot . '/course/lib.php';
 
         $showIdnumber = $input->getOption('idnumber');
@@ -155,12 +159,29 @@ class CourseList52Handler extends BaseHandler
             $searchFragments[] = $sqlOption;
         }
 
+        $verbose->section('Query Construction');
+
         $filters = $this->parseBooleanFilters($input);
         $visible = $filters['visible'];
         $empty = $filters['empty'];
         $active = $filters['active'];
 
+        $verbose->detail('Filter: visible', $visible === null ? 'any' : ($visible ? 'yes' : 'no'));
+        $verbose->detail('Filter: empty', $empty === null ? 'any' : ($empty ? 'yes' : 'no'));
+        $verbose->detail('Filter: active', $active === null ? 'any' : ($active ? 'yes' : 'no'));
+        if ($categoryId !== null) {
+            $verbose->detail('Category ID', $categoryId);
+        }
+        if ($searchFragments) {
+            $verbose->detail('Search fragments', implode(' ', $searchFragments));
+        }
+
         $fields = $fieldsRaw ? array_map('trim', explode(',', $fieldsRaw)) : null;
+        if ($fields) {
+            $verbose->detail('Custom fields', implode(', ', $fields));
+        }
+
+        $verbose->step('Building SQL query');
 
         // Build query.
         $select = ['c.id', 'c.category'];
@@ -184,8 +205,10 @@ class CourseList52Handler extends BaseHandler
         $params = [];
 
         if ($categoryId !== null) {
+            $verbose->info('Resolving category tree for ID ' . $categoryId);
             $category = \core_course_category::get((int) $categoryId);
             $categoryIds = $this->getCategoryIds($category);
+            $verbose->detail('Category IDs (incl. children)', implode(', ', $categoryIds));
             [$inSql, $inParams] = $DB->get_in_or_equal($categoryIds);
             $where[] = "c.category $inSql";
             $params = array_merge($params, $inParams);
@@ -200,6 +223,7 @@ class CourseList52Handler extends BaseHandler
             $existsSql = 'EXISTS (SELECT 1 FROM {logstore_standard_log} l WHERE l.courseid = c.id AND l.timecreated >= ?)';
             $where[] = $active ? $existsSql : "NOT $existsSql";
             $params[] = $cutoff;
+            $verbose->detail('Activity cutoff', date('Y-m-d H:i:s', $cutoff));
         }
 
         $sql .= ' WHERE ' . implode(' AND ', $where);
@@ -210,15 +234,20 @@ class CourseList52Handler extends BaseHandler
             $sql .= ' GROUP BY c.id HAVING COUNT(c.id) > 1';
         }
 
-        if ($output->isVerbose()) {
-            $output->writeln("SQL: $sql");
-            $output->writeln('Params: ' . var_export($params, true));
+        $verbose->done('SQL query built');
+        $verbose->info('SQL: ' . $sql);
+        if ($params) {
+            $verbose->info('Params: ' . implode(', ', array_map('strval', $params)));
         }
 
+        $verbose->step('Executing database query');
         $courses = $DB->get_records_sql($sql, $params ?: null);
+        $verbose->done('Query returned ' . count($courses) . ' course(s)');
 
         // Secondary filter for truly empty courses (no non-empty sections).
         if ($empty === true) {
+            $verbose->step('Applying secondary empty-course filter (checking sections)');
+            $beforeCount = count($courses);
             $sectionSql = "SELECT COUNT(*) AS c FROM {course_sections} WHERE course = ? AND summary <> ''";
             foreach ($courses as $id => $course) {
                 $sections = $DB->get_record_sql($sectionSql, [$course->id]);
@@ -226,16 +255,28 @@ class CourseList52Handler extends BaseHandler
                     unset($courses[$id]);
                 }
             }
+            $verbose->done('Filtered out ' . ($beforeCount - count($courses)) . ' non-empty course(s)');
         }
 
         $numericFilters = $this->parseNumericFilters($input);
-        $courses = $this->applyNumericFilters($courses, $numericFilters);
+        if (!empty($numericFilters)) {
+            $verbose->step('Applying numeric filters');
+            $courses = $this->applyNumericFilters($courses, $numericFilters);
+            $verbose->done(count($courses) . ' course(s) remaining after numeric filters');
+        }
 
         $stdinIds = $this->readStdinIds($input);
+        if ($stdinIds !== null) {
+            $verbose->step('Filtering by stdin IDs: ' . implode(', ', $stdinIds));
+        }
         $courses = $this->filterByStdinIds($courses, $stdinIds);
 
+        $verbose->step('Resolving category paths');
         $courses = $this->resolveCategoryPaths($courses);
+        $verbose->done('Category paths resolved');
 
+        $format = $idOnly ? 'oneline' : $input->getOption('output');
+        $verbose->step('Rendering output in "' . $format . '" format (' . count($courses) . ' courses)');
         $this->displayCourses($courses, $input, $output, $idOnly, $visible, $fields);
 
         return Command::SUCCESS;

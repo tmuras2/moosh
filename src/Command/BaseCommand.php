@@ -12,6 +12,7 @@ use Moosh2\Attribute\SinceVersion;
 use Moosh2\Bootstrap\BootstrapLevel;
 use Moosh2\Bootstrap\MoodleBootstrapper;
 use Moosh2\Bootstrap\MoodleVersion;
+use Moosh2\Output\VerboseLogger;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -63,28 +64,59 @@ abstract class BaseCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // Check class-level #[SinceVersion].
+        $verbose = new VerboseLogger($output);
+
+        $verbose->section('Command: ' . $this->getName());
+        $verbose->step('Resolving Moodle bootstrapper');
+
         $bootstrapper = $this->getBootstrapper($input, $output);
         $effectiveLevel = $this->getEffectiveBootstrapLevel();
+
+        $verbose->detail('Bootstrap level', $effectiveLevel->name);
+
+        $handler = $this->getActiveHandler();
+        if ($handler !== null) {
+            $verbose->detail('Handler', get_class($handler));
+            $handlerLevel = $handler->getBootstrapLevel();
+            if ($handlerLevel !== null) {
+                $verbose->info('Handler overrides bootstrap level to ' . $handlerLevel->name);
+            }
+        }
 
         if ($bootstrapper !== null) {
             if (!$this->meetsVersionRequirement($bootstrapper->getVersion())) {
                 $attr = $this->getSinceVersionAttribute();
+                $verbose->warn('Version requirement not met — need Moodle ' . $attr->version . '+');
                 $output->writeln(sprintf(
                     '<error>This command requires Moodle %s or later.</error>',
                     $attr->version,
                 ));
                 return Command::FAILURE;
             }
+            $verbose->done('Version requirement satisfied');
 
+            $verbose->step('Bootstrapping Moodle at level ' . $effectiveLevel->name);
             $bootstrapper->bootstrap(
                 $effectiveLevel,
                 $input->getOption('user'),
                 $input->getOption('no-login'),
             );
+            $verbose->done('Moodle bootstrap complete');
+        } else {
+            $verbose->skip('No bootstrapper — running without Moodle context');
         }
 
-        return $this->handle($input, $output);
+        $verbose->step('Executing command logic');
+        $result = $this->handle($input, $output);
+
+        if ($result === Command::SUCCESS) {
+            $verbose->done('Command finished successfully');
+        } else {
+            $verbose->warn('Command finished with exit code ' . $result);
+        }
+        $verbose->end();
+
+        return $result;
     }
 
     /**
