@@ -64,13 +64,17 @@ echo ""
 
 # Step 1: Reset Moodle to known state
 echo "--- Resetting Moodle to known state ---"
-bash "$MOODLE_DIR/clear.sh"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+bash "$SCRIPT_DIR/clear.sh"
 echo ""
 
 # Test data summary:
 #   4 categories: Mathematics, Sciences, Humanities, Computer Science
 #   12 courses (3 per category), each with 1 file resource activity
-#   50 students + 10 teachers enrolled in all 12 courses
+#   1 empty course (no modules)
+#   1 "Recently Active Course" with log entry at 2027-12-15
+#   1 "Old Activity Course" with all log entries removed
+#   50 students + 10 teachers enrolled in first 10 courses
 #   No questions, no forums, no quizzes
 #   Site course (id=1) has no enrolments and no activities
 
@@ -131,18 +135,25 @@ assert_output_contains "Custom fields header" 'id,shortname,fullname' "$output"
 assert_output_contains "Course in custom output" 'Algebra Fundamentals' "$output"
 echo ""
 
-# Test 7: Active filter (--is active)
-echo "--- Test: Active courses (--is active) ---"
-output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --is active 2>&1)
+# Test 7: Active filter with MockupClock
+# "Recently Active Course" has a log entry at 2027-12-15.
+# Setting MOCKUP_DATE_TIME to 2028-01-01 means "1 month ago" = 2027-12-01,
+# so the 2027-12-15 entry is within range → course is active.
+# All auto-generated logs from ~2026 are older than the cutoff.
+echo "--- Test: Active courses with MockupClock (--is active) ---"
+output=$(MOCKUP_DATE_TIME="2028-01-01 00:00:00" $PHP "$MOOSH" -p "$MOODLE_PATH" course:list --is active 2>&1)
 echo "$output"
-assert_output_not_empty "Active filter produces output" "$output"
+assert_output_contains "Recently Active Course is active" "Recently Active Course" "$output"
+assert_output_not_contains "Old Activity Course is not active" "Old Activity Course" "$output"
 echo ""
 
-# Test 8: Inactive filter (--is-not active)
-echo "--- Test: Inactive courses (--is-not active) ---"
-output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --is-not active 2>&1)
+# Test 8: Inactive filter with MockupClock
+# Same clock: Old Activity Course has all logs deleted, so no recent activity → inactive.
+echo "--- Test: Inactive courses with MockupClock (--is-not active) ---"
+output=$(MOCKUP_DATE_TIME="2028-01-01 00:00:00" $PHP "$MOOSH" -p "$MOODLE_PATH" course:list --is-not active 2>&1)
 echo "$output"
-assert_output_not_empty "Inactive filter produces output" "$output"
+assert_output_contains "Old Activity Course is inactive" "Old Activity Course" "$output"
+assert_output_not_contains "Recently Active Course is not inactive" "Recently Active Course" "$output"
 echo ""
 
 # Test 9: Help output

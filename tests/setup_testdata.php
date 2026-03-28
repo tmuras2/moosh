@@ -107,6 +107,64 @@ $course = $generator->create_course([
 ]);
 cli_writeln("  Created empty course: $cname (id={$course->id})");
 
+// ---------- Courses with known log timestamps for active/inactive testing ----------
+// Tests use MOCKUP_DATE_TIME="2028-01-01 00:00:00" so cutoff = 2027-12-01.
+// All auto-generated logs (course_created etc.) are from ~2026 and will be older
+// than the cutoff. We add a manual log at 2027-12-15 for the "active" course.
+
+// "Recently Active Course" — manual log entry on 2027-12-15 (within 1 month of 2028-01-01)
+$activeCourse = $generator->create_course([
+    'fullname'  => 'Recently Active Course',
+    'shortname' => 'recentlyactive_' . $category->id,
+    'category'  => $category->id,
+    'summary'   => 'Course with a recent log entry for active-filter testing.',
+    'numsections' => 1,
+]);
+$resourcegen->create_instance([
+    'course' => $activeCourse->id,
+    'name'   => 'Course material - Recently Active Course',
+    'intro'  => 'Sample file resource.',
+    'introformat' => FORMAT_HTML,
+    'defaultfilename' => 'coursefile.txt',
+], ['section' => 1]);
+$DB->insert_record('logstore_standard_log', [
+    'eventname'   => '\\core\\event\\course_viewed',
+    'component'   => 'core',
+    'action'      => 'viewed',
+    'target'      => 'course',
+    'objecttable' => 'course',
+    'objectid'    => $activeCourse->id,
+    'courseid'    => $activeCourse->id,
+    'userid'      => $admin->id,
+    'timecreated' => (new DateTimeImmutable('2027-12-15 12:00:00'))->getTimestamp(),
+    'origin'      => 'web',
+    'crud'        => 'r',
+    'edulevel'    => 2,
+    'contextid'   => context_course::instance($activeCourse->id)->id,
+    'contextlevel' => CONTEXT_COURSE,
+    'contextinstanceid' => $activeCourse->id,
+]);
+cli_writeln("  Created course: Recently Active Course (id={$activeCourse->id}) with log at 2027-12-15");
+
+// "Old Activity Course" — all auto-generated logs deleted, no recent activity
+$oldCourse = $generator->create_course([
+    'fullname'  => 'Old Activity Course',
+    'shortname' => 'oldactivity_' . $category->id,
+    'category'  => $category->id,
+    'summary'   => 'Course with no recent log entries for active-filter testing.',
+    'numsections' => 1,
+]);
+$resourcegen->create_instance([
+    'course' => $oldCourse->id,
+    'name'   => 'Course material - Old Activity Course',
+    'intro'  => 'Sample file resource.',
+    'introformat' => FORMAT_HTML,
+    'defaultfilename' => 'coursefile.txt',
+], ['section' => 1]);
+// Remove all auto-generated log entries so this course has no activity at all.
+$DB->delete_records('logstore_standard_log', ['courseid' => $oldCourse->id]);
+cli_writeln("  Created course: Old Activity Course (id={$oldCourse->id}) with all logs removed");
+
 // ---------- Students ----------
 
 cli_writeln('');
