@@ -78,7 +78,7 @@ class CourseList51Handler extends BaseHandler
             return in_array($modName, $this->getInstalledModules(), true);
         }
 
-        return parent::isMetricSupported($metric);
+        return array_key_exists($metric, $this->supportedNumericMetrics());
     }
 
     protected function resolveNumericMetric(string $metric, int $courseId): int

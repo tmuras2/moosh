@@ -111,3 +111,7 @@ Handlers can override the command's bootstrap level by implementing `getBootstra
 4. Optionally create a helper trait for shared logic
 5. Register the command in `Application::registerCommands()`
 6. Add integration tests in `tests/`
+
+## Testing
+Integration tests can be run using local Moodle instance and running test_course_list.sh script.
+Always run test_course_list.sh after doing a change, to make sure there are no regressions.

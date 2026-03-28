@@ -18,17 +18,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class Application extends SymfonyApplication
-{
-    public const VERSION = '2.0.0-dev';
+final class Application extends SymfonyApplication {
+    public const VERSION = '2.0';
 
     private ?string $moodlePath = null;
     private ?MoodleVersion $moodleVersion = null;
     private ?MoodleBootstrapper $bootstrapper = null;
     private bool $bootstrapperResolved = false;
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct('moosh', self::VERSION);
 
         $this->resolveVersionEarly();
@@ -41,53 +39,57 @@ final class Application extends SymfonyApplication
      * Available before Symfony input parsing — safe to call during configure().
      * Returns null if no Moodle installation was found.
      */
-    public function getMoodleVersion(): ?MoodleVersion
-    {
+    public function getMoodleVersion(): ?MoodleVersion {
         return $this->moodleVersion;
     }
 
-    protected function getDefaultInputDefinition(): \Symfony\Component\Console\Input\InputDefinition
-    {
+    protected function getDefaultInputDefinition(): \Symfony\Component\Console\Input\InputDefinition {
         $definition = parent::getDefaultInputDefinition();
 
         $definition->addOptions([
-            new InputOption(
-                'moodle-path',
-                'p',
-                InputOption::VALUE_REQUIRED,
-                'Path to the Moodle directory',
-            ),
-            new InputOption(
-                'user',
-                'u',
-                InputOption::VALUE_REQUIRED,
-                'Moodle user to log in as (default: admin)',
-            ),
-            new InputOption(
-                'no-login',
-                'l',
-                InputOption::VALUE_NONE,
-                'Do not log in as any user',
-            ),
-            new InputOption(
-                'no-user-check',
-                null,
-                InputOption::VALUE_NONE,
-                'Do not check if Moodle data is owned by the current user',
-            ),
-            new InputOption(
-                'performance',
-                't',
-                InputOption::VALUE_NONE,
-                'Show performance information including timings',
-            ),
-            new InputOption(
-                'output',
-                'o',
-                InputOption::VALUE_REQUIRED,
-                'Output format: table, csv, json',
-                'table',
-            ),
+                new InputOption(
+                        'moodle-path',
+                        'p',
+                        InputOption::VALUE_REQUIRED,
+                        'Path to the Moodle directory',
+                ),
+                new InputOption(
+                        'user',
+                        'u',
+                        InputOption::VALUE_REQUIRED,
+                        'Moodle user to log in as (default: admin)',
+                ),
+                new InputOption(
+                        'no-login',
+                        'l',
+                        InputOption::VALUE_NONE,
+                        'Do not log in as any user',
+                ),
+                new InputOption(
+                        'no-user-check',
+                        null,
+                        InputOption::VALUE_NONE,
+                        'Do not check if Moodle data is owned by the current user',
+                ),
+                new InputOption(
+                        'performance',
+                        't',
+                        InputOption::VALUE_NONE,
+                        'Show performance information including timings',
+                ),
+                new InputOption(
+                        'output',
+                        'o',
+                        InputOption::VALUE_REQUIRED,
+                        'Output format: table, csv, json',
+                        'table',
+                ),
+                new InputOption(
+                        'run',
+                        null,
+                        InputOption::VALUE_NONE,
+                        'Run command in write-mode. It may modify the database.',
+                ),
         ]);
 
         return $definition;
@@ -100,8 +102,7 @@ final class Application extends SymfonyApplication
      * Returns null if no Moodle directory was found (commands with
      * BootstrapLevel::None can still run).
      */
-    public function getBootstrapper(InputInterface $input, OutputInterface $output): ?MoodleBootstrapper
-    {
+    public function getBootstrapper(InputInterface $input, OutputInterface $output): ?MoodleBootstrapper {
         if ($this->bootstrapperResolved) {
             return $this->bootstrapper;
         }
@@ -135,8 +136,7 @@ final class Application extends SymfonyApplication
      * Scans $_SERVER['argv'] for --moodle-path / -p since Symfony input
      * parsing has not happened yet at this point.
      */
-    private function resolveVersionEarly(): void
-    {
+    private function resolveVersionEarly(): void {
         $moodlePath = $this->extractMoodlePathFromArgv();
 
         if ($moodlePath === null) {
@@ -160,8 +160,7 @@ final class Application extends SymfonyApplication
     /**
      * Extract --moodle-path / -p value from raw argv before Symfony parses input.
      */
-    private function extractMoodlePathFromArgv(): ?string
-    {
+    private function extractMoodlePathFromArgv(): ?string {
         $argv = $_SERVER['argv'] ?? [];
 
         for ($i = 0, $count = count($argv); $i < $count; $i++) {
@@ -181,8 +180,7 @@ final class Application extends SymfonyApplication
         return null;
     }
 
-    private function registerCommands(): void
-    {
+    private function registerCommands(): void {
         $this->add(new CourseListCommand($this->moodleVersion));
     }
 }
