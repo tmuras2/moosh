@@ -308,6 +308,17 @@ assert_output_contains "Combined mod-resource+activities returns Algebra" "Algeb
 assert_output_contains "Combined mod-resource+activities returns Chemistry" "General Chemistry" "$output"
 echo ""
 
+# Test 28: Empty courses (--is empty, --is-not empty)
+echo "--- Test: Inactive courses (--is empty, --is-not empty) ---"
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --is empty 2>&1)
+echo "$output"
+assert_output_contains "Empty course is shown" "Empty course" "$output"
+echo ""
+output=$($PHP "$MOOSH" -p "$MOODLE_PATH" course:list --is-not empty 2>&1)
+echo "$output"
+assert_output_not_contains "Empty course is not shown" "Empty course" "$output"
+echo ""
+
 # Summary
 echo "================================"
 echo "Results: $PASS passed, $FAIL failed"

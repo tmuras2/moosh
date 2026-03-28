@@ -13,6 +13,7 @@ use Moosh2\Bootstrap\MoodlePathResolver;
 use Moosh2\Bootstrap\MoodleVersion;
 use Moosh2\Command\Course\CourseListCommand;
 use Moosh2\Output\VerboseLogger;
+use Moosh2\Service\MockupClock;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -181,6 +182,9 @@ final class Application extends SymfonyApplication {
     }
 
     private function registerCommands(): void {
-        $this->add(new CourseListCommand($this->moodleVersion));
+        $mockupDateTime = getenv('MOCKUP_DATE_TIME');
+        $clock = $mockupDateTime !== false ? new MockupClock($mockupDateTime) : null;
+
+        $this->addCommand(new CourseListCommand($this->moodleVersion, $clock));
     }
 }

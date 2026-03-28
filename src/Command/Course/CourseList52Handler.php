@@ -189,7 +189,7 @@ class CourseList52Handler extends BaseHandler
             $select[] = 'c.idnumber';
         }
         if ($empty !== null) {
-            $select[] = 'COUNT(c.id) AS modules';
+            $select[] = 'COUNT(m.id) AS modules';
         }
         $select[] = 'c.shortname';
         $select[] = 'c.fullname';
@@ -229,9 +229,9 @@ class CourseList52Handler extends BaseHandler
         $sql .= ' WHERE ' . implode(' AND ', $where);
 
         if ($empty === true) {
-            $sql .= ' GROUP BY c.id HAVING COUNT(c.id) < 2';
+            $sql .= ' GROUP BY c.id HAVING COUNT(m.id) = 0';
         } elseif ($empty === false) {
-            $sql .= ' GROUP BY c.id HAVING COUNT(c.id) > 1';
+            $sql .= ' GROUP BY c.id HAVING COUNT(m.id) > 0';
         }
 
         $verbose->done('SQL query built');
