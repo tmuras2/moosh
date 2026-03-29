@@ -100,6 +100,7 @@ Handlers can override the command's bootstrap level by implementing `getBootstra
 - Type hints on all parameters and return types
 - One class per file, PSR-4 autoloading (`Moosh2\` namespace)
 - PascalCase classes, camelCase methods, colon-separated command names (`course:list`)
+- Command names use **singular nouns**: `course:list`, `user:info`, `plugin:usage` (not `courses:list` or `plugins:usage`)
 - PHPDoc copyright/license headers on all files
 - No dev tooling (phpunit, phpcs) configured yet — keep changes manually consistent
 

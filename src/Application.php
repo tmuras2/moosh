@@ -15,6 +15,7 @@ use Moosh2\Command\Category\CategoryInfoCommand;
 use Moosh2\Command\Category\CategoryListCommand;
 use Moosh2\Command\Context\ContextInfoCommand;
 use Moosh2\Command\Course\CourseInfoCommand;
+use Moosh2\Command\Plugin\PluginUsageCommand;
 use Moosh2\Command\Course\CourseListCommand;
 use Moosh2\Command\User\UserInfoCommand;
 use Moosh2\Command\User\UserListCommand;
@@ -194,6 +195,7 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new CategoryListCommand($this->moodleVersion));
         $this->addCommand(new CategoryInfoCommand($this->moodleVersion));
         $this->addCommand(new ContextInfoCommand($this->moodleVersion));
+        $this->addCommand(new PluginUsageCommand($this->moodleVersion));
         $this->addCommand(new CourseListCommand($this->moodleVersion, $clock));
         $this->addCommand(new CourseInfoCommand($this->moodleVersion));
         $this->addCommand(new UserListCommand($this->moodleVersion, $clock));
