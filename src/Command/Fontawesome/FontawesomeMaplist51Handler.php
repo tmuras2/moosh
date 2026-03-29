@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class FontawesomeList51Handler extends BaseHandler
+class FontawesomeMaplist51Handler extends BaseHandler
 {
     public function configureCommand(Command $command): void
     {

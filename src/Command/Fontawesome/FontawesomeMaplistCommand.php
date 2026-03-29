@@ -17,11 +17,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * List and search Font Awesome icons available in Moodle.
+ * List and search Font Awesome icon mappings in Moodle.
  *
- * Canonical name: fontawesome:list  |  Alias: fontawesome-list
+ * Canonical name: fontawesome:maplist  |  Alias: fontawesome-maplist
  */
-class FontawesomeListCommand extends BaseCommand
+class FontawesomeMaplistCommand extends BaseCommand
 {
     protected BootstrapLevel $bootstrapLevel = BootstrapLevel::Full;
 
@@ -36,16 +36,16 @@ class FontawesomeListCommand extends BaseCommand
     protected function configure(): void
     {
         $this
-            ->setName('fontawesome:list')
-            ->setAliases(['fontawesome-list'])
-            ->setDescription('List and search Font Awesome icons in Moodle')
+            ->setName('fontawesome:maplist')
+            ->setAliases(['fontawesome-maplist'])
+            ->setDescription('List and search Font Awesome icon mappings in Moodle')
             ->setHelp(
                 "Lists Font Awesome icon mappings from Moodle's icon system.\n" .
                 "Optionally filter by a search term matching Moodle icon name or FA icon class.\n\n" .
                 "Examples:\n" .
-                "  moosh fontawesome:list                   # list all icons\n" .
-                "  moosh fontawesome:list search             # icons matching 'search'\n" .
-                "  moosh fontawesome:list --component core   # only core icons"
+                "  moosh fontawesome:maplist                   # list all icons\n" .
+                "  moosh fontawesome:maplist search             # icons matching 'search'\n" .
+                "  moosh fontawesome:maplist --component core   # only core icons"
             );
 
         $this->handler->configureCommand($this);
@@ -66,8 +66,8 @@ class FontawesomeListCommand extends BaseCommand
     private function resolveHandler(?MoodleVersion $moodleVersion): BaseHandler
     {
         if ($moodleVersion !== null && $moodleVersion->isAtLeast('5.2')) {
-            return new FontawesomeList52Handler();
+            return new FontawesomeMaplist52Handler();
         }
-        return new FontawesomeList51Handler();
+        return new FontawesomeMaplist51Handler();
     }
 }

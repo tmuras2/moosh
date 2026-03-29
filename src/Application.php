@@ -27,7 +27,7 @@ use Moosh2\Command\Activity\ActivityModCommand;
 use Moosh2\Command\Data\DataCheckCommand;
 use Moosh2\Command\Backup\BackupEmptyFilesCommand;
 use Moosh2\Command\Backup\BackupInfoCommand;
-use Moosh2\Command\Fontawesome\FontawesomeListCommand;
+use Moosh2\Command\Fontawesome\FontawesomeMaplistCommand;
 use Moosh2\Command\Fontawesome\FontawesomeRefreshCacheCommand;
 use Moosh2\Command\Category\CategoryCreateCommand;
 use Moosh2\Command\Category\CategoryDeleteCommand;
@@ -249,7 +249,7 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new BadgeModCommand($this->moodleVersion));
         $this->addCommand(new BadgeDeleteCommand($this->moodleVersion));
         $this->addCommand(new BackupEmptyFilesCommand($this->moodleVersion));
-        $this->addCommand(new FontawesomeListCommand($this->moodleVersion));
+        $this->addCommand(new FontawesomeMaplistCommand($this->moodleVersion));
         $this->addCommand(new FontawesomeRefreshCacheCommand($this->moodleVersion));
         $this->addCommand(new BackupInfoCommand($this->moodleVersion));
         $this->addCommand(new CategoryCreateCommand($this->moodleVersion));

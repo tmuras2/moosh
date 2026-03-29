@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Integration test for moosh2 fontawesome:list and fontawesome:refresh-cache
+# Integration test for moosh2 fontawesome:maplist and fontawesome:refresh-cache
 # Requires a working Moodle 5.1 installation at /var/www/html/moodle51
 #
 # Usage: bash tests/test_fontawesome.sh
@@ -56,14 +56,14 @@ bash "$SCRIPT_DIR/clear.sh"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════
-# fontawesome:list
+# fontawesome:maplist
 # ═══════════════════════════════════════════════════════════════════
 
-echo "========== fontawesome:list =========="
+echo "========== fontawesome:maplist =========="
 echo ""
 
 echo "--- Test: List all icons (CSV) ---"
-OUT=$($PHP $MOOSH fontawesome:list -p "$MOODLE_PATH" -o csv)
+OUT=$($PHP $MOOSH fontawesome:maplist -p "$MOODLE_PATH" -o csv)
 FIRST_LINE=$(echo "$OUT" | head -1)
 assert_output_contains "Header row" "component,icon,fontawesome" "$FIRST_LINE"
 LINE_COUNT=$(echo "$OUT" | wc -l)
@@ -78,7 +78,7 @@ assert_output_contains "Has fa class" "fa" "$OUT"
 echo ""
 
 echo "--- Test: Search for 'search' ---"
-OUT=$($PHP $MOOSH fontawesome:list -p "$MOODLE_PATH" search -o csv)
+OUT=$($PHP $MOOSH fontawesome:maplist -p "$MOODLE_PATH" search -o csv)
 echo "$OUT"
 assert_output_contains "Finds search icon" "search" "$OUT"
 assert_output_contains "Maps to magnifying-glass" "magnifying-glass" "$OUT"
@@ -86,33 +86,33 @@ assert_output_not_contains "No unrelated icons" "calendar" "$OUT"
 echo ""
 
 echo "--- Test: Search for 'calendar' ---"
-OUT=$($PHP $MOOSH fontawesome:list -p "$MOODLE_PATH" calendar -o csv)
+OUT=$($PHP $MOOSH fontawesome:maplist -p "$MOODLE_PATH" calendar -o csv)
 echo "$OUT"
 assert_output_contains "Finds calendar icon" "calendar" "$OUT"
 echo ""
 
 echo "--- Test: Component filter ---"
-OUT=$($PHP $MOOSH fontawesome:list -p "$MOODLE_PATH" --component theme -o csv)
+OUT=$($PHP $MOOSH fontawesome:maplist -p "$MOODLE_PATH" --component theme -o csv)
 echo "$OUT" | head -5
 assert_output_contains "All rows are theme component" "theme," "$OUT"
 assert_output_not_contains "No core component" "core," "$OUT"
 echo ""
 
 echo "--- Test: Component filter + search ---"
-OUT=$($PHP $MOOSH fontawesome:list -p "$MOODLE_PATH" --component core search -o csv)
+OUT=$($PHP $MOOSH fontawesome:maplist -p "$MOODLE_PATH" --component core search -o csv)
 echo "$OUT"
 assert_output_contains "Core search icon" "core,a/search" "$OUT"
 assert_output_not_contains "No theme icons" "theme," "$OUT"
 echo ""
 
 echo "--- Test: No results ---"
-OUT=$($PHP $MOOSH fontawesome:list -p "$MOODLE_PATH" xyznonexistent123 -o csv)
+OUT=$($PHP $MOOSH fontawesome:maplist -p "$MOODLE_PATH" xyznonexistent123 -o csv)
 LINE_COUNT=$(echo "$OUT" | wc -l)
 assert_output_contains "Only header for no results" "1" "$LINE_COUNT"
 echo ""
 
 echo "--- Test: JSON output ---"
-OUT=$($PHP $MOOSH fontawesome:list -p "$MOODLE_PATH" search -o json)
+OUT=$($PHP $MOOSH fontawesome:maplist -p "$MOODLE_PATH" search -o json)
 echo "$OUT" | head -10
 assert_output_contains "JSON has component" '"component"' "$OUT"
 assert_output_contains "JSON has icon" '"icon"' "$OUT"
@@ -120,20 +120,20 @@ assert_output_contains "JSON has fontawesome" '"fontawesome"' "$OUT"
 echo ""
 
 echo "--- Test: Table output ---"
-OUT=$($PHP $MOOSH fontawesome:list -p "$MOODLE_PATH" search)
+OUT=$($PHP $MOOSH fontawesome:maplist -p "$MOODLE_PATH" search)
 echo "$OUT"
 assert_output_contains "Table has component header" "component" "$OUT"
 assert_output_contains "Table has magnifying-glass" "magnifying-glass" "$OUT"
 echo ""
 
 echo "--- Test: Help ---"
-OUT=$($PHP $MOOSH fontawesome:list -p "$MOODLE_PATH" --help)
-assert_output_contains "Help description" "List and search Font Awesome" "$OUT"
+OUT=$($PHP $MOOSH fontawesome:maplist -p "$MOODLE_PATH" --help)
+assert_output_contains "Help description" "List and search Font Awesome icon mappings" "$OUT"
 assert_output_contains "Help shows --component" "--component" "$OUT"
 echo ""
 
-echo "--- Test: fontawesome-list alias ---"
-OUT=$($PHP $MOOSH fontawesome-list -p "$MOODLE_PATH" search -o csv)
+echo "--- Test: fontawesome-maplist alias ---"
+OUT=$($PHP $MOOSH fontawesome-maplist -p "$MOODLE_PATH" search -o csv)
 assert_output_contains "Alias works" "magnifying-glass" "$OUT"
 echo ""
 
