@@ -34,6 +34,8 @@ use Moosh2\Command\Category\CategoryCreateCommand;
 use Moosh2\Command\Category\CategoryDeleteCommand;
 use Moosh2\Command\Category\CategoryInfoCommand;
 use Moosh2\Command\Category\CategoryListCommand;
+use Moosh2\Command\Config\ConfigGetCommand;
+use Moosh2\Command\Config\ConfigSetCommand;
 use Moosh2\Command\Context\ContextInfoCommand;
 use Moosh2\Command\Report\ReportConcurrencyCommand;
 use Moosh2\Command\Course\CourseBackupCommand;
@@ -264,6 +266,8 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new CategoryDeleteCommand($this->moodleVersion));
         $this->addCommand(new CategoryListCommand($this->moodleVersion));
         $this->addCommand(new CategoryInfoCommand($this->moodleVersion));
+        $this->addCommand(new ConfigGetCommand($this->moodleVersion));
+        $this->addCommand(new ConfigSetCommand($this->moodleVersion));
         $this->addCommand(new ContextInfoCommand($this->moodleVersion));
         $this->addCommand(new DataCheckCommand($this->moodleVersion));
         $this->addCommand(new CourseBackupCommand($this->moodleVersion));
