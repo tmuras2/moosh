@@ -23,6 +23,7 @@ use Moosh2\Command\Badge\BadgeInfoCommand;
 use Moosh2\Command\Badge\BadgeModCommand;
 use Moosh2\Command\Activity\ActivityDeleteCommand;
 use Moosh2\Command\Activity\ActivityModCommand;
+use Moosh2\Command\Data\DataCheckCommand;
 use Moosh2\Command\Backup\BackupEmptyFilesCommand;
 use Moosh2\Command\Backup\BackupInfoCommand;
 use Moosh2\Command\Category\CategoryCreateCommand;
@@ -227,6 +228,7 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new CategoryListCommand($this->moodleVersion));
         $this->addCommand(new CategoryInfoCommand($this->moodleVersion));
         $this->addCommand(new ContextInfoCommand($this->moodleVersion));
+        $this->addCommand(new DataCheckCommand($this->moodleVersion));
         $this->addCommand(new CourseCreateCommand($this->moodleVersion));
         $this->addCommand(new CourseListCommand($this->moodleVersion, $clock));
         $this->addCommand(new CourseInfoCommand($this->moodleVersion));
