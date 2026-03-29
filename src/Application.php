@@ -11,6 +11,7 @@ namespace Moosh2;
 use Moosh2\Bootstrap\MoodleBootstrapper;
 use Moosh2\Bootstrap\MoodlePathResolver;
 use Moosh2\Bootstrap\MoodleVersion;
+use Moosh2\Command\Course\CourseInfoCommand;
 use Moosh2\Command\Course\CourseListCommand;
 use Moosh2\Output\VerboseLogger;
 use Moosh2\Service\MockupClock;
@@ -186,5 +187,6 @@ final class Application extends SymfonyApplication {
         $clock = $mockupDateTime !== false ? new MockupClock($mockupDateTime) : null;
 
         $this->addCommand(new CourseListCommand($this->moodleVersion, $clock));
+        $this->addCommand(new CourseInfoCommand($this->moodleVersion));
     }
 }
