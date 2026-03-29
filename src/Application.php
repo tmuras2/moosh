@@ -13,6 +13,7 @@ use Moosh2\Bootstrap\MoodlePathResolver;
 use Moosh2\Bootstrap\MoodleVersion;
 use Moosh2\Command\Course\CourseInfoCommand;
 use Moosh2\Command\Course\CourseListCommand;
+use Moosh2\Command\User\UserInfoCommand;
 use Moosh2\Command\User\UserListCommand;
 use Moosh2\Output\VerboseLogger;
 use Moosh2\Service\MockupClock;
@@ -190,5 +191,6 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new CourseListCommand($this->moodleVersion, $clock));
         $this->addCommand(new CourseInfoCommand($this->moodleVersion));
         $this->addCommand(new UserListCommand($this->moodleVersion, $clock));
+        $this->addCommand(new UserInfoCommand($this->moodleVersion));
     }
 }
