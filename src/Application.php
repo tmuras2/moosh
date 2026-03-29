@@ -12,6 +12,7 @@ use Moosh2\Bootstrap\MoodleBootstrapper;
 use Moosh2\Bootstrap\MoodlePathResolver;
 use Moosh2\Bootstrap\MoodleVersion;
 use Moosh2\Command\Activity\ActivityAddCommand;
+use Moosh2\Command\Activity\ActivityInfoCommand;
 use Moosh2\Command\Admin\AdminLoginCommand;
 use Moosh2\Command\Audit\AuditPasswordCommand;
 use Moosh2\Command\Auth\AuthInfoCommand;
@@ -232,6 +233,7 @@ final class Application extends SymfonyApplication {
         $clock = $mockupDateTime !== false ? new MockupClock($mockupDateTime) : null;
 
         $this->addCommand(new ActivityAddCommand($this->moodleVersion));
+        $this->addCommand(new ActivityInfoCommand($this->moodleVersion));
         $this->addCommand(new ActivityDeleteCommand($this->moodleVersion));
         $this->addCommand(new ActivityModCommand($this->moodleVersion));
         $this->addCommand(new AdminLoginCommand($this->moodleVersion));
