@@ -11,12 +11,15 @@ namespace Moosh2;
 use Moosh2\Bootstrap\MoodleBootstrapper;
 use Moosh2\Bootstrap\MoodlePathResolver;
 use Moosh2\Bootstrap\MoodleVersion;
+use Moosh2\Command\Category\CategoryCreateCommand;
 use Moosh2\Command\Category\CategoryInfoCommand;
 use Moosh2\Command\Category\CategoryListCommand;
 use Moosh2\Command\Context\ContextInfoCommand;
+use Moosh2\Command\Course\CourseCreateCommand;
 use Moosh2\Command\Course\CourseInfoCommand;
-use Moosh2\Command\Plugin\PluginUsageCommand;
 use Moosh2\Command\Course\CourseListCommand;
+use Moosh2\Command\Plugin\PluginUsageCommand;
+use Moosh2\Command\User\UserCreateCommand;
 use Moosh2\Command\User\UserInfoCommand;
 use Moosh2\Command\User\UserListCommand;
 use Moosh2\Output\VerboseLogger;
@@ -192,12 +195,15 @@ final class Application extends SymfonyApplication {
         $mockupDateTime = getenv('MOCKUP_DATE_TIME');
         $clock = $mockupDateTime !== false ? new MockupClock($mockupDateTime) : null;
 
+        $this->addCommand(new CategoryCreateCommand($this->moodleVersion));
         $this->addCommand(new CategoryListCommand($this->moodleVersion));
         $this->addCommand(new CategoryInfoCommand($this->moodleVersion));
         $this->addCommand(new ContextInfoCommand($this->moodleVersion));
-        $this->addCommand(new PluginUsageCommand($this->moodleVersion));
+        $this->addCommand(new CourseCreateCommand($this->moodleVersion));
         $this->addCommand(new CourseListCommand($this->moodleVersion, $clock));
         $this->addCommand(new CourseInfoCommand($this->moodleVersion));
+        $this->addCommand(new PluginUsageCommand($this->moodleVersion));
+        $this->addCommand(new UserCreateCommand($this->moodleVersion));
         $this->addCommand(new UserListCommand($this->moodleVersion, $clock));
         $this->addCommand(new UserInfoCommand($this->moodleVersion));
     }
