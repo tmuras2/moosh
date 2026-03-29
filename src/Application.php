@@ -30,6 +30,7 @@ use Moosh2\Command\Category\CategoryCreateCommand;
 use Moosh2\Command\Category\CategoryInfoCommand;
 use Moosh2\Command\Category\CategoryListCommand;
 use Moosh2\Command\Context\ContextInfoCommand;
+use Moosh2\Command\Report\ReportConcurrencyCommand;
 use Moosh2\Command\Course\CourseCreateCommand;
 use Moosh2\Command\Course\CourseInfoCommand;
 use Moosh2\Command\Course\CourseListCommand;
@@ -233,6 +234,7 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new CourseListCommand($this->moodleVersion, $clock));
         $this->addCommand(new CourseInfoCommand($this->moodleVersion));
         $this->addCommand(new PluginUsageCommand($this->moodleVersion));
+        $this->addCommand(new ReportConcurrencyCommand($this->moodleVersion));
         $this->addCommand(new UserCreateCommand($this->moodleVersion));
         $this->addCommand(new UserListCommand($this->moodleVersion, $clock));
         $this->addCommand(new UserInfoCommand($this->moodleVersion));
