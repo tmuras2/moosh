@@ -26,29 +26,35 @@ if [[ ! -f "$DATA_FILE" ]]; then
     exit 1
 fi
 
+TOTAL_START=$SECONDS
+
 echo "=== Moodle 5.1 clear & restore ==="
 
 # Drop and recreate database.
 echo "Dropping and recreating database '$DB_NAME'..."
+STEP_START=$SECONDS
 mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" <<SQL
 DROP DATABASE IF EXISTS \`$DB_NAME\`;
 CREATE DATABASE \`$DB_NAME\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 SQL
-echo "Database recreated."
+echo "Database recreated. ($((SECONDS - STEP_START))s)"
 
 # Restore database from dump.
 echo "Restoring database from dump.sql.gz..."
+STEP_START=$SECONDS
 gunzip -c "$DUMP_FILE" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" "$DB_NAME"
-echo "Database restored."
+echo "Database restored. ($((SECONDS - STEP_START))s)"
 
 # Clear dataroot.
 echo "Clearing dataroot '$DATAROOT'..."
+STEP_START=$SECONDS
 sudo rm -rf "${DATAROOT:?}"/*
-echo "Dataroot cleared."
+echo "Dataroot cleared. ($((SECONDS - STEP_START))s)"
 
 # Restore dataroot from archive.
 echo "Restoring dataroot from data.tar.gz..."
+STEP_START=$SECONDS
 sudo tar xzf "$DATA_FILE" -C "$(dirname "$DATAROOT")"
-echo "Dataroot restored."
+echo "Dataroot restored. ($((SECONDS - STEP_START))s)"
 
-echo "=== Done ==="
+echo "=== Done in $((SECONDS - TOTAL_START))s ==="
