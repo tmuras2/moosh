@@ -40,6 +40,7 @@ use Moosh2\Command\ProfileField\ProfileFieldDeleteCommand;
 use Moosh2\Command\ProfileField\ProfileFieldExportCommand;
 use Moosh2\Command\ProfileField\ProfileFieldImportCommand;
 use Moosh2\Command\ProfileField\ProfileFieldInfoCommand;
+use Moosh2\Command\Search\SearchTimestampCommand;
 use Moosh2\Command\Sql\SqlSelectCommand;
 use Moosh2\Command\User\UserCreateCommand;
 use Moosh2\Command\User\UserInfoCommand;
@@ -246,6 +247,7 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new ProfileFieldExportCommand($this->moodleVersion));
         $this->addCommand(new ProfileFieldImportCommand($this->moodleVersion));
         $this->addCommand(new ProfileFieldInfoCommand($this->moodleVersion));
+        $this->addCommand(new SearchTimestampCommand($this->moodleVersion));
         $this->addCommand(new SqlSelectCommand($this->moodleVersion));
         $this->addCommand(new UserCreateCommand($this->moodleVersion));
         $this->addCommand(new UserListCommand($this->moodleVersion, $clock));
