@@ -12,6 +12,7 @@ use Moosh2\Command\BaseHandler;
 use Moosh2\Output\ResultFormatter;
 use Moosh2\Output\VerboseLogger;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -239,9 +240,18 @@ class CourseInfo51Handler extends BaseHandler
 
         $verbose->step('Rendering output');
 
-        $formatter = new ResultFormatter($output, $format);
-        $headers = array_keys($data);
-        $formatter->display($headers, [array_values($data)]);
+        if ($format === 'table') {
+            $table = new Table($output);
+            $table->setHeaders(['Metric', 'Value']);
+            foreach ($data as $key => $value) {
+                $table->addRow([$key, $value]);
+            }
+            $table->render();
+        } else {
+            $formatter = new ResultFormatter($output, $format);
+            $headers = array_keys($data);
+            $formatter->display($headers, [array_values($data)]);
+        }
 
         return Command::SUCCESS;
     }
