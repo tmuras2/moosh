@@ -35,6 +35,7 @@ use Moosh2\Command\Course\CourseCreateCommand;
 use Moosh2\Command\Course\CourseInfoCommand;
 use Moosh2\Command\Course\CourseListCommand;
 use Moosh2\Command\Plugin\PluginUsageCommand;
+use Moosh2\Command\Sql\SqlSelectCommand;
 use Moosh2\Command\User\UserCreateCommand;
 use Moosh2\Command\User\UserInfoCommand;
 use Moosh2\Command\User\UserListCommand;
@@ -235,6 +236,7 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new CourseInfoCommand($this->moodleVersion));
         $this->addCommand(new PluginUsageCommand($this->moodleVersion));
         $this->addCommand(new ReportConcurrencyCommand($this->moodleVersion));
+        $this->addCommand(new SqlSelectCommand($this->moodleVersion));
         $this->addCommand(new UserCreateCommand($this->moodleVersion));
         $this->addCommand(new UserListCommand($this->moodleVersion, $clock));
         $this->addCommand(new UserInfoCommand($this->moodleVersion));
