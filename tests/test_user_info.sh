@@ -169,6 +169,21 @@ assert_output_contains "Admin has log entries" '"Log entries":' "$OUT"
 assert_output_not_contains "Admin log entries not zero" '"Log entries": 0' "$OUT"
 echo ""
 
+# ── Login statistics ──────────────────────────────────────────────
+
+echo "--- Test: Admin login statistics ---"
+OUT=$($PHP $MOOSH user:info -p "$MOODLE_PATH" 2 -o json)
+assert_output_contains "Has successful logins field" '"Successful logins (last 30 days)":' "$OUT"
+assert_output_contains "Has failed logins field" '"Failed logins (last 30 days)":' "$OUT"
+assert_output_not_contains "Admin successful logins not zero" '"Successful logins (last 30 days)": 0' "$OUT"
+echo ""
+
+echo "--- Test: Student login statistics ---"
+OUT=$($PHP $MOOSH user:info -p "$MOODLE_PATH" 3 -o json)
+assert_output_contains "Student 0 successful logins" '"Successful logins (last 30 days)": 0' "$OUT"
+assert_output_contains "Student 0 failed logins" '"Failed logins (last 30 days)": 0' "$OUT"
+echo ""
+
 # ── Zero counters for student ─────────────────────────────────────
 
 echo "--- Test: Zero counters for student ---"

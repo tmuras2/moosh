@@ -144,6 +144,25 @@ class UserInfo51Handler extends BaseHandler
         );
         $data['Log entries'] = (int) $logs->c;
 
+        // --- Logins in last month ---
+        $verbose->step('Counting logins in last month');
+        $monthAgo = time() - (30 * 24 * 60 * 60);
+
+        $successfulLogins = $DB->get_record_sql(
+            "SELECT COUNT(*) AS c FROM {logstore_standard_log}
+              WHERE userid = ? AND eventname = ? AND timecreated >= ?",
+            [$userid, '\\core\\event\\user_loggedin', $monthAgo],
+        );
+        $data['Successful logins (last 30 days)'] = (int) $successfulLogins->c;
+
+        $failedLogins = $DB->get_record_sql(
+            "SELECT COUNT(*) AS c FROM {logstore_standard_log}
+              WHERE eventname = ? AND timecreated >= ?
+                AND other LIKE ?",
+            ['\\core\\event\\user_login_failed', $monthAgo, '%"username":"' . $DB->sql_like_escape($user->username) . '"%'],
+        );
+        $data['Failed logins (last 30 days)'] = (int) $failedLogins->c;
+
         // --- Forum posts ---
         $verbose->step('Counting forum posts');
         if ($DB->get_manager()->table_exists('forum_posts')) {
