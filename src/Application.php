@@ -11,6 +11,7 @@ namespace Moosh2;
 use Moosh2\Bootstrap\MoodleBootstrapper;
 use Moosh2\Bootstrap\MoodlePathResolver;
 use Moosh2\Bootstrap\MoodleVersion;
+use Moosh2\Command\Backup\BackupInfoCommand;
 use Moosh2\Command\Category\CategoryCreateCommand;
 use Moosh2\Command\Category\CategoryInfoCommand;
 use Moosh2\Command\Category\CategoryListCommand;
@@ -195,6 +196,7 @@ final class Application extends SymfonyApplication {
         $mockupDateTime = getenv('MOCKUP_DATE_TIME');
         $clock = $mockupDateTime !== false ? new MockupClock($mockupDateTime) : null;
 
+        $this->addCommand(new BackupInfoCommand($this->moodleVersion));
         $this->addCommand(new CategoryCreateCommand($this->moodleVersion));
         $this->addCommand(new CategoryListCommand($this->moodleVersion));
         $this->addCommand(new CategoryInfoCommand($this->moodleVersion));
