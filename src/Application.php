@@ -30,6 +30,7 @@ use Moosh2\Command\Backup\BackupInfoCommand;
 use Moosh2\Command\Fontawesome\FontawesomeListCommand;
 use Moosh2\Command\Fontawesome\FontawesomeRefreshCacheCommand;
 use Moosh2\Command\Category\CategoryCreateCommand;
+use Moosh2\Command\Category\CategoryDeleteCommand;
 use Moosh2\Command\Category\CategoryInfoCommand;
 use Moosh2\Command\Category\CategoryListCommand;
 use Moosh2\Command\Context\ContextInfoCommand;
@@ -250,6 +251,7 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new FontawesomeRefreshCacheCommand($this->moodleVersion));
         $this->addCommand(new BackupInfoCommand($this->moodleVersion));
         $this->addCommand(new CategoryCreateCommand($this->moodleVersion));
+        $this->addCommand(new CategoryDeleteCommand($this->moodleVersion));
         $this->addCommand(new CategoryListCommand($this->moodleVersion));
         $this->addCommand(new CategoryInfoCommand($this->moodleVersion));
         $this->addCommand(new ContextInfoCommand($this->moodleVersion));
