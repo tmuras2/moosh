@@ -136,9 +136,9 @@ echo ""
 echo "--- Test: Computer Science category ---"
 OUT=$($PHP $MOOSH category:info -p "$MOODLE_PATH" 5 -o json)
 assert_output_contains "CS name" '"Computer Science"' "$OUT"
-assert_output_contains "6 direct courses" '"Direct courses": 6' "$OUT"
-assert_output_contains "6 total courses" '"Total courses (recursive)": 6' "$OUT"
-assert_output_contains "5 total activities" '"Total activities": 5' "$OUT"
+assert_output_contains "7 direct courses" '"Direct courses": 7' "$OUT"
+assert_output_contains "7 total courses" '"Total courses (recursive)": 7' "$OUT"
+assert_output_contains "6 total activities" '"Total activities": 6' "$OUT"
 echo ""
 
 # ── Empty category (id=1) ────────────────────────────────────────

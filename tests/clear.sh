@@ -13,8 +13,8 @@ DB_HOST="localhost"
 DATAROOT="/opt/data/moodle51"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-DUMP_FILE="$SCRIPT_DIR/dump.sql.gz"
-DATA_FILE="$SCRIPT_DIR/data.tar.gz"
+DUMP_FILE="$SCRIPT_DIR/test_data_setup/dump.sql.gz"
+DATA_FILE="$SCRIPT_DIR/test_data_setup/data.tar.gz"
 
 # Check dump files exist.
 if [[ ! -f "$DUMP_FILE" ]]; then

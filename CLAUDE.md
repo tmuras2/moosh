@@ -114,5 +114,12 @@ Handlers can override the command's bootstrap level by implementing `getBootstra
 6. Add integration tests in `tests/`
 
 ## Testing
+
 Integration tests can be run using local Moodle instance and running test_course_list.sh script.
 Always run test_course_list.sh after doing a change, to make sure there are no regressions.
+
+
+## Bash Command Style
+
+Never chain commands with && or ; operators. Run them as separate bash calls instead.
+

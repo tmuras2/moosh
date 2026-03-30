@@ -52,8 +52,9 @@ echo "Populating test data..."
 sudo -u www-data $PHP "$SCRIPT_DIR/setup_testdata.php" $MOODLE_DIR
 echo "Test data created."
 
-# 5. Create dump.
+# 5. Create dump (run from SCRIPT_DIR so files land here).
 echo "Creating dump..."
-bash "$SCRIPT_DIR/dump.sh"
+cd "$SCRIPT_DIR"
+bash "$SCRIPT_DIR/../dump.sh"
 
 echo "=== Full reinstall complete ==="

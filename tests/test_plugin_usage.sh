@@ -122,8 +122,8 @@ echo ""
 echo "--- Test: --type format ---"
 OUT=$($PHP $MOOSH plugin:usage -p "$MOODLE_PATH" --type format -o csv)
 echo "$OUT"
-assert_output_contains "Topics format with 15 courses" "format,topics," "$OUT"
-assert_output_contains "Topics count is 15" ",15," "$OUT"
+assert_output_contains "Topics format with 16 courses" "format,topics," "$OUT"
+assert_output_contains "Topics count is 16" ",16," "$OUT"
 assert_output_contains "Weeks format" "format,weeks," "$OUT"
 echo ""
 

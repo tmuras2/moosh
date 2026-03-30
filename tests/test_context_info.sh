@@ -133,7 +133,7 @@ OUT=$($PHP $MOOSH context:info -p "$MOODLE_PATH" $SYSTEM_CTX -o json)
 assert_output_contains "JSON Context level" '"Context level": 10' "$OUT"
 assert_output_contains "JSON Context level name" '"Context level name": "System"' "$OUT"
 assert_output_contains "JSON Total users 62" '"Total users": 62' "$OUT"
-assert_output_contains "JSON Total courses 15" '"Total courses": 15' "$OUT"
+assert_output_contains "JSON Total courses 16" '"Total courses": 16' "$OUT"
 assert_output_contains "JSON Total categories 5" '"Total categories": 5' "$OUT"
 echo ""
 

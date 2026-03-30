@@ -20,6 +20,7 @@ require_once($CFG->libdir . '/testing/generator/data_generator.php');
 require_once($CFG->libdir . '/testing/generator/component_generator_base.php');
 require_once($CFG->libdir . '/testing/generator/module_generator.php');
 require_once($CFG->dirroot . '/mod/resource/tests/generator/lib.php');
+require_once($CFG->dirroot . '/mod/lesson/tests/generator/lib.php');
 
 // We need an admin user set as current user for file operations.
 $admin = get_admin();
@@ -164,6 +165,77 @@ $resourcegen->create_instance([
 // Remove all auto-generated log entries so this course has no activity at all.
 $DB->delete_records('logstore_standard_log', ['courseid' => $oldCourse->id]);
 cli_writeln("  Created course: Old Activity Course (id={$oldCourse->id}) with all logs removed");
+
+// ---------- "Big Media" course with course image and lesson ----------
+
+cli_writeln('');
+cli_heading('Creating "Big Media" course with course image and lesson activity');
+
+$bigMediaCourse = $generator->create_course([
+    'fullname'  => 'Big Media',
+    'shortname' => 'bigmedia_' . $category->id,
+    'category'  => $category->id,
+    'summary'   => 'Course with large image used as course image and inside a lesson activity.',
+    'numsections' => 1,
+]);
+
+// Set course overview image (course image).
+$courseContext = context_course::instance($bigMediaCourse->id);
+$fs = get_file_storage();
+$imagePath = __DIR__ . '/big_image_chickens_frog_2MB.png';
+$imageFileName = 'big_image_chickens_frog_2MB.png';
+
+$fileRecord = [
+    'contextid' => $courseContext->id,
+    'component' => 'course',
+    'filearea'  => 'overviewfiles',
+    'itemid'    => 0,
+    'filepath'  => '/',
+    'filename'  => $imageFileName,
+];
+$fs->create_file_from_pathname($fileRecord, $imagePath);
+cli_writeln("  Set course image: {$imageFileName}");
+
+// Create lesson activity with the image embedded in a content page.
+$lessongen = new mod_lesson_generator($generator);
+$lesson = $lessongen->create_instance([
+    'course' => $bigMediaCourse->id,
+    'name'   => 'Media Lesson',
+    'intro'  => 'A lesson containing a large embedded image.',
+    'introformat' => FORMAT_HTML,
+], ['section' => 1]);
+
+// Create content page with HTML referencing the image.
+$contentHtml = '<h3>Wildlife Photography Collection</h3>'
+    . '<p>This lesson showcases a high-resolution image from our wildlife photography archive. '
+    . 'The image below features chickens and a frog captured in their natural habitat.</p>'
+    . '<p><img src="@@PLUGINFILE@@/' . $imageFileName . '" alt="Chickens and frog" '
+    . 'width="800" class="img-fluid" /></p>'
+    . '<p>Notice the detail and vibrant colors preserved in this 2MB photograph. '
+    . 'Large media files like this are common in multimedia-rich courses.</p>';
+
+$contentPage = $lessongen->create_content($lesson, [
+    'title' => 'Wildlife Photography',
+    'contents_editor' => [
+        'text' => $contentHtml,
+        'format' => FORMAT_HTML,
+        'itemid' => 0,
+    ],
+]);
+
+// Store the image directly in the lesson page_contents file area with the page id as itemid.
+$lessonContext = context_module::instance($lesson->cmid);
+$fs->create_file_from_pathname([
+    'contextid' => $lessonContext->id,
+    'component' => 'mod_lesson',
+    'filearea'  => 'page_contents',
+    'itemid'    => $contentPage->id,
+    'filepath'  => '/',
+    'filename'  => $imageFileName,
+], $imagePath);
+
+cli_writeln("  Created lesson 'Media Lesson' with content page containing embedded image");
+cli_writeln("  Created course: Big Media (id={$bigMediaCourse->id})");
 
 // ---------- Students ----------
 
