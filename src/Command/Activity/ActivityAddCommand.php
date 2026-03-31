@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Add an activity to a course.
  *
  * Replaces Moosh\Command\Moodle39\Activity\ActivityAdd.
- * Canonical name: activity:add  |  Alias: activity-add
+ * Canonical name: activity:create  |  Aliases: activity-create, activity:add, activity-add
  */
 class ActivityAddCommand extends BaseCommand
 {
@@ -37,9 +37,9 @@ class ActivityAddCommand extends BaseCommand
     protected function configure(): void
     {
         $this
-            ->setName('activity:add')
-            ->setAliases(['activity-add'])
-            ->setDescription('Add an activity to a course')
+            ->setName('activity:create')
+            ->setAliases(['activity-create', 'activity:add', 'activity-add'])
+            ->setDescription('Create an activity in a course')
             ->setHelp('Creates a new activity module instance in a course. Requires --run to actually create the activity.');
 
         $this->handler->configureCommand($this);

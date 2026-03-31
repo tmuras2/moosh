@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Create a badge.
  *
  * Replaces Moosh\Command\Moodle40\Badge\BadgeCreate.
- * Canonical name: badge:add  |  Alias: badge-add
+ * Canonical name: badge:create  |  Aliases: badge-create, badge:add, badge-add
  */
 class BadgeAddCommand extends BaseCommand
 {
@@ -37,8 +37,8 @@ class BadgeAddCommand extends BaseCommand
     protected function configure(): void
     {
         $this
-            ->setName('badge:add')
-            ->setAliases(['badge-add'])
+            ->setName('badge:create')
+            ->setAliases(['badge-create', 'badge:add', 'badge-add'])
             ->setDescription('Create a badge')
             ->setHelp('Creates a new badge (site-level or course-level). Requires --run to actually create.');
 

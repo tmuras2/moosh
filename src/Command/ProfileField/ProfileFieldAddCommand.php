@@ -31,8 +31,8 @@ class ProfileFieldAddCommand extends BaseCommand
     protected function configure(): void
     {
         $this
-            ->setName('profilefield:add')
-            ->setAliases(['profilefield-add'])
+            ->setName('profilefield:create')
+            ->setAliases(['profilefield-create', 'profilefield:add', 'profilefield-add'])
             ->setDescription('Create a user profile field')
             ->setHelp('Creates a new custom user profile field. Requires --run.');
 
