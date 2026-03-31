@@ -6,60 +6,9 @@
 # Usage: bash tests/test_data_check.sh
 #
 
-set -uo pipefail
+source "$(dirname "$0")/common.sh"
 
-MOOSH="$(cd "$(dirname "$0")/.." && pwd)/moosh.php"
-MOODLE_DIR="/var/www/html/moodle51"
-MOODLE_PATH="$MOODLE_DIR/public"
 DATAROOT="/opt/data/moodle51"
-PHP="${PHP:-/usr/bin/php}"
-PASS=0
-FAIL=0
-
-assert_output_contains() {
-    local description="$1"
-    local expected="$2"
-    local actual="$3"
-    if printf '%s' "$actual" | grep -qF -- "$expected"; then
-        echo "  PASS: $description"
-        ((PASS++))
-    else
-        echo "  FAIL: $description"
-        echo "    Expected to contain: $expected"
-        echo "    Got: $actual"
-        ((FAIL++))
-    fi
-}
-
-assert_output_not_contains() {
-    local description="$1"
-    local expected="$2"
-    local actual="$3"
-    if printf '%s' "$actual" | grep -qF -- "$expected"; then
-        echo "  FAIL: $description"
-        echo "    Expected NOT to contain: $expected"
-        echo "    Got: $actual"
-        ((FAIL++))
-    else
-        echo "  PASS: $description"
-        ((PASS++))
-    fi
-}
-
-assert_exit_code() {
-    local description="$1"
-    local expected="$2"
-    local actual="$3"
-    if [ "$actual" -eq "$expected" ]; then
-        echo "  PASS: $description"
-        ((PASS++))
-    else
-        echo "  FAIL: $description"
-        echo "    Expected exit code: $expected"
-        echo "    Got: $actual"
-        ((FAIL++))
-    fi
-}
 
 echo "=== moosh2 data:check integration tests ==="
 echo "Moodle path: $MOODLE_PATH"
@@ -232,11 +181,4 @@ OUT=$($PHP $MOOSH data-check -p "$MOODLE_PATH" checksum -o csv)
 assert_output_contains "Alias works" "checksum" "$OUT"
 echo ""
 
-# ── Summary ───────────────────────────────────────────────────────
-
-echo ""
-echo "================================"
-echo "Results: $PASS passed, $FAIL failed"
-echo "================================"
-
-exit $FAIL
+print_summary

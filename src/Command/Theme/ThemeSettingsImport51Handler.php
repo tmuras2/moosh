@@ -171,6 +171,12 @@ class ThemeSettingsImport51Handler extends BaseHandler
 
         // If the file ends with .tar.gz, decompress first
         if (str_ends_with($filePath, '.tar.gz') || str_ends_with($filePath, '.tgz')) {
+            // Remove stale .tar from a previous run to avoid PharData error
+            $baseName = basename($filePath);
+            $tarPath = dirname($filePath) . '/' . preg_replace('/\.(tar\.gz|tgz)$/', '.tar', $baseName);
+            if (file_exists($tarPath)) {
+                unlink($tarPath);
+            }
             $phar->decompress();
             // The decompressed tar lands next to the original
             $baseName = basename($filePath);

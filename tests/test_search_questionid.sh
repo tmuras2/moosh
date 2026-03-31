@@ -6,44 +6,7 @@
 # Usage: bash tests/test_search_questionid.sh
 #
 
-set -uo pipefail
-
-MOOSH="$(cd "$(dirname "$0")/.." && pwd)/moosh.php"
-MOODLE_DIR="/var/www/html/moodle51"
-MOODLE_PATH="$MOODLE_DIR/public"
-PHP="${PHP:-/usr/bin/php}"
-PASS=0
-FAIL=0
-
-assert_output_contains() {
-    local description="$1"
-    local expected="$2"
-    local actual="$3"
-    if printf '%s' "$actual" | grep -qF -- "$expected"; then
-        echo "  PASS: $description"
-        ((PASS++))
-    else
-        echo "  FAIL: $description"
-        echo "    Expected to contain: $expected"
-        echo "    Got: $actual"
-        ((FAIL++))
-    fi
-}
-
-assert_output_not_contains() {
-    local description="$1"
-    local expected="$2"
-    local actual="$3"
-    if printf '%s' "$actual" | grep -qF -- "$expected"; then
-        echo "  FAIL: $description"
-        echo "    Expected NOT to contain: $expected"
-        echo "    Got: $actual"
-        ((FAIL++))
-    else
-        echo "  PASS: $description"
-        ((PASS++))
-    fi
-}
+source "$(dirname "$0")/common.sh"
 
 echo "=== moosh2 search:questionid integration tests ==="
 echo "Moodle path: $MOODLE_PATH"
@@ -167,9 +130,4 @@ OUT=$($PHP $MOOSH search-questionid -p "$MOODLE_PATH" $QID -o csv)
 assert_output_contains "Alias works" "question" "$OUT"
 echo ""
 
-echo ""
-echo "================================"
-echo "Results: $PASS passed, $FAIL failed"
-echo "================================"
-
-exit $FAIL
+print_summary

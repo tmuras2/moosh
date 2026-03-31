@@ -127,13 +127,16 @@ class ThemeSettingsExport51Handler extends BaseHandler
 
         // Compress
         $verbose->step('Compressing archive');
+        $archivePath = "{$tarName}.gz";
+        if (file_exists($archivePath)) {
+            unlink($archivePath);
+        }
         $phar->compress(\Phar::GZ);
 
         // Cleanup temp files
         @unlink($xmlTempPath);
         @unlink($tarName);
 
-        $archivePath = "{$tarName}.gz";
         $verbose->done("Exported $settingCount setting(s) and $fileCount file(s)");
         $output->writeln("Settings exported to $archivePath");
 

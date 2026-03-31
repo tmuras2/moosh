@@ -6,44 +6,7 @@
 # Usage: bash tests/test_user_course_delete.sh
 #
 
-set -uo pipefail
-
-MOOSH="$(cd "$(dirname "$0")/.." && pwd)/moosh.php"
-MOODLE_DIR="/var/www/html/moodle51"
-MOODLE_PATH="$MOODLE_DIR/public"
-PHP="${PHP:-/usr/bin/php}"
-PASS=0
-FAIL=0
-
-assert_output_contains() {
-    local description="$1"
-    local expected="$2"
-    local actual="$3"
-    if printf '%s' "$actual" | grep -qF -- "$expected"; then
-        echo "  PASS: $description"
-        ((PASS++))
-    else
-        echo "  FAIL: $description"
-        echo "    Expected to contain: $expected"
-        echo "    Got: $actual"
-        ((FAIL++))
-    fi
-}
-
-assert_exit_code() {
-    local description="$1"
-    local expected="$2"
-    local actual="$3"
-    if [ "$actual" -eq "$expected" ]; then
-        echo "  PASS: $description"
-        ((PASS++))
-    else
-        echo "  FAIL: $description"
-        echo "    Expected exit code: $expected"
-        echo "    Got: $actual"
-        ((FAIL++))
-    fi
-}
+source "$(dirname "$0")/common.sh"
 
 echo "=== moosh2 user:delete and course:delete integration tests ==="
 echo "Moodle path: $MOODLE_PATH"
@@ -186,11 +149,4 @@ OUT=$($PHP $MOOSH course-delete -p "$MOODLE_PATH" 5 2>&1)
 assert_output_contains "Alias works" "Dry run" "$OUT"
 echo ""
 
-# ── Summary ──────────────────────────────────────────────────────
-
-echo ""
-echo "================================"
-echo "Results: $PASS passed, $FAIL failed"
-echo "================================"
-
-exit $FAIL
+print_summary
