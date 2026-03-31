@@ -14,6 +14,7 @@ use Moosh2\Bootstrap\MoodleVersion;
 use Moosh2\Command\Activity\ActivityAddCommand;
 use Moosh2\Command\Activity\ActivityInfoCommand;
 use Moosh2\Command\Admin\AdminLoginCommand;
+use Moosh2\Command\Audit\AuditBruteforceCommand;
 use Moosh2\Command\Audit\AuditPasswordCommand;
 use Moosh2\Command\Auth\AuthInfoCommand;
 use Moosh2\Command\Auth\AuthListCommand;
@@ -267,6 +268,7 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new ActivityDeleteCommand($this->moodleVersion));
         $this->addCommand(new ActivityModCommand($this->moodleVersion));
         $this->addCommand(new AdminLoginCommand($this->moodleVersion));
+        $this->addCommand(new AuditBruteforceCommand($this->moodleVersion));
         $this->addCommand(new AuditPasswordCommand($this->moodleVersion));
         $this->addCommand(new AuthListCommand($this->moodleVersion));
         $this->addCommand(new AuthInfoCommand($this->moodleVersion));
