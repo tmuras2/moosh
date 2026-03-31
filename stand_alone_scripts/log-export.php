@@ -83,7 +83,7 @@ USAGE);
 
 // ── Helpers ──────────────────────────────────────────────────────
 
-function fatal(string $msg): never {
+function fatal(string $msg): void {
     fwrite(STDERR, "ERROR: $msg\n");
     exit(1);
 }
@@ -126,7 +126,7 @@ function parseMoodleConfig(string $moodlePath): array {
     if (preg_match("/require_once\s*\(\s*.*?'([^']+)'\s*\)/", $content, $m)) {
         $redirectTarget = $m[1];
         // Resolve __DIR__ relative path.
-        if (str_contains($redirectTarget, '__DIR__')) {
+        if (strpos($redirectTarget, '__DIR__') !== false) {
             // Already handled below via the configfile pattern.
         }
     }
@@ -175,13 +175,13 @@ function connectDb(array $cfg): mysqli {
     $socket = null;
 
     // Handle socket connections (host contains /).
-    if (str_contains($host, '/')) {
+    if (strpos($host, '/') !== false) {
         $socket = $host;
         $host = 'localhost';
     }
 
     // Handle host:port format.
-    if (str_contains($host, ':') && !str_contains($host, '/')) {
+    if (strpos($host, ':') !== false && strpos($host, '/') === false) {
         [$host, $port] = explode(':', $host, 2);
         $port = (int) $port;
     }
@@ -217,13 +217,13 @@ foreach ($args as $arg) {
         usage();
     } elseif ($arg === '--compact') {
         $compact = true;
-    } elseif (str_starts_with($arg, '--from=')) {
+    } elseif (substr($arg, 0, 7) === '--from=') {
         $fromOpt = substr($arg, 7);
-    } elseif (str_starts_with($arg, '--to=')) {
+    } elseif (substr($arg, 0, 5) === '--to=') {
         $toOpt = substr($arg, 5);
-    } elseif (str_starts_with($arg, '--event-map=')) {
+    } elseif (substr($arg, 0, 12) === '--event-map=') {
         $eventMapPath = substr($arg, 12);
-    } elseif (!str_starts_with($arg, '-')) {
+    } elseif (substr($arg, 0, 1) !== '-') {
         $positional[] = $arg;
     } else {
         fatal("Unknown option: $arg");

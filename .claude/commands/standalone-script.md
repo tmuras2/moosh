@@ -4,6 +4,23 @@ You are creating a standalone PHP script that replicates the functionality of th
 
 The script should be placed in `stand_alone_scripts/` and must be a single self-contained file with no includes or external dependencies (no Composer, no Symfony, no Moodle bootstrap).
 
+## PHP Compatibility
+
+Standalone scripts must be compatible with **PHP 7.2+**. Do NOT use features introduced after PHP 7.2:
+- No `str_contains()`, `str_starts_with()`, `str_ends_with()` (PHP 8.0) — use `strpos()` / `substr()` instead
+- No `never` return type (PHP 8.1) — use `void` instead
+- No `match` expressions (PHP 8.0) — use `switch` or if/elseif instead
+- No named arguments (PHP 8.0)
+- No union types (PHP 8.0) or intersection types (PHP 8.1)
+- No `readonly` properties (PHP 8.1)
+- No enums (PHP 8.1)
+- No arrow functions `fn()` (PHP 7.4) — use regular closures instead
+- No typed properties (PHP 7.4)
+- No null coalescing assignment `??=` (PHP 7.4)
+- No `array_key_first()` / `array_key_last()` (PHP 7.3)
+
+Allowed PHP 7.2 features: `void` return type, `object` type hint, trailing commas in grouped `use`, `?Type` nullable types.
+
 ## Instructions
 
 Follow these steps carefully:
