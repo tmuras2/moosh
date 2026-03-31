@@ -87,6 +87,7 @@ use Moosh2\Command\User\UserCreateCommand;
 use Moosh2\Command\User\UserDeleteCommand;
 use Moosh2\Command\User\UserInfoCommand;
 use Moosh2\Command\User\UserListCommand;
+use Moosh2\Command\User\UserModCommand;
 use Moosh2\Output\VerboseLogger;
 use Moosh2\Service\MockupClock;
 use Symfony\Component\Console\Application as SymfonyApplication;
@@ -336,5 +337,6 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new UserDeleteCommand($this->moodleVersion));
         $this->addCommand(new UserListCommand($this->moodleVersion, $clock));
         $this->addCommand(new UserInfoCommand($this->moodleVersion));
+        $this->addCommand(new UserModCommand($this->moodleVersion));
     }
 }
