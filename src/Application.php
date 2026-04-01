@@ -100,6 +100,7 @@ use Moosh2\Command\Sql\SqlSelectCommand;
 use Moosh2\Command\Theme\ThemeInfoCommand;
 use Moosh2\Command\Theme\ThemeSettingsExportCommand;
 use Moosh2\Command\Theme\ThemeSettingsImportCommand;
+use Moosh2\Command\Webservice\WebserviceCallCommand;
 use Moosh2\Command\User\UserCreateCommand;
 use Moosh2\Command\User\UserDeleteCommand;
 use Moosh2\Command\User\UserImportPicturesCommand;
@@ -374,5 +375,6 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new UserImportPicturesCommand($this->moodleVersion));
         $this->addCommand(new UserInfoCommand($this->moodleVersion));
         $this->addCommand(new UserModCommand($this->moodleVersion));
+        $this->addCommand(new WebserviceCallCommand($this->moodleVersion));
     }
 }
