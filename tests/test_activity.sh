@@ -94,7 +94,7 @@ echo ""
 
 echo "--- Test: activity:add help ---"
 OUT=$($PHP $MOOSH activity:add -p "$MOODLE_PATH" --help)
-assert_output_contains "Help description" "Add an activity to a course" "$OUT"
+assert_output_contains "Help description" "Create an activity in a course" "$OUT"
 assert_output_contains "Help shows --name" "--name" "$OUT"
 assert_output_contains "Help shows --section" "--section" "$OUT"
 echo ""

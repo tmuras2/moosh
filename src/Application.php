@@ -34,6 +34,8 @@ use Moosh2\Command\Log\LogExportCommand;
 use Moosh2\Command\Log\LogUnpackCommand;
 use Moosh2\Command\Backup\BackupEmptyFilesCommand;
 use Moosh2\Command\Backup\BackupInfoCommand;
+use Moosh2\Command\Gradebook\GradebookExportCommand;
+use Moosh2\Command\Gradebook\GradebookImportCommand;
 use Moosh2\Command\Fontawesome\FontawesomeListCommand;
 use Moosh2\Command\Fontawesome\FontawesomeMaplistCommand;
 use Moosh2\Command\Fontawesome\FontawesomeRefreshCacheCommand;
@@ -278,6 +280,8 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new BadgeModCommand($this->moodleVersion));
         $this->addCommand(new BadgeDeleteCommand($this->moodleVersion));
         $this->addCommand(new BackupEmptyFilesCommand($this->moodleVersion));
+        $this->addCommand(new GradebookExportCommand($this->moodleVersion));
+        $this->addCommand(new GradebookImportCommand($this->moodleVersion));
         $this->addCommand(new FontawesomeListCommand($this->moodleVersion));
         $this->addCommand(new FontawesomeMaplistCommand($this->moodleVersion));
         $this->addCommand(new FontawesomeRefreshCacheCommand($this->moodleVersion));
