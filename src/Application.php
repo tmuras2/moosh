@@ -47,6 +47,8 @@ use Moosh2\Command\File\FileListCommand;
 use Moosh2\Command\File\FileStatsCommand;
 use Moosh2\Command\File\FileUploadCommand;
 use Moosh2\Command\Data\DataCheckCommand;
+use Moosh2\Command\Filter\FilterListCommand;
+use Moosh2\Command\Filter\FilterModCommand;
 use Moosh2\Command\Event\EventDiscoverCommand;
 use Moosh2\Command\Log\LogExportCommand;
 use Moosh2\Command\Log\LogUnpackCommand;
@@ -374,6 +376,8 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new ContextRebuildCommand($this->moodleVersion));
         $this->addCommand(new DataCheckCommand($this->moodleVersion));
         $this->addCommand(new EventDiscoverCommand($this->moodleVersion));
+        $this->addCommand(new FilterListCommand($this->moodleVersion));
+        $this->addCommand(new FilterModCommand($this->moodleVersion));
         $this->addCommand(new FileCheckCommand($this->moodleVersion));
         $this->addCommand(new FileDeleteCommand($this->moodleVersion));
         $this->addCommand(new FileInfoCommand($this->moodleVersion));
