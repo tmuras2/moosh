@@ -14,6 +14,15 @@ use Moosh2\Bootstrap\MoodleVersion;
 use Moosh2\Command\Activity\ActivityAddCommand;
 use Moosh2\Command\Activity\ActivityInfoCommand;
 use Moosh2\Command\Admin\AdminLoginCommand;
+use Moosh2\Command\Dashboard\DashboardResetCommand;
+use Moosh2\Command\Database\DatabaseCheckCommand;
+use Moosh2\Command\Debug\DebugOnCommand;
+use Moosh2\Command\Debug\DebugOffCommand;
+use Moosh2\Command\Maintenance\MaintenanceOnCommand;
+use Moosh2\Command\Maintenance\MaintenanceOffCommand;
+use Moosh2\Command\Php\PhpEvalCommand;
+use Moosh2\Command\Session\SessionKillCommand;
+use Moosh2\Command\System\SystemCheckCommand;
 use Moosh2\Command\Audit\AuditBruteforceCommand;
 use Moosh2\Command\Audit\AuditPasswordCommand;
 use Moosh2\Command\Auth\AuthInfoCommand;
@@ -454,5 +463,14 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new UserInfoCommand($this->moodleVersion));
         $this->addCommand(new UserModCommand($this->moodleVersion));
         $this->addCommand(new WebserviceCallCommand($this->moodleVersion));
+        $this->addCommand(new DashboardResetCommand($this->moodleVersion));
+        $this->addCommand(new DatabaseCheckCommand($this->moodleVersion));
+        $this->addCommand(new DebugOnCommand($this->moodleVersion));
+        $this->addCommand(new DebugOffCommand($this->moodleVersion));
+        $this->addCommand(new MaintenanceOnCommand($this->moodleVersion));
+        $this->addCommand(new MaintenanceOffCommand($this->moodleVersion));
+        $this->addCommand(new PhpEvalCommand($this->moodleVersion));
+        $this->addCommand(new SessionKillCommand($this->moodleVersion));
+        $this->addCommand(new SystemCheckCommand($this->moodleVersion));
     }
 }
