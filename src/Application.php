@@ -35,6 +35,9 @@ use Moosh2\Command\Auth\AuthInfoCommand;
 use Moosh2\Command\Auth\AuthListCommand;
 use Moosh2\Command\Auth\AuthModCommand;
 use Moosh2\Command\Badge\BadgeAddCommand;
+use Moosh2\Command\Completion\CompletionMarkCommand;
+use Moosh2\Command\Completion\CompletionResetCommand;
+use Moosh2\Command\Completion\CompletionStatusCommand;
 use Moosh2\Command\Badge\BadgeDeleteCommand;
 use Moosh2\Command\Badge\BadgeInfoCommand;
 use Moosh2\Command\Badge\BadgeModCommand;
@@ -484,5 +487,8 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new RecycleBinListCommand($this->moodleVersion));
         $this->addCommand(new RecycleBinRestoreCommand($this->moodleVersion));
         $this->addCommand(new RecycleBinPurgeCommand($this->moodleVersion));
+        $this->addCommand(new CompletionStatusCommand($this->moodleVersion));
+        $this->addCommand(new CompletionMarkCommand($this->moodleVersion));
+        $this->addCommand(new CompletionResetCommand($this->moodleVersion));
     }
 }
