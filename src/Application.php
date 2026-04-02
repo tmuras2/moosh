@@ -14,6 +14,12 @@ use Moosh2\Bootstrap\MoodleVersion;
 use Moosh2\Command\Activity\ActivityAddCommand;
 use Moosh2\Command\Activity\ActivityInfoCommand;
 use Moosh2\Command\Admin\AdminLoginCommand;
+use Moosh2\Command\Content\ContentReplaceCommand;
+use Moosh2\Command\Content\ContentHttpsReplaceCommand;
+use Moosh2\Command\Course\CourseRepairCommand;
+use Moosh2\Command\RecycleBin\RecycleBinListCommand;
+use Moosh2\Command\RecycleBin\RecycleBinRestoreCommand;
+use Moosh2\Command\RecycleBin\RecycleBinPurgeCommand;
 use Moosh2\Command\Dashboard\DashboardResetCommand;
 use Moosh2\Command\Database\DatabaseCheckCommand;
 use Moosh2\Command\Debug\DebugOnCommand;
@@ -472,5 +478,11 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new PhpEvalCommand($this->moodleVersion));
         $this->addCommand(new SessionKillCommand($this->moodleVersion));
         $this->addCommand(new SystemCheckCommand($this->moodleVersion));
+        $this->addCommand(new ContentReplaceCommand($this->moodleVersion));
+        $this->addCommand(new ContentHttpsReplaceCommand($this->moodleVersion));
+        $this->addCommand(new CourseRepairCommand($this->moodleVersion));
+        $this->addCommand(new RecycleBinListCommand($this->moodleVersion));
+        $this->addCommand(new RecycleBinRestoreCommand($this->moodleVersion));
+        $this->addCommand(new RecycleBinPurgeCommand($this->moodleVersion));
     }
 }
