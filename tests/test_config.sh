@@ -108,4 +108,113 @@ assert_output_contains "Help shows --plugin" "--plugin" "$OUT"
 echo ""
 
 
+# ═══════════════════════════════════════════════════════════════════
+# config:export
+# ═══════════════════════════════════════════════════════════════════
+
+echo "========== config:export =========="
+echo ""
+
+echo "--- Test: Export core to stdout ---"
+OUT=$($PHP $MOOSH config:export -p "$MOODLE_PATH" 2>&1)
+assert_output_contains "Has _type" '"_type": "core"' "$OUT"
+assert_output_contains "Has settings" '"settings"' "$OUT"
+assert_output_contains "Has theme" '"theme"' "$OUT"
+echo ""
+
+echo "--- Test: Export core to file ---"
+TMPFILE=$(mktemp /tmp/moosh_config_XXXXXX.json)
+OUT=$($PHP $MOOSH config:export -p "$MOODLE_PATH" "$TMPFILE" 2>&1)
+assert_output_contains "Shows exported" "Exported to" "$OUT"
+assert_output_contains "Shows filename" "$TMPFILE" "$OUT"
+# Verify file content
+CONTENT=$(cat "$TMPFILE")
+echo "$CONTENT" | grep -q '"_type": "core"'
+if [ $? -eq 0 ]; then
+    echo "  PASS: File contains core export"
+    ((PASS++))
+else
+    echo "  FAIL: File does not contain core export"
+    ((FAIL++))
+fi
+echo ""
+
+echo "--- Test: Export plugin ---"
+OUT=$($PHP $MOOSH config:export --plugin mod_forum -p "$MOODLE_PATH" 2>&1)
+assert_output_contains "Has plugin type" '"_type": "plugin"' "$OUT"
+assert_output_contains "Has plugin name" '"plugin": "mod_forum"' "$OUT"
+assert_output_contains "Has version" '"version"' "$OUT"
+echo ""
+
+echo "--- Test: Export plugin to file ---"
+PLUGIN_FILE=$(mktemp /tmp/moosh_plugin_XXXXXX.json)
+OUT=$($PHP $MOOSH config:export --plugin mod_forum -p "$MOODLE_PATH" "$PLUGIN_FILE" 2>&1)
+assert_output_contains "Plugin exported" "Exported to" "$OUT"
+echo ""
+
+echo "--- Test: Export all ---"
+OUT=$($PHP $MOOSH config:export --plugin all -p "$MOODLE_PATH" 2>&1 | head -5)
+assert_output_contains "Has all type" '"_type": "all"' "$OUT"
+assert_output_contains "Has core key" '"core"' "$OUT"
+echo ""
+
+echo "--- Test: Help ---"
+OUT=$($PHP $MOOSH config:export -p "$MOODLE_PATH" --help 2>&1)
+assert_output_contains "Help description" "Export Moodle configuration" "$OUT"
+assert_output_contains "Help shows --plugin" "--plugin" "$OUT"
+echo ""
+
+# ═══════════════════════════════════════════════════════════════════
+# config:import
+# ═══════════════════════════════════════════════════════════════════
+
+echo "========== config:import =========="
+echo ""
+
+echo "--- Test: Dry run ---"
+OUT=$($PHP $MOOSH config:import -p "$MOODLE_PATH" "$TMPFILE" 2>&1)
+assert_output_contains "Shows dry run" "Dry run" "$OUT"
+echo ""
+
+echo "--- Test: Import core with --run ---"
+OUT=$($PHP $MOOSH config:import -p "$MOODLE_PATH" --run "$TMPFILE" 2>&1)
+assert_output_contains "Shows summary" "settings" "$OUT"
+echo ""
+
+echo "--- Test: Import plugin ---"
+OUT=$($PHP $MOOSH config:import -p "$MOODLE_PATH" --run "$PLUGIN_FILE" 2>&1)
+assert_output_contains "Plugin import summary" "settings" "$OUT"
+echo ""
+
+echo "--- Test: Import with --ignore-existing ---"
+OUT=$($PHP $MOOSH config:import -p "$MOODLE_PATH" --run --ignore-existing "$TMPFILE" 2>&1)
+assert_output_contains "Ignore existing summary" "skip" "$OUT"
+echo ""
+
+echo "--- Test: Nonexistent file ---"
+OUT=$($PHP $MOOSH config:import -p "$MOODLE_PATH" /tmp/nonexistent_file.json 2>&1)
+EC=$?
+assert_exit_code "Exit code 1 for nonexistent file" 1 $EC
+assert_output_contains "File not found" "not found" "$OUT"
+echo ""
+
+echo "--- Test: Invalid JSON ---"
+BADFILE=$(mktemp /tmp/moosh_bad_XXXXXX.json)
+echo "not json" > "$BADFILE"
+OUT=$($PHP $MOOSH config:import -p "$MOODLE_PATH" "$BADFILE" 2>&1)
+EC=$?
+assert_exit_code "Exit code 1 for invalid JSON" 1 $EC
+assert_output_contains "Invalid JSON error" "Invalid JSON" "$OUT"
+rm -f "$BADFILE"
+echo ""
+
+echo "--- Test: Help ---"
+OUT=$($PHP $MOOSH config:import -p "$MOODLE_PATH" --help 2>&1)
+assert_output_contains "Help description" "Import Moodle configuration" "$OUT"
+assert_output_contains "Help shows --ignore-existing" "--ignore-existing" "$OUT"
+echo ""
+
+# Cleanup
+rm -f "$TMPFILE" "$PLUGIN_FILE"
+
 print_summary
