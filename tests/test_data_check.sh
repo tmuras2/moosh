@@ -176,9 +176,5 @@ echo ""
 
 # ── data-check alias ──────────────────────────────────────────────
 
-echo "--- Test: data-check alias ---"
-OUT=$($PHP $MOOSH data-check -p "$MOODLE_PATH" checksum -o csv)
-assert_output_contains "Alias works" "checksum" "$OUT"
-echo ""
 
 print_summary

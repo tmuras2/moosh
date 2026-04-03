@@ -57,10 +57,6 @@ OUT=$($PHP $MOOSH file:stats -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Show file storage statistics" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH file-stats -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Total file records" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  file:list
@@ -105,10 +101,6 @@ assert_output_contains "Help description" "List files" "$OUT"
 assert_output_contains "Help shows --courseid" "--courseid" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH file-list --courseid 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "coursefile" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  file:info
@@ -156,10 +148,6 @@ OUT=$($PHP $MOOSH file:info -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Show detailed file information" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH file-info $FILE_ID -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "File ID" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  file:check
@@ -197,10 +185,6 @@ assert_output_contains "Help shows --missing" "--missing" "$OUT"
 assert_output_contains "Help shows --orphaned" "--orphaned" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH file-check -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Missing Files" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  file:upload
@@ -249,10 +233,6 @@ assert_output_contains "Help description" "Upload a file" "$OUT"
 assert_output_contains "Help shows --contextid" "--contextid" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH file-upload "$TMPDIR/testfile.txt" --contextid $CTX_ID --component course --filearea summary -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  file:delete
@@ -299,10 +279,5 @@ assert_output_contains "Help description" "Delete files" "$OUT"
 assert_output_contains "Help shows --hash" "--hash" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH file-delete 99999 -p "$MOODLE_PATH" 2>&1)
-# Will fail for invalid ID but alias should resolve
-assert_output_not_empty "Alias resolves" "$OUT"
-echo ""
 
 print_summary

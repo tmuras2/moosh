@@ -29,8 +29,7 @@ class BlockMod51Handler extends BaseHandler
             ->addOption('region', null, InputOption::VALUE_REQUIRED, 'Move to region (side-pre, side-post, content)')
             ->addOption('weight', null, InputOption::VALUE_REQUIRED, 'Set weight/position')
             ->addOption('pagetypepattern', null, InputOption::VALUE_REQUIRED, 'Change page type pattern')
-            ->addOption('showinsubcontexts', null, InputOption::VALUE_REQUIRED, 'Set showinsubcontexts (1 or 0)')
-            ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the block instance(s)');
+            ->addOption('showinsubcontexts', null, InputOption::VALUE_REQUIRED, 'Set showinsubcontexts (1 or 0)');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -46,14 +45,13 @@ class BlockMod51Handler extends BaseHandler
         $newWeight = $input->getOption('weight');
         $newPagetype = $input->getOption('pagetypepattern');
         $newSubcontexts = $input->getOption('showinsubcontexts');
-        $doDelete = $input->getOption('delete');
 
         $verbose->step('Loading Moodle libraries');
         require_once $CFG->dirroot . '/lib/blocklib.php';
 
         // Check that at least one modification was requested.
-        if (!$doDelete && $newRegion === null && $newWeight === null && $newPagetype === null && $newSubcontexts === null) {
-            $output->writeln('<error>No modifications specified. Use --region, --weight, --pagetypepattern, --showinsubcontexts, or --delete.</error>');
+        if ($newRegion === null && $newWeight === null && $newPagetype === null && $newSubcontexts === null) {
+            $output->writeln('<error>No modifications specified. Use --region, --weight, --pagetypepattern, or --showinsubcontexts.</error>');
             return Command::FAILURE;
         }
 
@@ -73,34 +71,9 @@ class BlockMod51Handler extends BaseHandler
             $instances[] = $instance;
         }
 
-        // Handle delete.
-        if ($doDelete) {
-            return $this->handleDelete($instances, $runMode, $output, $verbose);
-        }
-
         // Handle modifications.
         return $this->handleModify($instances, $newRegion, $newWeight, $newPagetype, $newSubcontexts,
             $runMode, $format, $output, $verbose);
-    }
-
-    private function handleDelete(array $instances, bool $runMode, OutputInterface $output, VerboseLogger $verbose): int
-    {
-        if (!$runMode) {
-            $output->writeln('<info>Dry run — the following block(s) would be deleted (use --run to execute):</info>');
-            foreach ($instances as $instance) {
-                $output->writeln("  ID={$instance->id} ({$instance->blockname}, region={$instance->defaultregion})");
-            }
-            return Command::SUCCESS;
-        }
-
-        $verbose->step('Deleting block instance(s)');
-        foreach ($instances as $instance) {
-            blocks_delete_instance($instance);
-            $output->writeln("Deleted block instance {$instance->id} ({$instance->blockname}).");
-            $verbose->info("Deleted instance {$instance->id}");
-        }
-
-        return Command::SUCCESS;
     }
 
     private function handleModify(

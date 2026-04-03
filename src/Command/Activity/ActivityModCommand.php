@@ -38,7 +38,6 @@ class ActivityModCommand extends BaseCommand
     {
         $this
             ->setName('activity:mod')
-            ->setAliases(['activity-mod'])
             ->setDescription('Modify an activity or move it to a different section')
             ->setHelp('Modifies activity properties (name, visibility, ID number) or moves it to a different section. Requires --run to apply changes.');
 

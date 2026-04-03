@@ -37,7 +37,6 @@ class GradeItemListCommand extends BaseCommand
     {
         $this
             ->setName('gradeitem:list')
-            ->setAliases(['gradeitem-list'])
             ->setDescription('List grade items for a course')
             ->setHelp(<<<'HELP'
                 Lists grade items for a course, optionally filtered by type or category.

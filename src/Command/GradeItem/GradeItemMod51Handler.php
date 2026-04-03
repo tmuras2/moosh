@@ -25,7 +25,7 @@ class GradeItemMod51Handler extends BaseHandler
     public function configureCommand(Command $command): void
     {
         $command
-            ->addArgument('id', InputArgument::REQUIRED, 'Grade item ID')
+            ->addArgument('itemid', InputArgument::REQUIRED, 'Grade item ID')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Set item name')
             ->addOption('grademax', null, InputOption::VALUE_REQUIRED, 'Set maximum grade')
             ->addOption('grademin', null, InputOption::VALUE_REQUIRED, 'Set minimum grade')
@@ -33,8 +33,7 @@ class GradeItemMod51Handler extends BaseHandler
             ->addOption('category', null, InputOption::VALUE_REQUIRED, 'Move to grade category ID')
             ->addOption('hidden', null, InputOption::VALUE_REQUIRED, 'Set hidden (1 or 0)')
             ->addOption('locked', null, InputOption::VALUE_REQUIRED, 'Set locked (1 or 0)')
-            ->addOption('idnumber', null, InputOption::VALUE_REQUIRED, 'Set ID number')
-            ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the grade item');
+            ->addOption('idnumber', null, InputOption::VALUE_REQUIRED, 'Set ID number');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -45,7 +44,7 @@ class GradeItemMod51Handler extends BaseHandler
         $runMode = $input->getOption('run');
         $format = $input->getOption('output');
 
-        $itemId = (int) $input->getArgument('id');
+        $itemId = (int) $input->getArgument('itemid');
         $newName = $input->getOption('name');
         $newGradeMax = $input->getOption('grademax');
         $newGradeMin = $input->getOption('grademin');
@@ -54,7 +53,6 @@ class GradeItemMod51Handler extends BaseHandler
         $newHidden = $input->getOption('hidden');
         $newLocked = $input->getOption('locked');
         $newIdNumber = $input->getOption('idnumber');
-        $doDelete = $input->getOption('delete');
 
         $verbose->step('Loading Moodle libraries');
         require_once $CFG->libdir . '/gradelib.php';
@@ -67,23 +65,13 @@ class GradeItemMod51Handler extends BaseHandler
             return Command::FAILURE;
         }
 
-        $hasChanges = $doDelete || $newName !== null || $newGradeMax !== null || $newGradeMin !== null
+        $hasChanges = $newName !== null || $newGradeMax !== null || $newGradeMin !== null
             || $newGradePass !== null || $newCategory !== null || $newHidden !== null
             || $newLocked !== null || $newIdNumber !== null;
 
         if (!$hasChanges) {
-            $output->writeln('<error>No modifications specified. Use --name, --grademax, --grademin, --gradepass, --category, --hidden, --locked, --idnumber, or --delete.</error>');
+            $output->writeln('<error>No modifications specified. Use --name, --grademax, --grademin, --gradepass, --category, --hidden, --locked, or --idnumber.</error>');
             return Command::FAILURE;
-        }
-
-        if ($doDelete) {
-            if (!$runMode) {
-                $output->writeln("<info>Dry run — would delete grade item '{$gi->itemname}' (ID=$itemId) (use --run to execute).</info>");
-                return Command::SUCCESS;
-            }
-            $gi->delete('moosh');
-            $output->writeln("Deleted grade item '{$gi->itemname}' (ID=$itemId).");
-            return Command::SUCCESS;
         }
 
         // Validate category if changing.

@@ -104,9 +104,5 @@ assert_output_contains "Help description" "Delete course categories" "$OUT"
 assert_output_contains "Help shows --move-to" "--move-to" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH category-delete -p "$MOODLE_PATH" 4 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

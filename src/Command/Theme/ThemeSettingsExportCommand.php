@@ -31,7 +31,6 @@ class ThemeSettingsExportCommand extends BaseCommand
     {
         $this
             ->setName('theme:settings-export')
-            ->setAliases(['theme-settings-export'])
             ->setDescription('Export theme settings to a tar.gz archive')
             ->setHelp('Exports all settings and associated files for a theme into a portable archive.');
         $this->handler->configureCommand($this);

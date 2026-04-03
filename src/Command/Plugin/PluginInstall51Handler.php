@@ -22,7 +22,7 @@ class PluginInstall51Handler extends BaseHandler
     public function configureCommand(Command $command): void
     {
         $command
-            ->addArgument('plugin_name', InputArgument::REQUIRED, 'Frankenstyle plugin name (e.g. mod_attendance)')
+            ->addArgument('plugin', InputArgument::REQUIRED, 'Frankenstyle plugin name (e.g. mod_attendance)')
             ->addOption('release', null, InputOption::VALUE_REQUIRED, 'Specific plugin version number (e.g. 2024010700)')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force install even if Moodle version is unsupported')
             ->addOption('delete', 'd', InputOption::VALUE_NONE, 'Remove existing plugin directory before installing')
@@ -35,7 +35,7 @@ class PluginInstall51Handler extends BaseHandler
 
         $verbose = new VerboseLogger($output);
         $runMode = $input->getOption('run');
-        $pluginName = $input->getArgument('plugin_name');
+        $pluginName = $input->getArgument('plugin');
         $releaseVersion = $input->getOption('release');
         $force = $input->getOption('force');
         $delete = $input->getOption('delete');

@@ -104,9 +104,5 @@ echo ""
 
 # ── course-create alias ──────────────────────────────────────────
 
-echo "--- Test: course-create alias ---"
-OUT=$($PHP $MOOSH course-create -p "$MOODLE_PATH" --run --category 2 aliascourse -o csv)
-assert_output_contains "Alias works" "aliascourse" "$OUT"
-echo ""
 
 print_summary

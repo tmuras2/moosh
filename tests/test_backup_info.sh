@@ -172,10 +172,6 @@ echo ""
 
 # ── backup-info alias ────────────────────────────────────────────
 
-echo "--- Test: backup-info alias ---"
-OUT=$($PHP $MOOSH backup-info -p "$MOODLE_PATH" /tmp/test_backup_algebra.mbz)
-assert_output_contains "Alias works" "Algebra Fundamentals" "$OUT"
-echo ""
 
 # ── Cleanup ───────────────────────────────────────────────────────
 rm -f /tmp/test_backup_algebra.mbz

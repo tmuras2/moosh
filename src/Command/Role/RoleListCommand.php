@@ -37,7 +37,6 @@ class RoleListCommand extends BaseCommand
     {
         $this
             ->setName('role:list')
-            ->setAliases(['role-list'])
             ->setDescription('List all roles')
             ->setHelp('Lists all roles defined in the system with their ID, shortname, name, and archetype.');
 

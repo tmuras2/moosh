@@ -31,7 +31,6 @@ class CohortCreateCommand extends BaseCommand
     {
         $this
             ->setName('cohort:create')
-            ->setAliases(['cohort-create'])
             ->setDescription('Create a cohort')
             ->setHelp(<<<'HELP'
                 Creates one or more cohorts at system or category level.

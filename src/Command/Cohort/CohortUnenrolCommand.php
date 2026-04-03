@@ -31,7 +31,6 @@ class CohortUnenrolCommand extends BaseCommand
     {
         $this
             ->setName('cohort:unenrol')
-            ->setAliases(['cohort-unenrol', 'cohort-unsync'])
             ->setDescription('Remove cohort enrolment sync from a course')
             ->setHelp(<<<'HELP'
                 Removes the cohort enrolment instance from a course, stopping automatic sync.

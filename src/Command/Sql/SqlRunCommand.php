@@ -37,7 +37,6 @@ class SqlRunCommand extends BaseCommand
     {
         $this
             ->setName('sql:run')
-            ->setAliases(['sql-run'])
             ->setDescription('Execute arbitrary SQL against the Moodle database')
             ->setHelp(<<<'HELP'
                 Executes a SQL query using Moodle's database API.

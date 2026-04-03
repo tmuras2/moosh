@@ -70,10 +70,6 @@ assert_output_contains "Help description" "Create a group" "$OUT"
 assert_output_contains "Help shows --visibility" "--visibility" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH group-create "Alias" 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  group:list
@@ -105,10 +101,6 @@ OUT=$($PHP $MOOSH group:list -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "List groups" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH group-list 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Group A" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  group:mod
@@ -173,10 +165,10 @@ EC=$?
 assert_exit_code "Exit code 1 for no mod" 1 $EC
 echo ""
 
-echo "--- Test: Delete ---"
+echo "--- Test: group:delete ---"
 DEL_OUT=$($PHP $MOOSH group:create "ToDelete" 2 -p "$MOODLE_PATH" --run -o csv 2>&1)
 DEL_ID=$(echo "$DEL_OUT" | tail -1 | cut -d, -f1)
-OUT=$($PHP $MOOSH group:mod $DEL_ID --delete -p "$MOODLE_PATH" --run 2>&1)
+OUT=$($PHP $MOOSH group:delete $DEL_ID -p "$MOODLE_PATH" --run 2>&1)
 EC=$?
 assert_exit_code "Delete exit code 0" 0 $EC
 assert_output_contains "Shows deleted" "Deleted" "$OUT"
@@ -186,13 +178,8 @@ echo "--- Test: Help ---"
 OUT=$($PHP $MOOSH group:mod -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help shows --add-member" "--add-member" "$OUT"
 assert_output_contains "Help shows --empty" "--empty" "$OUT"
-assert_output_contains "Help shows --delete" "--delete" "$OUT"
 echo ""
 
-echo "--- Test: group-memberadd alias ---"
-OUT=$($PHP $MOOSH group-memberadd $GRP_A_ID --add-member student01 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  grouping:create
@@ -229,10 +216,6 @@ OUT=$($PHP $MOOSH grouping:create -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Create a grouping" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH grouping-create "Alias" 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  grouping:list
@@ -264,10 +247,6 @@ OUT=$($PHP $MOOSH grouping:list -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "List groupings" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH grouping-list 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Lab Groups" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  grouping:mod
@@ -321,10 +300,10 @@ EC=$?
 assert_exit_code "Exit code 1 for no mod" 1 $EC
 echo ""
 
-echo "--- Test: Delete ---"
+echo "--- Test: grouping:delete ---"
 DEL_OUT=$($PHP $MOOSH grouping:create "ToDelete" 2 -p "$MOODLE_PATH" --run -o csv 2>&1)
 DEL_ID=$(echo "$DEL_OUT" | tail -1 | cut -d, -f1)
-OUT=$($PHP $MOOSH grouping:mod $DEL_ID --delete -p "$MOODLE_PATH" --run 2>&1)
+OUT=$($PHP $MOOSH grouping:delete $DEL_ID -p "$MOODLE_PATH" --run 2>&1)
 EC=$?
 assert_exit_code "Delete exit code 0" 0 $EC
 assert_output_contains "Shows deleted" "Deleted" "$OUT"
@@ -334,12 +313,7 @@ echo "--- Test: Help ---"
 OUT=$($PHP $MOOSH grouping:mod -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help shows --add-group" "--add-group" "$OUT"
 assert_output_contains "Help shows --remove-group" "--remove-group" "$OUT"
-assert_output_contains "Help shows --delete" "--delete" "$OUT"
 echo ""
 
-echo "--- Test: group-assigngrouping alias ---"
-OUT=$($PHP $MOOSH group-assigngrouping $GRPING_ID --add-group $GRP_A_ID -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

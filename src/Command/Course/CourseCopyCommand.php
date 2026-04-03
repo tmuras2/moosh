@@ -31,7 +31,6 @@ class CourseCopyCommand extends BaseCommand
     {
         $this
             ->setName('course:copy')
-            ->setAliases(['course-copy'])
             ->setDescription('Copy a course')
             ->setHelp('Creates a copy of a course as an ad-hoc task. Requires --run to execute.');
         $this->handler->configureCommand($this);

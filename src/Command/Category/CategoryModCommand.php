@@ -30,9 +30,6 @@ class CategoryModCommand extends BaseCommand
     {
         $this
             ->setName('category:mod')
-            ->setAliases(['category-mod', 'category-move', 'category-config-set',
-                'category-resortcourses', 'category-sortordertofirst',
-                'category-move-courses-from-category-to-another'])
             ->setDescription('Modify, move, resort, or manage courses in a category')
             ->setHelp(<<<'HELP'
                 Modifies category properties, moves it, reorders children/courses, or moves courses out.

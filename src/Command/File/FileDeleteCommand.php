@@ -30,7 +30,6 @@ class FileDeleteCommand extends BaseCommand
     {
         $this
             ->setName('file:delete')
-            ->setAliases(['file-delete', 'file-hash-delete'])
             ->setDescription('Delete files from Moodle file storage')
             ->setHelp(<<<'HELP'
                 Delete files by ID or hash.

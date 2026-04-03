@@ -30,7 +30,6 @@ class QuestionDeleteCommand extends BaseCommand
     {
         $this
             ->setName('question:delete')
-            ->setAliases(['question-delete', 'question-deleteOrphaned', 'question-clean'])
             ->setDescription('Delete questions by ID or clean up orphaned questions')
             ->setHelp(<<<'HELP'
                 Deletes questions by ID, or cleans up orphaned questions (missing type data).

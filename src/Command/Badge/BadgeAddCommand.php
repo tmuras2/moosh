@@ -38,7 +38,6 @@ class BadgeAddCommand extends BaseCommand
     {
         $this
             ->setName('badge:create')
-            ->setAliases(['badge-create', 'badge:add', 'badge-add'])
             ->setDescription('Create a badge')
             ->setHelp('Creates a new badge (site-level or course-level). Requires --run to actually create.');
 

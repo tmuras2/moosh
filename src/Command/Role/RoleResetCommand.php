@@ -37,7 +37,6 @@ class RoleResetCommand extends BaseCommand
     {
         $this
             ->setName('role:reset')
-            ->setAliases(['role-reset'])
             ->setDescription('Reset a role to match an XML definition file')
             ->setHelp(<<<'HELP'
                 Overwrites the current role configuration with that from an XML definition file.

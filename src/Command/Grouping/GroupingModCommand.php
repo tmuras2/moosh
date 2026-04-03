@@ -30,16 +30,14 @@ class GroupingModCommand extends BaseCommand
     {
         $this
             ->setName('grouping:mod')
-            ->setAliases(['grouping-mod', 'group-assigngrouping'])
-            ->setDescription('Modify a grouping, assign/unassign groups, or delete')
+            ->setDescription('Modify a grouping or assign/unassign groups')
             ->setHelp(<<<'HELP'
-                Modifies grouping properties, assigns/unassigns groups, or deletes a grouping.
+                Modifies grouping properties or assigns/unassigns groups.
 
                 Examples:
                   grouping:mod 5 --name "Renamed" --run
                   grouping:mod 5 --add-group 10 --add-group 11 --run
                   grouping:mod 5 --remove-group 10 --run
-                  grouping:mod 5 --delete --run
                 HELP);
         $this->handler->configureCommand($this);
     }

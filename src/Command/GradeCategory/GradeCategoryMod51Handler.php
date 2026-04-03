@@ -25,13 +25,12 @@ class GradeCategoryMod51Handler extends BaseHandler
     public function configureCommand(Command $command): void
     {
         $command
-            ->addArgument('id', InputArgument::REQUIRED, 'Grade category ID')
+            ->addArgument('categoryid', InputArgument::REQUIRED, 'Grade category ID')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Set category name')
             ->addOption('aggregation', null, InputOption::VALUE_REQUIRED, 'Set aggregation type')
             ->addOption('keephigh', null, InputOption::VALUE_REQUIRED, 'Keep only N highest')
             ->addOption('droplow', null, InputOption::VALUE_REQUIRED, 'Drop N lowest')
-            ->addOption('hidden', null, InputOption::VALUE_REQUIRED, 'Set hidden (1 or 0)')
-            ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the grade category');
+            ->addOption('hidden', null, InputOption::VALUE_REQUIRED, 'Set hidden (1 or 0)');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -42,13 +41,12 @@ class GradeCategoryMod51Handler extends BaseHandler
         $runMode = $input->getOption('run');
         $format = $input->getOption('output');
 
-        $catId = (int) $input->getArgument('id');
+        $catId = (int) $input->getArgument('categoryid');
         $newName = $input->getOption('name');
         $newAggregation = $input->getOption('aggregation');
         $newKeephigh = $input->getOption('keephigh');
         $newDroplow = $input->getOption('droplow');
         $newHidden = $input->getOption('hidden');
-        $doDelete = $input->getOption('delete');
 
         $verbose->step('Loading Moodle libraries');
         require_once $CFG->libdir . '/gradelib.php';
@@ -61,19 +59,9 @@ class GradeCategoryMod51Handler extends BaseHandler
             return Command::FAILURE;
         }
 
-        if (!$doDelete && $newName === null && $newAggregation === null && $newKeephigh === null && $newDroplow === null && $newHidden === null) {
-            $output->writeln('<error>No modifications specified. Use --name, --aggregation, --keephigh, --droplow, --hidden, or --delete.</error>');
+        if ($newName === null && $newAggregation === null && $newKeephigh === null && $newDroplow === null && $newHidden === null) {
+            $output->writeln('<error>No modifications specified. Use --name, --aggregation, --keephigh, --droplow, or --hidden.</error>');
             return Command::FAILURE;
-        }
-
-        if ($doDelete) {
-            if (!$runMode) {
-                $output->writeln("<info>Dry run — would delete grade category '{$gc->fullname}' (ID=$catId) (use --run to execute).</info>");
-                return Command::SUCCESS;
-            }
-            $gc->delete('moosh');
-            $output->writeln("Deleted grade category '{$gc->fullname}' (ID=$catId).");
-            return Command::SUCCESS;
         }
 
         // Build changes summary.

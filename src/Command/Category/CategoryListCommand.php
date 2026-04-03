@@ -40,7 +40,6 @@ class CategoryListCommand extends BaseCommand
     {
         $this
             ->setName('category:list')
-            ->setAliases(['category-list'])
             ->setDescription('List Moodle course categories')
             ->setHelp('Lists course categories matching optional search criteria with configurable output fields and format.');
 

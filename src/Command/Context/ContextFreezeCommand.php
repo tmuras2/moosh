@@ -37,7 +37,6 @@ class ContextFreezeCommand extends BaseCommand
     {
         $this
             ->setName('context:freeze')
-            ->setAliases(['context-freeze'])
             ->setDescription('Freeze (lock) one or more contexts')
             ->setHelp(<<<'HELP'
                 Freezes contexts so that all write capabilities are suppressed.

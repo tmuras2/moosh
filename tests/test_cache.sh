@@ -69,10 +69,6 @@ assert_output_contains "Help shows --store" "--store" "$OUT"
 assert_output_contains "Help shows --definition" "--definition" "$OUT"
 echo ""
 
-echo "--- Test: cache-clear alias ---"
-OUT=$($PHP $MOOSH cache-clear -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "All caches purged" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  cache:rebuild
@@ -116,10 +112,6 @@ assert_output_contains "Help description" "Rebuild course cache" "$OUT"
 assert_output_contains "Help shows --all" "--all" "$OUT"
 echo ""
 
-echo "--- Test: cache-course-rebuild alias ---"
-OUT=$($PHP $MOOSH cache-course-rebuild 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Rebuilt" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  cache:info
@@ -178,10 +170,6 @@ assert_output_contains "Help description" "Show cache configuration" "$OUT"
 assert_output_contains "Help shows --stores" "--stores" "$OUT"
 echo ""
 
-echo "--- Test: cache-config-get alias ---"
-OUT=$($PHP $MOOSH cache-config-get --stores -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "default_application" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  cache:create
@@ -232,10 +220,6 @@ assert_output_contains "Help shows plugin" "plugin" "$OUT"
 assert_output_contains "Help shows --server" "--server" "$OUT"
 echo ""
 
-echo "--- Test: cache-create alias ---"
-OUT=$($PHP $MOOSH cache-create file aliasstore -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # Verify store was created
 OUT=$($PHP $MOOSH cache:info --stores -p "$MOODLE_PATH" -o csv 2>&1)
@@ -321,9 +305,5 @@ assert_output_contains "Help shows --application" "--application" "$OUT"
 assert_output_contains "Help shows --definition" "--definition" "$OUT"
 echo ""
 
-echo "--- Test: cache-edit-mappings alias ---"
-OUT=$($PHP $MOOSH cache-edit-mappings --application default_application -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

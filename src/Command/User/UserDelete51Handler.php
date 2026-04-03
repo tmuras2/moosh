@@ -22,7 +22,7 @@ class UserDelete51Handler extends BaseHandler
     {
         $command
             ->addArgument(
-                'user',
+                'userid',
                 InputArgument::REQUIRED | InputArgument::IS_ARRAY,
                 'Username(s) or user ID(s) to delete',
             )
@@ -35,7 +35,7 @@ class UserDelete51Handler extends BaseHandler
 
         $verbose = new VerboseLogger($output);
         $runMode = $input->getOption('run');
-        $users = $input->getArgument('user');
+        $users = $input->getArgument('userid');
         $byId = $input->getOption('id');
 
         require_once $CFG->dirroot . '/user/lib.php';

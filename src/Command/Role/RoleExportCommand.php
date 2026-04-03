@@ -37,7 +37,6 @@ class RoleExportCommand extends BaseCommand
     {
         $this
             ->setName('role:export')
-            ->setAliases(['role-export'])
             ->setDescription('Export a role definition to XML')
             ->setHelp(<<<'HELP'
                 Exports a role's full definition (permissions, context levels, archetype) as XML.

@@ -30,7 +30,6 @@ class FilterModCommand extends BaseCommand
     {
         $this
             ->setName('filter:mod')
-            ->setAliases(['filter-mod', 'filter-set'])
             ->setDescription('Modify a text filter state, order, or configuration')
             ->setHelp(<<<'HELP'
                 Modifies filter global or local state, reorders filters, or sets configuration.

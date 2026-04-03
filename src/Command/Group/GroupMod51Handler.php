@@ -30,8 +30,7 @@ class GroupMod51Handler extends BaseHandler
             ->addOption('enrolmentkey', null, InputOption::VALUE_REQUIRED, 'Set enrolment key')
             ->addOption('add-member', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Add member by username or user ID')
             ->addOption('remove-member', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Remove member by username or user ID')
-            ->addOption('empty', null, InputOption::VALUE_NONE, 'Remove all members')
-            ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the group');
+            ->addOption('empty', null, InputOption::VALUE_NONE, 'Remove all members');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -51,7 +50,6 @@ class GroupMod51Handler extends BaseHandler
         $addMembers = $input->getOption('add-member');
         $removeMembers = $input->getOption('remove-member');
         $doEmpty = $input->getOption('empty');
-        $doDelete = $input->getOption('delete');
 
         require_once $CFG->dirroot . '/group/lib.php';
 
@@ -61,24 +59,13 @@ class GroupMod51Handler extends BaseHandler
             return Command::FAILURE;
         }
 
-        $hasChanges = $doDelete || $doEmpty || $newName !== null || $newDesc !== null
+        $hasChanges = $doEmpty || $newName !== null || $newDesc !== null
             || $newIdnumber !== null || $newVisibility !== null || $newKey !== null
             || !empty($addMembers) || !empty($removeMembers);
 
         if (!$hasChanges) {
             $output->writeln('<error>No modifications specified.</error>');
             return Command::FAILURE;
-        }
-
-        // Delete.
-        if ($doDelete) {
-            if (!$runMode) {
-                $output->writeln("<info>Dry run — would delete group '{$group->name}' (ID=$groupId) (use --run to execute).</info>");
-                return Command::SUCCESS;
-            }
-            groups_delete_group($groupId);
-            $output->writeln("Deleted group '{$group->name}' (ID=$groupId).");
-            return Command::SUCCESS;
         }
 
         // Resolve users.

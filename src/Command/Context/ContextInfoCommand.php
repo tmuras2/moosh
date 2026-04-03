@@ -38,7 +38,6 @@ class ContextInfoCommand extends BaseCommand
     {
         $this
             ->setName('context:info')
-            ->setAliases(['context-info'])
             ->setDescription('Show detailed information about a context')
             ->setHelp('Displays comprehensive statistics for a single context: type, instance, role assignments, capabilities, child contexts, files, and type-specific details.');
 

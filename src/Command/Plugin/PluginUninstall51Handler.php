@@ -20,7 +20,7 @@ class PluginUninstall51Handler extends BaseHandler
     public function configureCommand(Command $command): void
     {
         $command
-            ->addArgument('plugin_name', InputArgument::REQUIRED, 'Frankenstyle plugin name (e.g. mod_attendance)');
+            ->addArgument('plugin', InputArgument::REQUIRED, 'Frankenstyle plugin name (e.g. mod_attendance)');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -29,7 +29,7 @@ class PluginUninstall51Handler extends BaseHandler
 
         $verbose = new VerboseLogger($output);
         $runMode = $input->getOption('run');
-        $pluginName = $input->getArgument('plugin_name');
+        $pluginName = $input->getArgument('plugin');
 
         require_once $CFG->libdir . '/adminlib.php';
         require_once $CFG->libdir . '/upgradelib.php';

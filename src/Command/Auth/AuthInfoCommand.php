@@ -37,7 +37,6 @@ class AuthInfoCommand extends BaseCommand
     {
         $this
             ->setName('auth:info')
-            ->setAliases(['auth-info'])
             ->setDescription('Show detailed information about an auth plugin')
             ->setHelp('Displays comprehensive information about a specific authentication plugin: capabilities, user statistics, configuration settings, and field locks.');
 

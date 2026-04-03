@@ -21,7 +21,7 @@ class CompletionMarkCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('completion:mark')->setAliases(['completion-mark'])
+        $this->setName('completion:mark')
             ->setDescription('Mark course or activity as complete for a user')
             ->setHelp("Marks a course or activity as complete/incomplete for a user.\n\nExamples:\n  completion:mark 2 --userid 3 --run\n  completion:mark 2 --userid 3 --cmid 42 --run\n  completion:mark 2 --userid 3 --cmid 42 --state incomplete --run");
         $this->handler->configureCommand($this);

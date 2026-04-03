@@ -165,10 +165,6 @@ echo ""
 
 # ── backup-empty-files alias ─────────────────────────────────────
 
-echo "--- Test: backup-empty-files alias ---"
-OUT=$($PHP $MOOSH backup-empty-files /tmp/test_ef_backup.mbz)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ── Cleanup ───────────────────────────────────────────────────────
 rm -f /tmp/test_ef_backup.mbz /tmp/test_ef_emptied.mbz /tmp/test_ef_inplace.mbz

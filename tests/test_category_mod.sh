@@ -122,10 +122,6 @@ assert_output_contains "Help shows --resort" "--resort" "$OUT"
 assert_output_contains "Help shows --move-courses" "--move-courses" "$OUT"
 echo ""
 
-echo "--- Test: category-move alias ---"
-OUT=$($PHP $MOOSH category-move 2 --parent 0 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  category:export
@@ -177,10 +173,6 @@ OUT=$($PHP $MOOSH category:export -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Export category tree" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH category-export 0 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "<categories>" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  category:import
@@ -270,9 +262,5 @@ assert_output_contains "Help description" "Import categories" "$OUT"
 assert_output_contains "Help shows --parent" "--parent" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH category-import "$TMPDIR/import.xml" -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

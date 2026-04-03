@@ -30,10 +30,9 @@ class GroupModCommand extends BaseCommand
     {
         $this
             ->setName('group:mod')
-            ->setAliases(['group-mod', 'group-delete', 'group-memberadd', 'group-empty'])
-            ->setDescription('Modify a group, manage members, or delete')
+            ->setDescription('Modify a group or manage its members')
             ->setHelp(<<<'HELP'
-                Modifies group properties, manages members, or deletes a group.
+                Modifies group properties or manages members.
 
                 Examples:
                   group:mod 5 --name "New Name" --run
@@ -41,7 +40,6 @@ class GroupModCommand extends BaseCommand
                   group:mod 5 --remove-member admin --run
                   group:mod 5 --empty --run
                   group:mod 5 --visibility 1 --run
-                  group:mod 5 --delete --run
                 HELP);
         $this->handler->configureCommand($this);
     }

@@ -37,18 +37,16 @@ class BlockModCommand extends BaseCommand
     {
         $this
             ->setName('block:mod')
-            ->setAliases(['block-mod', 'block:manage', 'block-manage'])
-            ->setDescription('Modify, move, or delete a block instance')
+            ->setDescription('Modify or move a block instance')
             ->setHelp(<<<'HELP'
                 Modifies block instance properties (region, weight, page type pattern,
-                visibility in subcontexts) or deletes block instances.
+                visibility in subcontexts).
 
                 Examples:
                   block:mod 42 --region side-post --run
                   block:mod 42 --weight 5 --run
                   block:mod 42 --pagetypepattern course-view-* --run
                   block:mod 42 --showinsubcontexts 1 --run
-                  block:mod 42 43 --delete --run
                 HELP);
 
         $this->handler->configureCommand($this);

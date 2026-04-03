@@ -71,15 +71,7 @@ assert_output_contains "Help description" "List enrolment methods" "$OUT"
 assert_output_contains "Help shows courseid" "courseid" "$OUT"
 echo ""
 
-echo "--- Test: enrol-list alias ---"
-OUT=$($PHP $MOOSH enrol-list 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "manual" "$OUT"
-echo ""
 
-echo "--- Test: course-enrol-list alias ---"
-OUT=$($PHP $MOOSH course-enrol-list 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Course alias works" "manual" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  enrol:mod
@@ -153,7 +145,7 @@ $PHP $MOOSH course:mod 2 --selfenrol 1 -p "$MOODLE_PATH" --run > /dev/null 2>&1
 # Get the newly created self ID (there might be two now)
 NEW_SELF_ID=$($PHP $MOOSH enrol:list 2 -p "$MOODLE_PATH" -o csv 2>&1 | grep self | tail -1 | cut -d, -f1)
 if [ "$NEW_SELF_ID" != "$SELF_ID" ]; then
-    OUT=$($PHP $MOOSH enrol:mod $NEW_SELF_ID --delete -p "$MOODLE_PATH" --run 2>&1)
+    OUT=$($PHP $MOOSH enrol:delete $NEW_SELF_ID -p "$MOODLE_PATH" --run 2>&1)
     EC=$?
     assert_exit_code "Delete exit code 0" 0 $EC
     assert_output_contains "Shows deleted" "Deleted" "$OUT"
@@ -179,19 +171,10 @@ echo ""
 
 echo "--- Test: enrol:mod help ---"
 OUT=$($PHP $MOOSH enrol:mod -p "$MOODLE_PATH" --help 2>&1)
-assert_output_contains "Help description" "Modify or delete" "$OUT"
+assert_output_contains "Help description" "Modify an enrolment" "$OUT"
 assert_output_contains "Help shows --enabled" "--enabled" "$OUT"
-assert_output_contains "Help shows --delete" "--delete" "$OUT"
 echo ""
 
-echo "--- Test: enrol-mod alias ---"
-OUT=$($PHP $MOOSH enrol-mod $GUEST_ID --enabled 0 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
-echo "--- Test: course-enrol-change-status alias ---"
-OUT=$($PHP $MOOSH course-enrol-change-status $GUEST_ID --enabled 0 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Change status alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

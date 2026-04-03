@@ -27,8 +27,7 @@ class GroupingMod51Handler extends BaseHandler
             ->addOption('description', 'd', InputOption::VALUE_REQUIRED, 'Set description')
             ->addOption('idnumber', null, InputOption::VALUE_REQUIRED, 'Set ID number')
             ->addOption('add-group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Assign group ID to grouping')
-            ->addOption('remove-group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Unassign group ID from grouping')
-            ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the grouping');
+            ->addOption('remove-group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Unassign group ID from grouping');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -45,7 +44,6 @@ class GroupingMod51Handler extends BaseHandler
         $newIdnumber = $input->getOption('idnumber');
         $addGroups = $input->getOption('add-group');
         $removeGroups = $input->getOption('remove-group');
-        $doDelete = $input->getOption('delete');
 
         require_once $CFG->dirroot . '/group/lib.php';
 
@@ -55,22 +53,12 @@ class GroupingMod51Handler extends BaseHandler
             return Command::FAILURE;
         }
 
-        $hasChanges = $doDelete || $newName !== null || $newDesc !== null || $newIdnumber !== null
+        $hasChanges = $newName !== null || $newDesc !== null || $newIdnumber !== null
             || !empty($addGroups) || !empty($removeGroups);
 
         if (!$hasChanges) {
             $output->writeln('<error>No modifications specified.</error>');
             return Command::FAILURE;
-        }
-
-        if ($doDelete) {
-            if (!$runMode) {
-                $output->writeln("<info>Dry run — would delete grouping '{$grouping->name}' (ID=$groupingId) (use --run to execute).</info>");
-                return Command::SUCCESS;
-            }
-            groups_delete_grouping($groupingId);
-            $output->writeln("Deleted grouping '{$grouping->name}' (ID=$groupingId).");
-            return Command::SUCCESS;
         }
 
         // Validate group IDs.

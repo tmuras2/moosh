@@ -21,7 +21,7 @@ class CompletionResetCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('completion:reset')->setAliases(['completion-reset'])
+        $this->setName('completion:reset')
             ->setDescription('Reset completion data for a course')
             ->setHelp("Resets all completion data for a course or specific activity.\n\nExamples:\n  completion:reset 2 --run\n  completion:reset 2 --cmid 42 --run");
         $this->handler->configureCommand($this);

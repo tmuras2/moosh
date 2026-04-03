@@ -30,7 +30,6 @@ class GroupListCommand extends BaseCommand
     {
         $this
             ->setName('group:list')
-            ->setAliases(['group-list'])
             ->setDescription('List groups in a course')
             ->setHelp(<<<'HELP'
                 Lists groups in a course with member counts.

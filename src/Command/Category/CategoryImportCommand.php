@@ -30,7 +30,6 @@ class CategoryImportCommand extends BaseCommand
     {
         $this
             ->setName('category:import')
-            ->setAliases(['category-import'])
             ->setDescription('Import categories from XML file')
             ->setHelp(<<<'HELP'
                 Imports categories from an XML file (as exported by category:export).

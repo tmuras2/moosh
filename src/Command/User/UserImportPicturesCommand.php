@@ -37,7 +37,6 @@ class UserImportPicturesCommand extends BaseCommand
     {
         $this
             ->setName('user:import-pictures')
-            ->setAliases(['user-import-pictures'])
             ->setDescription('Import user profile pictures from a directory')
             ->setHelp(<<<'HELP'
                 Imports profile pictures from a directory, matching image filenames to users.

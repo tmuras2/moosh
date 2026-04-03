@@ -31,7 +31,6 @@ class ThemeInfoCommand extends BaseCommand
     {
         $this
             ->setName('theme:info')
-            ->setAliases(['theme-info'])
             ->setDescription('Show theme usage information and site theme configuration')
             ->setHelp('Displays which themes are in use across courses, categories, and users, and shows the current site theme.');
         $this->handler->configureCommand($this);

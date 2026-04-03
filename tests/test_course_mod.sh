@@ -158,14 +158,6 @@ assert_output_contains "Help shows --guest" "--guest" "$OUT"
 assert_output_contains "Help shows --selfenrol" "--selfenrol" "$OUT"
 echo ""
 
-echo "--- Test: course-mod alias ---"
-OUT=$($PHP $MOOSH course-mod 2 --visible 1 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
-echo "--- Test: course-move alias ---"
-OUT=$($PHP $MOOSH course-move 2 --category 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Move alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

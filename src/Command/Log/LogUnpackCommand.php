@@ -37,7 +37,6 @@ class LogUnpackCommand extends BaseCommand
     {
         $this
             ->setName('log:unpack')
-            ->setAliases(['log-unpack'])
             ->setDescription('Restore IDs in a compact log export CSV using metadata.json')
             ->setHelp(
                 "Reads a compact CSV (without id column) produced by log:export --compact\n" .

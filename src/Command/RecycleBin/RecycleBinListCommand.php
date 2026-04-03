@@ -21,7 +21,7 @@ class RecycleBinListCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('recyclebin:list')->setAliases(['recyclebin-list'])
+        $this->setName('recyclebin:list')
             ->setDescription('List items in the recycle bin')
             ->setHelp("Lists deleted items in a course's recycle bin.\n\nExamples:\n  recyclebin:list 2\n  recyclebin:list 2 -o csv");
         $this->handler->configureCommand($this);

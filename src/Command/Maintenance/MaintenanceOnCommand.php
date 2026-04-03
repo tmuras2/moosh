@@ -28,7 +28,7 @@ class MaintenanceOnCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('maintenance:on')->setAliases(['maintenance-on'])
+        $this->setName('maintenance:on')
             ->setDescription('Enable maintenance mode')
             ->setHelp('Enables maintenance mode with optional message.');
         $this->handler->configureCommand($this);

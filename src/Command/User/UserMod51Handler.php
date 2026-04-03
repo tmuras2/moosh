@@ -27,7 +27,7 @@ class UserMod51Handler extends BaseHandler
     public function configureCommand(Command $command): void
     {
         $command
-            ->addArgument('user', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Username(s) or user ID(s) to modify')
+            ->addArgument('userid', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Username(s) or user ID(s) to modify')
             ->addOption('email', null, InputOption::VALUE_REQUIRED, 'Set email address')
             ->addOption('password', null, InputOption::VALUE_REQUIRED, 'Set password')
             ->addOption('auth', null, InputOption::VALUE_REQUIRED, 'Set authentication method')
@@ -51,7 +51,7 @@ class UserMod51Handler extends BaseHandler
         $verbose = new VerboseLogger($output);
         $runMode = $input->getOption('run');
         $format = $input->getOption('output');
-        $identifiers = $input->getArgument('user');
+        $identifiers = $input->getArgument('userid');
 
         $newEmail = $input->getOption('email');
         $newPassword = $input->getOption('password');

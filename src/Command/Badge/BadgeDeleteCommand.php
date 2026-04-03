@@ -38,7 +38,6 @@ class BadgeDeleteCommand extends BaseCommand
     {
         $this
             ->setName('badge:delete')
-            ->setAliases(['badge-delete'])
             ->setDescription('Delete badges')
             ->setHelp('Deletes one or more badges by their ID. Requires --run to actually delete.');
 

@@ -30,7 +30,6 @@ class GroupingCreateCommand extends BaseCommand
     {
         $this
             ->setName('grouping:create')
-            ->setAliases(['grouping-create'])
             ->setDescription('Create a grouping in a course')
             ->setHelp(<<<'HELP'
                 Creates a grouping in a course.

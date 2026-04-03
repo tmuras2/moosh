@@ -159,10 +159,6 @@ assert_output_contains "Help shows --run" "--run" "$OUT"
 assert_output_contains "Help shows sql argument" "sql" "$OUT"
 echo ""
 
-echo "--- Test: sql-run alias ---"
-OUT=$($PHP $MOOSH sql-run -p "$MOODLE_PATH" "SELECT id, username FROM {user} WHERE username='admin'" -o csv 2>&1)
-assert_output_contains "Alias works" "admin" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  sql:dump
@@ -226,10 +222,6 @@ assert_output_contains "Help shows --gzip" "--gzip" "$OUT"
 assert_output_contains "Help shows --tables" "--tables" "$OUT"
 echo ""
 
-echo "--- Test: sql-dump alias ---"
-OUT=$($PHP $MOOSH sql-dump -p "$MOODLE_PATH" --tables=config 2>&1 | head -5)
-assert_output_not_empty "Alias produces output" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  sql:cli
@@ -246,9 +238,5 @@ OUT=$($PHP $MOOSH sql:cli -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help shows description" "interactive database CLI" "$OUT"
 echo ""
 
-echo "--- Test: sql-cli alias ---"
-OUT=$($PHP $MOOSH sql-cli -p "$MOODLE_PATH" --help 2>&1)
-assert_output_contains "Alias help works" "interactive" "$OUT"
-echo ""
 
 print_summary

@@ -31,7 +31,6 @@ class CategoryDeleteCommand extends BaseCommand
     {
         $this
             ->setName('category:delete')
-            ->setAliases(['category-delete'])
             ->setDescription('Delete course categories')
             ->setHelp('Deletes one or more categories and their contents. Use --move-to to move courses to another category instead of deleting them. Requires --run to execute.');
         $this->handler->configureCommand($this);

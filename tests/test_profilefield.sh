@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Integration test for moosh2 profilefield:add, :info, :delete, :export, :import
+# Integration test for moosh2 profilefield:create, :info, :delete, :export, :import
 # Requires a working Moodle 5.1 installation at /var/www/html/moodle51
 #
 # Usage: bash tests/test_profilefield.sh
@@ -19,19 +19,19 @@ bash "$SCRIPT_DIR/clear.sh"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════
-# profilefield:add
+# profilefield:create
 # ═══════════════════════════════════════════════════════════════════
 
-echo "========== profilefield:add =========="
+echo "========== profilefield:create =========="
 echo ""
 
 echo "--- Test: Dry run ---"
-OUT=$($PHP $MOOSH profilefield:add -p "$MOODLE_PATH" testfield)
+OUT=$($PHP $MOOSH profilefield:create -p "$MOODLE_PATH" testfield)
 assert_output_contains "Shows dry run" "Dry run" "$OUT"
 echo ""
 
 echo "--- Test: Create text field ---"
-OUT=$($PHP $MOOSH profilefield:add -p "$MOODLE_PATH" --run --name "Employee ID" --category "HR" employeeid -o csv)
+OUT=$($PHP $MOOSH profilefield:create -p "$MOODLE_PATH" --run --name "Employee ID" --category "HR" employeeid -o csv)
 echo "$OUT"
 assert_output_contains "Header" "id,shortname,name,datatype,category" "$OUT"
 assert_output_contains "Shortname" "employeeid" "$OUT"
@@ -41,33 +41,33 @@ FIELD1_ID=$(echo "$OUT" | tail -1 | cut -d, -f1)
 echo ""
 
 echo "--- Test: Create datetime field ---"
-OUT=$($PHP $MOOSH profilefield:add -p "$MOODLE_PATH" --run --name "Start Date" --datatype datetime --category "HR" startdate -o csv)
+OUT=$($PHP $MOOSH profilefield:create -p "$MOODLE_PATH" --run --name "Start Date" --datatype datetime --category "HR" startdate -o csv)
 assert_output_contains "Datetime type" ",datetime," "$OUT"
 FIELD2_ID=$(echo "$OUT" | tail -1 | cut -d, -f1)
 echo ""
 
 echo "--- Test: Create checkbox field ---"
-OUT=$($PHP $MOOSH profilefield:add -p "$MOODLE_PATH" --run --name "Active" --datatype checkbox --required 1 --visible 1 isactive -o csv)
+OUT=$($PHP $MOOSH profilefield:create -p "$MOODLE_PATH" --run --name "Active" --datatype checkbox --required 1 --visible 1 isactive -o csv)
 assert_output_contains "Checkbox type" ",checkbox," "$OUT"
 FIELD3_ID=$(echo "$OUT" | tail -1 | cut -d, -f1)
 echo ""
 
 echo "--- Test: Duplicate shortname rejected ---"
-OUT=$($PHP $MOOSH profilefield:add -p "$MOODLE_PATH" --run employeeid 2>&1)
+OUT=$($PHP $MOOSH profilefield:create -p "$MOODLE_PATH" --run employeeid 2>&1)
 EXIT_CODE=$?
 assert_exit_code "Exit code 1 for duplicate" 1 "$EXIT_CODE"
 assert_output_contains "Already exists error" "already exists" "$OUT"
 echo ""
 
 echo "--- Test: JSON output ---"
-OUT=$($PHP $MOOSH profilefield:add -p "$MOODLE_PATH" --run --name "JSON Field" jsonfield -o json)
+OUT=$($PHP $MOOSH profilefield:create -p "$MOODLE_PATH" --run --name "JSON Field" jsonfield -o json)
 assert_output_contains "JSON has shortname" '"shortname"' "$OUT"
 assert_output_contains "JSON has jsonfield" '"jsonfield"' "$OUT"
 FIELD4_ID=$(echo "$OUT" | grep -o '"id": [0-9]*' | head -1 | grep -o '[0-9]*')
 echo ""
 
 echo "--- Test: Help ---"
-OUT=$($PHP $MOOSH profilefield:add -p "$MOODLE_PATH" --help)
+OUT=$($PHP $MOOSH profilefield:create -p "$MOODLE_PATH" --help)
 assert_output_contains "Help description" "Create a user profile field" "$OUT"
 assert_output_contains "Help shows --datatype" "--datatype" "$OUT"
 assert_output_contains "Help shows --category" "--category" "$OUT"
@@ -227,10 +227,6 @@ echo ""
 
 # ── Aliases ───────────────────────────────────────────────────────
 
-echo "--- Test: Aliases ---"
-OUT=$($PHP $MOOSH profilefield-export -p "$MOODLE_PATH" -o csv)
-assert_output_contains "Export alias" "employeeid" "$OUT"
-echo ""
 
 # ── Cleanup ───────────────────────────────────────────────────────
 rm -f /tmp/test_pf.csv

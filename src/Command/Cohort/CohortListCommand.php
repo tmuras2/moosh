@@ -31,7 +31,6 @@ class CohortListCommand extends BaseCommand
     {
         $this
             ->setName('cohort:list')
-            ->setAliases(['cohort-list'])
             ->setDescription('List cohorts')
             ->setHelp(<<<'HELP'
                 Lists cohorts with member counts.

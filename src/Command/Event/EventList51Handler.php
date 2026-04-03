@@ -24,14 +24,14 @@ class EventList51Handler extends BaseHandler
             ->addOption('component', null, InputOption::VALUE_REQUIRED, 'Filter by component (core, mod_forum, etc.)')
             ->addOption('crud', null, InputOption::VALUE_REQUIRED, 'Filter by CRUD: c, r, u, d')
             ->addOption('search', null, InputOption::VALUE_REQUIRED, 'Search event names')
-            ->addOption('id-only', 'i', InputOption::VALUE_NONE, 'Show classnames only');
+            ->addOption('classname-only', null, InputOption::VALUE_NONE, 'Show classnames only');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
     {
         $verbose = new VerboseLogger($output);
         $format = $input->getOption('output');
-        $idOnly = $input->getOption('id-only');
+        $idOnly = $input->getOption('classname-only');
 
         $filterComponent = $input->getOption('component');
         $filterCrud = $input->getOption('crud');

@@ -103,9 +103,5 @@ echo ""
 
 # ── audit-password alias ──────────────────────────────────────────
 
-echo "--- Test: audit-password alias ---"
-OUT=$($PHP $MOOSH audit-password -p "$MOODLE_PATH" --userid $WEAK_ID -o csv)
-assert_output_contains "Alias works" "weakuser1" "$OUT"
-echo ""
 
 print_summary

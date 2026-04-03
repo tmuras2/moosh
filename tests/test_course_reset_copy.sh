@@ -57,10 +57,6 @@ assert_output_contains "Help description" "Reset course data" "$OUT"
 assert_output_contains "Help shows --settings" "--settings" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH course-reset -p "$MOODLE_PATH" 2 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # course:copy
@@ -105,9 +101,5 @@ assert_output_contains "Help description" "Copy a course" "$OUT"
 assert_output_contains "Help shows --userdata" "--userdata" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH course-copy -p "$MOODLE_PATH" 2 "Alias Copy" alias_copy_sn 2 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

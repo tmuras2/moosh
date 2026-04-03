@@ -21,7 +21,7 @@ class CompletionStatusCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('completion:status')->setAliases(['completion-status'])
+        $this->setName('completion:status')
             ->setDescription('Show course completion status for a user')
             ->setHelp("Shows completion progress, activity states, and criteria status.\n\nExamples:\n  completion:status 2 --userid 3\n  completion:status 2 --userid 3 -o csv\n  completion:status 2 --all");
         $this->handler->configureCommand($this);

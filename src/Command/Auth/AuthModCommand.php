@@ -38,7 +38,6 @@ class AuthModCommand extends BaseCommand
     {
         $this
             ->setName('auth:mod')
-            ->setAliases(['auth-mod'])
             ->setDescription('Enable, disable, or reorder auth plugins')
             ->setHelp('Modify authentication plugin status: enable, disable, move up, or move down in priority order. Requires --run to apply changes.');
 

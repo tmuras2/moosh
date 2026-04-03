@@ -28,8 +28,7 @@ class EnrolMod51Handler extends BaseHandler
             ->addArgument('instanceid', InputArgument::REQUIRED | InputArgument::IS_ARRAY, 'Enrolment instance ID(s)')
             ->addOption('enabled', null, InputOption::VALUE_REQUIRED, 'Set status: 1=enable, 0=disable')
             ->addOption('roleid', null, InputOption::VALUE_REQUIRED, 'Set default role ID')
-            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Set instance name')
-            ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the instance');
+            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Set instance name');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -44,13 +43,12 @@ class EnrolMod51Handler extends BaseHandler
         $newEnabled = $input->getOption('enabled');
         $newRoleId = $input->getOption('roleid');
         $newName = $input->getOption('name');
-        $doDelete = $input->getOption('delete');
 
         require_once $CFG->libdir . '/enrollib.php';
 
-        $hasChanges = $doDelete || $newEnabled !== null || $newRoleId !== null || $newName !== null;
+        $hasChanges = $newEnabled !== null || $newRoleId !== null || $newName !== null;
         if (!$hasChanges) {
-            $output->writeln('<error>No modifications specified. Use --enabled, --roleid, --name, or --delete.</error>');
+            $output->writeln('<error>No modifications specified. Use --enabled, --roleid, or --name.</error>');
             return Command::FAILURE;
         }
 
@@ -64,25 +62,6 @@ class EnrolMod51Handler extends BaseHandler
                 return Command::FAILURE;
             }
             $instances[] = $instance;
-        }
-
-        if ($doDelete) {
-            if (!$runMode) {
-                $output->writeln('<info>Dry run — the following instance(s) would be deleted (use --run to execute):</info>');
-                foreach ($instances as $inst) {
-                    $output->writeln("  ID={$inst->id} ({$inst->enrol}, course={$inst->courseid})");
-                }
-                return Command::SUCCESS;
-            }
-
-            foreach ($instances as $inst) {
-                $plugin = enrol_get_plugin($inst->enrol);
-                if ($plugin) {
-                    $plugin->delete_instance($inst);
-                }
-                $output->writeln("Deleted enrolment instance {$inst->id} ({$inst->enrol}, course={$inst->courseid}).");
-            }
-            return Command::SUCCESS;
         }
 
         // Build changes summary.

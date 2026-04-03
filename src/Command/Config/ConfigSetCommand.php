@@ -31,7 +31,6 @@ class ConfigSetCommand extends BaseCommand
     {
         $this
             ->setName('config:set')
-            ->setAliases(['config-set'])
             ->setDescription('Set a Moodle configuration value')
             ->setHelp(
                 "Sets a Moodle configuration value using set_config(). Requires --run.\n\n" .

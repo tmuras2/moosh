@@ -96,15 +96,11 @@ echo ""
 echo "--- Test: gradebook:export help ---"
 OUT=$($PHP $MOOSH gradebook:export -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Export gradebook data for a course" "$OUT"
-assert_output_contains "Help shows course_id" "course_id" "$OUT"
+assert_output_contains "Help shows courseid" "courseid" "$OUT"
 assert_output_contains "Help shows --format" "--format" "$OUT"
 assert_output_contains "Help shows --display-type" "--display-type" "$OUT"
 echo ""
 
-echo "--- Test: gradebook-export alias ---"
-OUT=$($PHP $MOOSH gradebook-export 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Email address" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  gradebook:import
@@ -159,9 +155,5 @@ assert_output_contains "Help shows --map-users-by" "--map-users-by" "$OUT"
 assert_output_contains "Help shows --course-idnumber" "--course-idnumber" "$OUT"
 echo ""
 
-echo "--- Test: gradebook-import alias ---"
-OUT=$($PHP $MOOSH gradebook-import "$TMPDIR/export.csv" 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Mapped CSV column" "$OUT"
-echo ""
 
 print_summary

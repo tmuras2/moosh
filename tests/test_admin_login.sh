@@ -73,9 +73,5 @@ echo ""
 
 # ── admin-login alias ─────────────────────────────────────────────
 
-echo "--- Test: admin-login alias ---"
-OUT=$($PHP $MOOSH admin-login -p "$MOODLE_PATH")
-assert_output_contains "Alias works" "MoodleSession" "$OUT"
-echo ""
 
 print_summary

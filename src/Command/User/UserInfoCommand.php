@@ -37,7 +37,6 @@ class UserInfoCommand extends BaseCommand
     {
         $this
             ->setName('user:info')
-            ->setAliases(['user-info'])
             ->setDescription('Show detailed information about a user')
             ->setHelp('Displays comprehensive statistics for a single user: profile, enrolments, roles, activity, files, grades, messages, and more.');
 

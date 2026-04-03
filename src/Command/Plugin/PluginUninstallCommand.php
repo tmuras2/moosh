@@ -31,7 +31,6 @@ class PluginUninstallCommand extends BaseCommand
     {
         $this
             ->setName('plugin:uninstall')
-            ->setAliases(['plugin-uninstall'])
             ->setDescription('Uninstall a plugin from Moodle')
             ->setHelp('Removes a plugin using Moodle\'s plugin manager, deletes its directory, and runs the upgrade process.');
         $this->handler->configureCommand($this);

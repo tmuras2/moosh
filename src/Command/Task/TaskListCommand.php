@@ -30,7 +30,6 @@ class TaskListCommand extends BaseCommand
     {
         $this
             ->setName('task:list')
-            ->setAliases(['task-list', 'task-schedule', 'task-lock-check'])
             ->setDescription('List scheduled tasks')
             ->setHelp(<<<'HELP'
                 Lists scheduled tasks with schedule, status, and timing info.

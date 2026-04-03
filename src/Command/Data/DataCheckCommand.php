@@ -38,7 +38,6 @@ class DataCheckCommand extends BaseCommand
     {
         $this
             ->setName('data:check')
-            ->setAliases(['data-check'])
             ->setDescription('Run data integrity checks on the Moodle installation')
             ->setHelp(
                 "Runs one or more data integrity checks:\n" .

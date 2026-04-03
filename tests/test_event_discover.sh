@@ -84,11 +84,5 @@ echo ""
 
 # ── event-discover alias ─────────────────────────────────────────
 
-echo "--- Test: event-discover alias ---"
-OUT=$($PHP $MOOSH event-discover "$MOODLE_SRC" 2>&1)
-EXIT_CODE=$?
-assert_exit_code "Alias works" 0 "$EXIT_CODE"
-assert_output_contains "Alias discovers" "Discovered" "$OUT"
-echo ""
 
 print_summary

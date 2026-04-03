@@ -38,7 +38,6 @@ class ActivityAddCommand extends BaseCommand
     {
         $this
             ->setName('activity:create')
-            ->setAliases(['activity-create', 'activity:add', 'activity-add'])
             ->setDescription('Create an activity in a course')
             ->setHelp('Creates a new activity module instance in a course. Requires --run to actually create the activity.');
 

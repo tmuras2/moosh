@@ -268,14 +268,6 @@ echo ""
 
 # ── Aliases ──────────────────────────────────────────────────────
 
-echo "--- Test: context-freeze alias ---"
-OUT=$($PHP $MOOSH context-freeze -p "$MOODLE_PATH" $COURSE_CTX 2>&1)
-assert_output_contains "Alias context-freeze works" "Dry run" "$OUT"
-echo ""
 
-echo "--- Test: context-unfreeze alias ---"
-OUT=$($PHP $MOOSH context-unfreeze -p "$MOODLE_PATH" $COURSE_CTX 2>&1)
-assert_output_contains "Alias context-unfreeze works" "Dry run" "$OUT"
-echo ""
 
 print_summary

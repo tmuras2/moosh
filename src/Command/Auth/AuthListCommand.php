@@ -38,7 +38,6 @@ class AuthListCommand extends BaseCommand
     {
         $this
             ->setName('auth:list')
-            ->setAliases(['auth-list'])
             ->setDescription('List authentication plugins')
             ->setHelp('Lists Moodle authentication plugins with their status, user count, and capabilities.');
 

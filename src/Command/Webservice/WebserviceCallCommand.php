@@ -37,7 +37,6 @@ class WebserviceCallCommand extends BaseCommand
     {
         $this
             ->setName('webservice:call')
-            ->setAliases(['webservice-call'])
             ->setDescription('Call a Moodle webservice function via REST')
             ->setHelp(<<<'HELP'
                 Calls a Moodle webservice function using the REST protocol.

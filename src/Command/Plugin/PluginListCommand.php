@@ -31,7 +31,6 @@ class PluginListCommand extends BaseCommand
     {
         $this
             ->setName('plugin:list')
-            ->setAliases(['plugin-list'])
             ->setDescription('List available plugins from the moodle.org plugin directory')
             ->setHelp('Fetches and displays the list of plugins available for download from moodle.org.');
         $this->handler->configureCommand($this);

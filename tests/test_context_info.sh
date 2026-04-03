@@ -202,9 +202,5 @@ echo ""
 
 # ── context-info alias ───────────────────────────────────────────
 
-echo "--- Test: context-info alias ---"
-OUT=$($PHP $MOOSH context-info -p "$MOODLE_PATH" $SYSTEM_CTX)
-assert_output_contains "Alias works - shows System" "System" "$OUT"
-echo ""
 
 print_summary

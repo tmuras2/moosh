@@ -136,9 +136,5 @@ assert_output_contains "Help shows --pretty" "--pretty" "$OUT"
 assert_output_contains "Help shows --format" "--format" "$OUT"
 echo ""
 
-echo "--- Test: webservice-call alias ---"
-OUT=$($PHP $MOOSH webservice-call core_webservice_get_site_info --token "$TOKEN" -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "sitename" "$OUT"
-echo ""
 
 print_summary

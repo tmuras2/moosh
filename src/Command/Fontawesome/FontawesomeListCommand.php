@@ -36,7 +36,6 @@ class FontawesomeListCommand extends BaseCommand
     {
         $this
             ->setName('fontawesome:list')
-            ->setAliases(['fontawesome-list'])
             ->setDescription('List all Font Awesome icons available in Moodle')
             ->setHelp(
                 "Lists all Font Awesome icons from Moodle's bundled FA library by parsing\n" .

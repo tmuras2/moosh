@@ -30,7 +30,6 @@ class GroupCreateCommand extends BaseCommand
     {
         $this
             ->setName('group:create')
-            ->setAliases(['group-create'])
             ->setDescription('Create a group in a course')
             ->setHelp(<<<'HELP'
                 Creates one or more groups in a course.

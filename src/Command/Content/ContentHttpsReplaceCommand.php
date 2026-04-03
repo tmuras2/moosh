@@ -21,7 +21,7 @@ class ContentHttpsReplaceCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('content:https-replace')->setAliases(['content-https-replace'])
+        $this->setName('content:https-replace')
             ->setDescription('Replace HTTP URLs with HTTPS across the database')
             ->setHelp("Migrates embedded HTTP URLs to HTTPS. Use --list to see affected domains first.\n\nExamples:\n  content:https-replace --list\n  content:https-replace --run");
         $this->handler->configureCommand($this);

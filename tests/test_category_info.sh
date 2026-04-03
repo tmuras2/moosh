@@ -145,9 +145,5 @@ echo ""
 
 # ── category-info alias ──────────────────────────────────────────
 
-echo "--- Test: category-info alias ---"
-OUT=$($PHP $MOOSH category-info -p "$MOODLE_PATH" 2)
-assert_output_contains "Alias works - shows Mathematics" "Mathematics" "$OUT"
-echo ""
 
 print_summary

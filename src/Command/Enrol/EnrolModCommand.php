@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Modify or delete an enrolment method instance.
+ * Modify an enrolment method instance.
  *
  * Canonical name: enrol:mod  |  Aliases: enrol-mod, course-enrol-change-status, course-disable-enrolment
  */
@@ -37,17 +37,15 @@ class EnrolModCommand extends BaseCommand
     {
         $this
             ->setName('enrol:mod')
-            ->setAliases(['enrol-mod', 'course-enrol-change-status', 'course-disable-enrolment'])
-            ->setDescription('Modify or delete an enrolment method instance')
+            ->setDescription('Modify an enrolment method instance')
             ->setHelp(<<<'HELP'
-                Modifies enrolment instance properties (status, role, name) or deletes it.
+                Modifies enrolment instance properties (status, role, name).
 
                 Examples:
                   enrol:mod 5 --enabled 0 --run
                   enrol:mod 5 --enabled 1 --run
                   enrol:mod 5 --roleid 3 --run
                   enrol:mod 5 --name "Custom Name" --run
-                  enrol:mod 5 --delete --run
                 HELP);
 
         $this->handler->configureCommand($this);

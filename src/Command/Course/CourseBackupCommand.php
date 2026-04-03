@@ -31,7 +31,6 @@ class CourseBackupCommand extends BaseCommand
     {
         $this
             ->setName('course:backup')
-            ->setAliases(['course-backup'])
             ->setDescription('Create a backup of a course')
             ->setHelp('Creates a .mbz backup file of a course. Requires --run to execute.');
         $this->handler->configureCommand($this);

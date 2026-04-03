@@ -37,7 +37,6 @@ class RoleImportCommand extends BaseCommand
     {
         $this
             ->setName('role:import')
-            ->setAliases(['role-import'])
             ->setDescription('Import a role definition from XML')
             ->setHelp(<<<'HELP'
                 Imports a role from an XML file (as exported by role:export).

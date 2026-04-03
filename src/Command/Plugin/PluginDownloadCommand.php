@@ -31,7 +31,6 @@ class PluginDownloadCommand extends BaseCommand
     {
         $this
             ->setName('plugin:download')
-            ->setAliases(['plugin-download'])
             ->setDescription('Download a plugin ZIP from the moodle.org directory')
             ->setHelp('Downloads a plugin archive to the current working directory.');
         $this->handler->configureCommand($this);

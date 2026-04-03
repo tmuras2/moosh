@@ -59,9 +59,5 @@ assert_output_contains "Help description" "Find courses with oversized overview 
 assert_output_contains "Help shows --size" "--size" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH course-find-big-images -p "$MOODLE_PATH" -o csv)
-assert_output_contains "Alias works" "courseid" "$OUT"
-echo ""
 
 print_summary

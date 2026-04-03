@@ -37,7 +37,6 @@ class BadgeModCommand extends BaseCommand
     {
         $this
             ->setName('badge:mod')
-            ->setAliases(['badge-mod'])
             ->setDescription('Modify a badge')
             ->setHelp('Modifies badge properties: name, description, status. Requires --run to apply changes.');
 

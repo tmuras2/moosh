@@ -125,9 +125,5 @@ echo ""
 
 # ── Alias ─────────────────────────────────────────────────────────
 
-echo "--- Test: search-questionid alias ---"
-OUT=$($PHP $MOOSH search-questionid -p "$MOODLE_PATH" $QID -o csv)
-assert_output_contains "Alias works" "question" "$OUT"
-echo ""
 
 print_summary

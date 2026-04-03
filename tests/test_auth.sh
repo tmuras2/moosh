@@ -62,10 +62,6 @@ assert_output_contains "Help description" "List authentication plugins" "$OUT"
 assert_output_contains "Help shows --enabled-only" "--enabled-only" "$OUT"
 echo ""
 
-echo "--- Test: auth-list alias ---"
-OUT=$($PHP $MOOSH auth-list -p "$MOODLE_PATH" -o csv)
-assert_output_contains "Alias works" "manual" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # auth:info
@@ -118,10 +114,6 @@ assert_output_contains "Help description" "Show detailed information about an au
 assert_output_contains "Help shows plugin argument" "plugin" "$OUT"
 echo ""
 
-echo "--- Test: auth-info alias ---"
-OUT=$($PHP $MOOSH auth-info -p "$MOODLE_PATH" manual)
-assert_output_contains "Alias works" "Manual accounts" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # auth:mod
@@ -201,9 +193,5 @@ OUT=$($PHP $MOOSH auth:mod -p "$MOODLE_PATH" --help)
 assert_output_contains "Help description" "Enable, disable, or reorder" "$OUT"
 echo ""
 
-echo "--- Test: auth-mod alias ---"
-OUT=$($PHP $MOOSH auth-mod -p "$MOODLE_PATH" enable ldap)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

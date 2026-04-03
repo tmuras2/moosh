@@ -37,7 +37,6 @@ class EventDiscoverCommand extends BaseCommand
     {
         $this
             ->setName('event:discover')
-            ->setAliases(['event-discover'])
             ->setDescription('Discover all event classes in a Moodle source tree')
             ->setHelp(
                 "Scans a Moodle source directory for event classes and generates\n" .

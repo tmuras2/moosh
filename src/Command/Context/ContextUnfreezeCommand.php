@@ -37,7 +37,6 @@ class ContextUnfreezeCommand extends BaseCommand
     {
         $this
             ->setName('context:unfreeze')
-            ->setAliases(['context-unfreeze'])
             ->setDescription('Unfreeze (unlock) one or more contexts')
             ->setHelp(<<<'HELP'
                 Unfreezes contexts so that write capabilities are restored.

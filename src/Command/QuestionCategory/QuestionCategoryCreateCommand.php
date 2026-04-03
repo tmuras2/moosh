@@ -30,7 +30,6 @@ class QuestionCategoryCreateCommand extends BaseCommand
     {
         $this
             ->setName('questioncategory:create')
-            ->setAliases(['questioncategory-create'])
             ->setDescription('Create a question category')
             ->setHelp(<<<'HELP'
                 Creates a question category in a course context.

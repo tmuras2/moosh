@@ -29,7 +29,7 @@ class PluginDownload51Handler extends BaseHandler
     public function configureCommand(Command $command): void
     {
         $command
-            ->addArgument('plugin_name', InputArgument::REQUIRED, 'Frankenstyle plugin name (e.g. mod_attendance)')
+            ->addArgument('plugin', InputArgument::REQUIRED, 'Frankenstyle plugin name (e.g. mod_attendance)')
             ->addOption('moodle-version', null, InputOption::VALUE_REQUIRED, 'Moodle major version for compatibility (e.g. 4.5). Auto-detected if inside a Moodle directory.')
             ->addOption('url', null, InputOption::VALUE_NONE, 'Only display the download URL, do not download')
             ->addOption('proxy', null, InputOption::VALUE_REQUIRED, 'Proxy URI (e.g. tcp://user:pass@host:port)');
@@ -37,7 +37,7 @@ class PluginDownload51Handler extends BaseHandler
 
     public function handle(InputInterface $input, OutputInterface $output): int
     {
-        $pluginName = $input->getArgument('plugin_name');
+        $pluginName = $input->getArgument('plugin');
         $moodleRelease = $input->getOption('moodle-version');
         $urlOnly = $input->getOption('url');
         $proxy = $input->getOption('proxy');

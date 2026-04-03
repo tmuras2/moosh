@@ -37,7 +37,6 @@ class FontawesomeMaplistCommand extends BaseCommand
     {
         $this
             ->setName('fontawesome:maplist')
-            ->setAliases(['fontawesome-maplist'])
             ->setDescription('List and search Font Awesome icon mappings in Moodle')
             ->setHelp(
                 "Lists Font Awesome icon mappings from Moodle's icon system.\n" .

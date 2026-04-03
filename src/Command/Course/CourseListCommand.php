@@ -43,7 +43,6 @@ class CourseListCommand extends BaseCommand
     {
         $this
             ->setName('course:list')
-            ->setAliases(['course-list'])
             ->setDescription('List Moodle courses')
             ->setHelp('Lists courses matching optional search criteria with configurable output fields and format.');
 

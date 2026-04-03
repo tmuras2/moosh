@@ -26,8 +26,8 @@ class GradebookExport51Handler extends BaseHandler
     public function configureCommand(Command $command): void
     {
         $command
-            ->addArgument('course_id', InputArgument::REQUIRED, 'Course ID to export grades from')
-            ->addArgument('grade_item_ids', InputArgument::OPTIONAL, 'Comma-separated grade item IDs (all if omitted)')
+            ->addArgument('courseid', InputArgument::REQUIRED, 'Course ID to export grades from')
+            ->addArgument('gradeitemids', InputArgument::OPTIONAL, 'Comma-separated grade item IDs (all if omitted)')
             ->addOption('groupid', null, InputOption::VALUE_REQUIRED, 'Group ID to filter by', '0')
             ->addOption('export-feedback', null, InputOption::VALUE_NONE, 'Include feedback in export')
             ->addOption('only-active', null, InputOption::VALUE_NONE, 'Export only active enrolments')
@@ -43,8 +43,8 @@ class GradebookExport51Handler extends BaseHandler
 
         $verbose = new VerboseLogger($output);
 
-        $courseId = (int) $input->getArgument('course_id');
-        $itemIdsArg = $input->getArgument('grade_item_ids');
+        $courseId = (int) $input->getArgument('courseid');
+        $itemIdsArg = $input->getArgument('gradeitemids');
         $groupId = (int) $input->getOption('groupid');
         $exportFeedback = $input->getOption('export-feedback') ? 1 : 0;
         $onlyActive = $input->getOption('only-active') ? 1 : 0;

@@ -68,10 +68,6 @@ assert_output_contains "Help description" "Show detailed information" "$OUT"
 assert_output_contains "Help shows cmid" "cmid" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH activity-info -p "$MOODLE_PATH" 1 -o csv 2>&1)
-assert_output_contains "Alias works" "resource" "$OUT"
-echo ""
 
 # Test with a different activity to verify we handle various types
 echo "--- Test: Multiple activities ---"

@@ -30,7 +30,6 @@ class FileCheckCommand extends BaseCommand
     {
         $this
             ->setName('file:check')
-            ->setAliases(['file-check', 'file-datacheck', 'file-dbcheck'])
             ->setDescription('Check file storage consistency')
             ->setHelp(<<<'HELP'
                 Check for missing/orphaned files.

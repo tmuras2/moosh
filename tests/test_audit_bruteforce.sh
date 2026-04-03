@@ -191,14 +191,6 @@ assert_output_contains "Help shows --password-policy" "--password-policy" "$OUT"
 assert_output_contains "Help shows --targeted-users" "--targeted-users" "$OUT"
 echo ""
 
-echo "--- Test: audit-bruteforce alias ---"
-OUT=$($PHP $MOOSH audit-bruteforce -p "$MOODLE_PATH" --min-attempts=100 2>&1)
-assert_output_contains "Alias works" "No IPs found" "$OUT"
-echo ""
 
-echo "--- Test: security-check-bruteforce alias ---"
-OUT=$($PHP $MOOSH security-check-bruteforce -p "$MOODLE_PATH" --min-attempts=100 2>&1)
-assert_output_contains "Legacy alias works" "No IPs found" "$OUT"
-echo ""
 
 print_summary

@@ -37,7 +37,6 @@ class BackupEmptyFilesCommand extends BaseCommand
     {
         $this
             ->setName('backup:empty-files')
-            ->setAliases(['backup-empty-files'])
             ->setDescription('Truncate data files inside a Moodle backup')
             ->setHelp('Replaces all data files inside a .mbz backup with empty (0-byte) placeholders, keeping the same filenames. Updates files.xml accordingly. Requires --run to modify the file.');
 

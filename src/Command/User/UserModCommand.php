@@ -38,7 +38,6 @@ class UserModCommand extends BaseCommand
     {
         $this
             ->setName('user:mod')
-            ->setAliases(['user-mod', 'user-assign-system-role', 'user-unassign-system-role'])
             ->setDescription('Modify user properties, system roles, or admin status')
             ->setHelp(<<<'HELP'
                 Modify one or more users. Accepts usernames or IDs.

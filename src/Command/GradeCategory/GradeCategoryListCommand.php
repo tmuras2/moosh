@@ -37,7 +37,6 @@ class GradeCategoryListCommand extends BaseCommand
     {
         $this
             ->setName('gradecategory:list')
-            ->setAliases(['gradecategory-list'])
             ->setDescription('List grade categories')
             ->setHelp(<<<'HELP'
                 Lists grade categories, optionally filtered by course.

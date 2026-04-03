@@ -38,7 +38,6 @@ class FontawesomeRefreshCacheCommand extends BaseCommand
     {
         $this
             ->setName('fontawesome:refresh-cache')
-            ->setAliases(['fontawesome-refresh-cache'])
             ->setDescription('Refresh the Font Awesome icon mapping cache')
             ->setHelp('Purges and regenerates the Font Awesome icon mapping cache. Requires --run.');
 

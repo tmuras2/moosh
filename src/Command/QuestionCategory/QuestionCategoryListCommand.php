@@ -30,7 +30,6 @@ class QuestionCategoryListCommand extends BaseCommand
     {
         $this
             ->setName('questioncategory:list')
-            ->setAliases(['questioncategory-list'])
             ->setDescription('List question categories for a course')
             ->setHelp(<<<'HELP'
                 Lists question categories in a course context with question counts.

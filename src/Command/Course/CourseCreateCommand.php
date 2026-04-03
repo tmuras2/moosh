@@ -38,7 +38,6 @@ class CourseCreateCommand extends BaseCommand
     {
         $this
             ->setName('course:create')
-            ->setAliases(['course-create'])
             ->setDescription('Create Moodle courses')
             ->setHelp('Creates one or more Moodle courses. Requires --run to actually create courses.');
 

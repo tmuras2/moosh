@@ -182,9 +182,5 @@ echo ""
 
 # ── category-list alias ──────────────────────────────────────────
 
-echo "--- Test: category-list alias ---"
-OUT=$($PHP $MOOSH category-list -p "$MOODLE_PATH" -o csv)
-assert_output_contains "Alias works - header present" "id,name" "$OUT"
-echo ""
 
 print_summary

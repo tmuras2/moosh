@@ -37,7 +37,6 @@ class CachePurgeCommand extends BaseCommand
     {
         $this
             ->setName('cache:purge')
-            ->setAliases(['cache-purge', 'cache-clear'])
             ->setDescription('Purge caches')
             ->setHelp(<<<'HELP'
                 Purges all caches, a specific store, or a specific definition.

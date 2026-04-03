@@ -30,7 +30,6 @@ class EventLogCommand extends BaseCommand
     {
         $this
             ->setName('event:log')
-            ->setAliases(['event-log'])
             ->setDescription('Query the event log')
             ->setHelp(<<<'HELP'
                 Searches and filters logged events.

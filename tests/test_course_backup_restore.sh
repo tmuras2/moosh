@@ -73,10 +73,6 @@ assert_output_contains "Help description" "Create a backup" "$OUT"
 assert_output_contains "Help shows --template" "--template" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH course-backup -p "$MOODLE_PATH" 2 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # course:restore
@@ -119,10 +115,6 @@ assert_output_contains "Help shows --existing" "--existing" "$OUT"
 assert_output_contains "Help shows --overwrite" "--overwrite" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH course-restore -p "$MOODLE_PATH" "$BACKUP_FILE" 2 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ── Cleanup ──────────────────────────────────────────────────────
 

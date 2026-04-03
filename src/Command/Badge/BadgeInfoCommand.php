@@ -37,7 +37,6 @@ class BadgeInfoCommand extends BaseCommand
     {
         $this
             ->setName('badge:info')
-            ->setAliases(['badge-info'])
             ->setDescription('Show detailed information about a badge')
             ->setHelp('Displays comprehensive statistics for a badge: metadata, issuer info, status, awards, criteria, and related data.');
 

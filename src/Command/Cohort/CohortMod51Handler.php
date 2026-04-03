@@ -29,8 +29,7 @@ class CohortMod51Handler extends BaseHandler
             ->addOption('visible', null, InputOption::VALUE_REQUIRED, 'Set visible (1 or 0)')
             ->addOption('add-member', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Add member by username or user ID')
             ->addOption('remove-member', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Remove member by username or user ID')
-            ->addOption('import', null, InputOption::VALUE_REQUIRED, 'Import members from CSV file (username or email column)')
-            ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the cohort');
+            ->addOption('import', null, InputOption::VALUE_REQUIRED, 'Import members from CSV file (username or email column)');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -49,7 +48,6 @@ class CohortMod51Handler extends BaseHandler
         $addMembers = $input->getOption('add-member');
         $removeMembers = $input->getOption('remove-member');
         $importFile = $input->getOption('import');
-        $doDelete = $input->getOption('delete');
 
         require_once $CFG->dirroot . '/cohort/lib.php';
 
@@ -59,23 +57,12 @@ class CohortMod51Handler extends BaseHandler
             return Command::FAILURE;
         }
 
-        $hasChanges = $doDelete || $newName !== null || $newDesc !== null || $newIdnumber !== null
+        $hasChanges = $newName !== null || $newDesc !== null || $newIdnumber !== null
             || $newVisible !== null || !empty($addMembers) || !empty($removeMembers) || $importFile !== null;
 
         if (!$hasChanges) {
-            $output->writeln('<error>No modifications specified. Use --name, --description, --idnumber, --visible, --add-member, --remove-member, --import, or --delete.</error>');
+            $output->writeln('<error>No modifications specified. Use --name, --description, --idnumber, --visible, --add-member, --remove-member, or --import.</error>');
             return Command::FAILURE;
-        }
-
-        // Handle delete.
-        if ($doDelete) {
-            if (!$runMode) {
-                $output->writeln("<info>Dry run — would delete cohort '{$cohort->name}' (ID=$cohortId) (use --run to execute).</info>");
-                return Command::SUCCESS;
-            }
-            cohort_delete_cohort($cohort);
-            $output->writeln("Deleted cohort '{$cohort->name}' (ID=$cohortId).");
-            return Command::SUCCESS;
         }
 
         // Resolve users for add/remove.

@@ -40,7 +40,6 @@ class RoleModCommand extends BaseCommand
     {
         $this
             ->setName('role:mod')
-            ->setAliases(['role-mod', 'role-update-capability', 'role-update-contextlevel'])
             ->setDescription('Modify a role: properties, capabilities, or context levels')
             ->setHelp(<<<'HELP'
                 Modify a role's name, description, capabilities, or context levels.

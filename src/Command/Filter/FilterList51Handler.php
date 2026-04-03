@@ -31,7 +31,7 @@ class FilterList51Handler extends BaseHandler
         $command
             ->addOption('enabled', null, InputOption::VALUE_NONE, 'Show only enabled (not disabled) filters')
             ->addOption('context', null, InputOption::VALUE_REQUIRED, 'Show filter states for a specific context ID')
-            ->addOption('id-only', 'i', InputOption::VALUE_NONE, 'Show filter names only');
+            ->addOption('name-only', null, InputOption::VALUE_NONE, 'Show filter names only');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -40,7 +40,7 @@ class FilterList51Handler extends BaseHandler
 
         $verbose = new VerboseLogger($output);
         $format = $input->getOption('output');
-        $idOnly = $input->getOption('id-only');
+        $idOnly = $input->getOption('name-only');
         $onlyEnabled = $input->getOption('enabled');
         $contextId = $input->getOption('context');
 

@@ -21,7 +21,7 @@ class DebugOffCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('debug:off')->setAliases(['debug-off'])
+        $this->setName('debug:off')
             ->setDescription('Disable developer debug mode')
             ->setHelp('Disables debugging and restores production settings.');
     }

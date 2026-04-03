@@ -31,7 +31,6 @@ class ConfigGetCommand extends BaseCommand
     {
         $this
             ->setName('config:get')
-            ->setAliases(['config-get'])
             ->setDescription('Get Moodle configuration values')
             ->setHelp(
                 "Reads Moodle configuration values using get_config().\n\n" .

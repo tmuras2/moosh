@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Integration test for moosh2 activity:add, activity:delete, activity:mod commands
+# Integration test for moosh2 activity:create, activity:delete, activity:mod commands
 # Requires a working Moodle 5.1 installation at /var/www/html/moodle51
 #
 # Usage: bash tests/test_activity.sh
@@ -22,16 +22,16 @@ echo ""
 # Test data: Course 2 (Algebra Fundamentals) has 1 resource activity (cmid=1), 4 sections
 
 # ═══════════════════════════════════════════════════════════════════
-# activity:add
+# activity:create
 # ═══════════════════════════════════════════════════════════════════
 
-echo "========== activity:add =========="
+echo "========== activity:create =========="
 echo ""
 
 # ── Dry run ───────────────────────────────────────────────────────
 
-echo "--- Test: activity:add dry run ---"
-OUT=$($PHP $MOOSH activity:add -p "$MOODLE_PATH" forum 2)
+echo "--- Test: activity:create dry run ---"
+OUT=$($PHP $MOOSH activity:create -p "$MOODLE_PATH" forum 2)
 echo "$OUT"
 assert_output_contains "Shows dry run" "Dry run" "$OUT"
 assert_output_contains "Shows activity type" "forum" "$OUT"
@@ -40,7 +40,7 @@ echo ""
 # ── Add forum ─────────────────────────────────────────────────────
 
 echo "--- Test: Add forum to course 2 ---"
-OUT=$($PHP $MOOSH activity:add -p "$MOODLE_PATH" --run --name "Discussion Forum" forum 2 -o csv)
+OUT=$($PHP $MOOSH activity:create -p "$MOODLE_PATH" --run --name "Discussion Forum" forum 2 -o csv)
 echo "$OUT"
 assert_output_contains "Header row" "cmid,module,instance,course,section" "$OUT"
 assert_output_contains "Module is forum" ",forum," "$OUT"
@@ -52,7 +52,7 @@ echo ""
 # ── Add assignment ────────────────────────────────────────────────
 
 echo "--- Test: Add assignment to section 2 ---"
-OUT=$($PHP $MOOSH activity:add -p "$MOODLE_PATH" --run --name "Homework 1" --section 2 assign 2 -o csv)
+OUT=$($PHP $MOOSH activity:create -p "$MOODLE_PATH" --run --name "Homework 1" --section 2 assign 2 -o csv)
 echo "$OUT"
 assert_output_contains "Module is assign" ",assign," "$OUT"
 assert_output_contains "Section is 2" ",2" "$OUT"
@@ -63,7 +63,7 @@ echo ""
 # ── Add page ──────────────────────────────────────────────────────
 
 echo "--- Test: Add page with idnumber ---"
-OUT=$($PHP $MOOSH activity:add -p "$MOODLE_PATH" --run --name "Welcome Page" --idnumber "PAGE001" page 2 -o csv)
+OUT=$($PHP $MOOSH activity:create -p "$MOODLE_PATH" --run --name "Welcome Page" --idnumber "PAGE001" page 2 -o csv)
 echo "$OUT"
 assert_output_contains "Module is page" ",page," "$OUT"
 PAGE_CMID=$(echo "$OUT" | tail -1 | cut -d, -f1)
@@ -72,8 +72,8 @@ echo ""
 
 # ── JSON output ───────────────────────────────────────────────────
 
-echo "--- Test: activity:add JSON output ---"
-OUT=$($PHP $MOOSH activity:add -p "$MOODLE_PATH" --run --name "JSON URL" url 2 -o json)
+echo "--- Test: activity:create JSON output ---"
+OUT=$($PHP $MOOSH activity:create -p "$MOODLE_PATH" --run --name "JSON URL" url 2 -o json)
 echo "$OUT"
 assert_output_contains "JSON has cmid" '"cmid"' "$OUT"
 assert_output_contains "JSON has module" '"module"' "$OUT"
@@ -84,7 +84,7 @@ echo ""
 # ── Invalid module type ───────────────────────────────────────────
 
 echo "--- Test: Invalid module type ---"
-OUT=$($PHP $MOOSH activity:add -p "$MOODLE_PATH" --run nonexistent 2 2>&1)
+OUT=$($PHP $MOOSH activity:create -p "$MOODLE_PATH" --run nonexistent 2 2>&1)
 EXIT_CODE=$?
 assert_exit_code "Exit code 1 for invalid type" 1 "$EXIT_CODE"
 assert_output_contains "Error for unknown type" "Unknown activity type" "$OUT"
@@ -92,8 +92,8 @@ echo ""
 
 # ── Help output ───────────────────────────────────────────────────
 
-echo "--- Test: activity:add help ---"
-OUT=$($PHP $MOOSH activity:add -p "$MOODLE_PATH" --help)
+echo "--- Test: activity:create help ---"
+OUT=$($PHP $MOOSH activity:create -p "$MOODLE_PATH" --help)
 assert_output_contains "Help description" "Create an activity in a course" "$OUT"
 assert_output_contains "Help shows --name" "--name" "$OUT"
 assert_output_contains "Help shows --section" "--section" "$OUT"
@@ -101,10 +101,6 @@ echo ""
 
 # ── Alias ─────────────────────────────────────────────────────────
 
-echo "--- Test: activity-add alias ---"
-OUT=$($PHP $MOOSH activity-add -p "$MOODLE_PATH" --run --name "Alias Quiz" quiz 2 -o csv)
-assert_output_contains "Alias works" "quiz" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # activity:mod
@@ -206,10 +202,6 @@ echo ""
 
 # ── Alias ─────────────────────────────────────────────────────────
 
-echo "--- Test: activity-mod alias ---"
-OUT=$($PHP $MOOSH activity-mod -p "$MOODLE_PATH" --run --name "Alias Name" $FORUM_CMID -o csv)
-assert_output_contains "Alias works" "Alias Name" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # activity:delete
@@ -264,11 +256,5 @@ echo ""
 
 # ── Alias ─────────────────────────────────────────────────────────
 
-echo "--- Test: activity-delete alias ---"
-# Create a temp activity to delete via alias
-TEMP=$($PHP $MOOSH activity:add -p "$MOODLE_PATH" --run --name "TempDel" page 2 -o csv | tail -1 | cut -d, -f1)
-OUT=$($PHP $MOOSH activity-delete -p "$MOODLE_PATH" --run $TEMP)
-assert_output_contains "Alias works" "Deleted" "$OUT"
-echo ""
 
 print_summary

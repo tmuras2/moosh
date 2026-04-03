@@ -38,7 +38,6 @@ class AuditPasswordCommand extends BaseCommand
     {
         $this
             ->setName('audit:password')
-            ->setAliases(['audit-password'])
             ->setDescription('Audit user passwords against known weak passwords')
             ->setHelp('Checks Moodle user password hashes against a list of ~10,000 known weak passwords. Reports users with easily crackable passwords.');
 

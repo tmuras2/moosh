@@ -38,7 +38,6 @@ class UserCreateCommand extends BaseCommand
     {
         $this
             ->setName('user:create')
-            ->setAliases(['user-create'])
             ->setDescription('Create Moodle users')
             ->setHelp('Creates one or more Moodle user accounts. Requires --run to actually create users.');
 

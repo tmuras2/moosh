@@ -37,7 +37,6 @@ class QuizDeleteAttemptCommand extends BaseCommand
     {
         $this
             ->setName('quiz:delete-attempt')
-            ->setAliases(['quiz-delete-attempts'])
             ->setDescription('Delete all attempts for a quiz')
             ->setHelp(<<<'HELP'
                 Deletes all quiz attempts for the specified quiz course module(s).

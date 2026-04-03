@@ -30,7 +30,6 @@ class TaskAdhocCommand extends BaseCommand
     {
         $this
             ->setName('task:adhoc')
-            ->setAliases(['task-adhoc'])
             ->setDescription('List or manage adhoc tasks')
             ->setHelp(<<<'HELP'
                 Lists pending/failed adhoc tasks, executes them, or cleans up old failures.

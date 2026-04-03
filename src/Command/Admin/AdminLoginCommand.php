@@ -38,7 +38,6 @@ class AdminLoginCommand extends BaseCommand
     {
         $this
             ->setName('admin:login')
-            ->setAliases(['admin-login'])
             ->setDescription('Create an admin login session')
             ->setHelp('Creates a valid Moodle session for the admin user and returns the session cookie name and value. Useful for scripting authenticated HTTP requests.');
 

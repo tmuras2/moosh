@@ -31,7 +31,6 @@ class UserDeleteCommand extends BaseCommand
     {
         $this
             ->setName('user:delete')
-            ->setAliases(['user-delete'])
             ->setDescription('Delete users')
             ->setHelp('Deletes one or more users by username or ID. Requires --run to execute.');
         $this->handler->configureCommand($this);

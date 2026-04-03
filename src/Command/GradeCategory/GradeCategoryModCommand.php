@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Modify or delete a grade category.
+ * Modify a grade category.
  *
  * Canonical name: gradecategory:mod  |  Alias: gradecategory-mod
  */
@@ -37,16 +37,14 @@ class GradeCategoryModCommand extends BaseCommand
     {
         $this
             ->setName('gradecategory:mod')
-            ->setAliases(['gradecategory-mod'])
-            ->setDescription('Modify or delete a grade category')
+            ->setDescription('Modify a grade category')
             ->setHelp(<<<'HELP'
-                Modifies grade category properties or deletes it.
+                Modifies grade category properties.
 
                 Examples:
                   gradecategory:mod 5 --name "New Name" --run
                   gradecategory:mod 5 --aggregation 0 --run
                   gradecategory:mod 5 --hidden 1 --run
-                  gradecategory:mod 5 --delete --run
                 HELP);
 
         $this->handler->configureCommand($this);

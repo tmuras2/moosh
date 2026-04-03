@@ -38,7 +38,6 @@ class PluginUsageCommand extends BaseCommand
     {
         $this
             ->setName('plugin:usage')
-            ->setAliases(['plugin-usage'])
             ->setDescription('Show plugin usage statistics')
             ->setHelp('Displays usage statistics for all plugin types: activities, blocks, course formats, enrolment methods, authentication methods, question types, and filters.');
 

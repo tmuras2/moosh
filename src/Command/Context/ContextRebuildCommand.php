@@ -37,7 +37,6 @@ class ContextRebuildCommand extends BaseCommand
     {
         $this
             ->setName('context:rebuild')
-            ->setAliases(['context-rebuild'])
             ->setDescription('Rebuild all context paths and clean up orphaned instances')
             ->setHelp(<<<'HELP'
                 Cleans up orphaned context instances and rebuilds all context paths.

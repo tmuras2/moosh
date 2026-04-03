@@ -32,7 +32,6 @@ class ProfileFieldDeleteCommand extends BaseCommand
     {
         $this
             ->setName('profilefield:delete')
-            ->setAliases(['profilefield-delete'])
             ->setDescription('Delete user profile fields')
             ->setHelp('Deletes user profile fields by ID. Also removes associated user data. Requires --run.');
 

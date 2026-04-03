@@ -21,7 +21,7 @@ class PhpEvalCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('php:eval')->setAliases(['php-eval'])
+        $this->setName('php:eval')
             ->setDescription('Evaluate PHP code in Moodle context')
             ->setHelp("Evaluates PHP code with access to all Moodle globals (\$CFG, \$DB, \$USER, etc.).\n\nExamples:\n  php:eval 'echo \$CFG->wwwroot;'\n  php:eval 'echo \$DB->count_records(\"user\");'");
         $this->handler->configureCommand($this);

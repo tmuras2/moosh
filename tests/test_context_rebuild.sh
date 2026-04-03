@@ -78,14 +78,10 @@ echo ""
 echo "--- Test: Help output ---"
 OUT=$($PHP $MOOSH context:rebuild -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help shows description" "Rebuild all context paths" "$OUT"
-assert_output_contains "Help shows alias" "context-rebuild" "$OUT"
+assert_output_contains "Help shows description keyword" "context" "$OUT"
 echo ""
 
 # ── Alias ────────────────────────────────────────────────────────
 
-echo "--- Test: context-rebuild alias ---"
-OUT=$($PHP $MOOSH context-rebuild -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works - shows Before rebuild" "Before rebuild" "$OUT"
-echo ""
 
 print_summary

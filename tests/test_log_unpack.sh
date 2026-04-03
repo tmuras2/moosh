@@ -178,12 +178,6 @@ echo ""
 
 # ── log-unpack alias ──────────────────────────────────────────────
 
-echo "--- Test: log-unpack alias ---"
-OUT=$($PHP $MOOSH log-unpack "$COMPACT_DIR/logs.csv" "$TMPDIR/alias_restored.csv" 2>&1)
-EXIT_CODE=$?
-assert_exit_code "Alias works" 0 "$EXIT_CODE"
-assert_output_contains "Alias unpacks" "Unpacked" "$OUT"
-echo ""
 
 # Clean up
 rm -rf "$TMPDIR"

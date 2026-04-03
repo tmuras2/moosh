@@ -31,10 +31,9 @@ class CohortModCommand extends BaseCommand
     {
         $this
             ->setName('cohort:mod')
-            ->setAliases(['cohort-mod', 'cohort-delete'])
-            ->setDescription('Modify, delete, or manage members of a cohort')
+            ->setDescription('Modify a cohort or manage its members')
             ->setHelp(<<<'HELP'
-                Modifies cohort properties, manages members, or deletes cohorts.
+                Modifies cohort properties or manages members.
 
                 Examples:
                   cohort:mod 5 --name "New Name" --run
@@ -42,7 +41,6 @@ class CohortModCommand extends BaseCommand
                   cohort:mod 5 --add-member 3 --run
                   cohort:mod 5 --remove-member admin --run
                   cohort:mod 5 --import members.csv --run
-                  cohort:mod 5 --delete --run
                 HELP);
         $this->handler->configureCommand($this);
     }

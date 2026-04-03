@@ -77,10 +77,6 @@ OUT=$($PHP $MOOSH theme:info -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Show theme usage information" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH theme-info -p "$MOODLE_PATH" -o csv 2>&1)
-assert_output_contains "Alias works" "boost" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # theme:settings-export
@@ -116,10 +112,6 @@ assert_output_contains "Help description" "Export theme settings" "$OUT"
 assert_output_contains "Help shows --outputdir" "--outputdir" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH theme-settings-export -p "$MOODLE_PATH" boost --outputdir "$EXPORT_DIR" 2>&1)
-assert_output_contains "Alias works" "exported" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # theme:settings-import
@@ -173,10 +165,6 @@ assert_output_contains "Help description" "Import theme settings" "$OUT"
 assert_output_contains "Help shows --target-theme" "--target-theme" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH theme-settings-import -p "$MOODLE_PATH" "$EXPORT_FILE" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ── Cleanup ──────────────────────────────────────────────────────
 

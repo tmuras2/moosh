@@ -31,7 +31,6 @@ class CourseEnrolCommand extends BaseCommand
     {
         $this
             ->setName('course:enrol')
-            ->setAliases(['course-enrol'])
             ->setDescription('Enrol users into a course')
             ->setHelp('Enrols one or more users into a course using the manual enrolment plugin. Requires --run to execute.');
         $this->handler->configureCommand($this);

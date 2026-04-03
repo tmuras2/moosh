@@ -37,7 +37,6 @@ class SqlCliCommand extends BaseCommand
     {
         $this
             ->setName('sql:cli')
-            ->setAliases(['sql-cli'])
             ->setDescription('Open an interactive database CLI shell')
             ->setHelp(<<<'HELP'
                 Opens the native database CLI client (mysql or psql) connected to the

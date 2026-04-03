@@ -60,9 +60,5 @@ assert_output_contains "Help shows --limit" "--limit" "$OUT"
 assert_output_contains "Help shows --days" "--days" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH course-top -p "$MOODLE_PATH" -o csv)
-assert_output_contains "Alias works" "courseid" "$OUT"
-echo ""
 
 print_summary

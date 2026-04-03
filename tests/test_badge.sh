@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Integration test for moosh2 badge:add, badge:info, badge:mod, badge:delete commands
+# Integration test for moosh2 badge:create, badge:info, badge:mod, badge:delete commands
 # Requires a working Moodle 5.1 installation at /var/www/html/moodle51
 #
 # Usage: bash tests/test_badge.sh
@@ -20,14 +20,14 @@ bash "$SCRIPT_DIR/clear.sh"
 echo ""
 
 # ═══════════════════════════════════════════════════════════════════
-# badge:add
+# badge:create
 # ═══════════════════════════════════════════════════════════════════
 
-echo "========== badge:add =========="
+echo "========== badge:create =========="
 echo ""
 
 echo "--- Test: Dry run ---"
-OUT=$($PHP $MOOSH badge:add -p "$MOODLE_PATH" "Dry Run Badge")
+OUT=$($PHP $MOOSH badge:create -p "$MOODLE_PATH" "Dry Run Badge")
 echo "$OUT"
 assert_output_contains "Shows dry run" "Dry run" "$OUT"
 assert_output_contains "Shows badge name" "Dry Run Badge" "$OUT"
@@ -35,7 +35,7 @@ assert_output_contains "Shows site type" "site" "$OUT"
 echo ""
 
 echo "--- Test: Create site badge ---"
-OUT=$($PHP $MOOSH badge:add -p "$MOODLE_PATH" --run -d "A site-level badge" "Site Badge" -o csv)
+OUT=$($PHP $MOOSH badge:create -p "$MOODLE_PATH" --run -d "A site-level badge" "Site Badge" -o csv)
 echo "$OUT"
 assert_output_contains "Header row" "id,name,type,courseid,status" "$OUT"
 assert_output_contains "Badge name" "Site Badge" "$OUT"
@@ -46,7 +46,7 @@ echo "  Created site badge ID=$SITE_BADGE_ID"
 echo ""
 
 echo "--- Test: Create course badge ---"
-OUT=$($PHP $MOOSH badge:add -p "$MOODLE_PATH" --run --course 2 -d "Course-level badge" "Course Badge" -o csv)
+OUT=$($PHP $MOOSH badge:create -p "$MOODLE_PATH" --run --course 2 -d "Course-level badge" "Course Badge" -o csv)
 echo "$OUT"
 assert_output_contains "Course badge type" ",course," "$OUT"
 assert_output_contains "Course ID 2" ",2," "$OUT"
@@ -55,7 +55,7 @@ echo "  Created course badge ID=$COURSE_BADGE_ID"
 echo ""
 
 echo "--- Test: JSON output ---"
-OUT=$($PHP $MOOSH badge:add -p "$MOODLE_PATH" --run "JSON Badge" -o json)
+OUT=$($PHP $MOOSH badge:create -p "$MOODLE_PATH" --run "JSON Badge" -o json)
 echo "$OUT"
 assert_output_contains "JSON has name" '"name"' "$OUT"
 assert_output_contains "JSON has JSON Badge" '"JSON Badge"' "$OUT"
@@ -63,24 +63,19 @@ JSON_BADGE_ID=$(echo "$OUT" | grep -o '"id": [0-9]*' | head -1 | grep -o '[0-9]*
 echo ""
 
 echo "--- Test: Invalid course ---"
-OUT=$($PHP $MOOSH badge:add -p "$MOODLE_PATH" --run --course 99999 "Bad Badge" 2>&1)
+OUT=$($PHP $MOOSH badge:create -p "$MOODLE_PATH" --run --course 99999 "Bad Badge" 2>&1)
 EXIT_CODE=$?
 assert_exit_code "Exit code 1 for invalid course" 1 "$EXIT_CODE"
 assert_output_contains "Course not found" "not found" "$OUT"
 echo ""
 
 echo "--- Test: Help ---"
-OUT=$($PHP $MOOSH badge:add -p "$MOODLE_PATH" --help)
+OUT=$($PHP $MOOSH badge:create -p "$MOODLE_PATH" --help)
 assert_output_contains "Help description" "Create a badge" "$OUT"
 assert_output_contains "Help shows --course" "--course" "$OUT"
 assert_output_contains "Help shows --description" "--description" "$OUT"
 echo ""
 
-echo "--- Test: badge-add alias ---"
-OUT=$($PHP $MOOSH badge-add -p "$MOODLE_PATH" --run "Alias Badge" -o csv)
-assert_output_contains "Alias works" "Alias Badge" "$OUT"
-ALIAS_BADGE_ID=$(echo "$OUT" | tail -1 | cut -d, -f1)
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # badge:info
@@ -128,10 +123,6 @@ OUT=$($PHP $MOOSH badge:info -p "$MOODLE_PATH" --help)
 assert_output_contains "Help description" "Show detailed information about a badge" "$OUT"
 echo ""
 
-echo "--- Test: badge-info alias ---"
-OUT=$($PHP $MOOSH badge-info -p "$MOODLE_PATH" $SITE_BADGE_ID)
-assert_output_contains "Alias works" "Site Badge" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # badge:mod
@@ -182,10 +173,6 @@ assert_output_contains "Help shows --name" "--name" "$OUT"
 assert_output_contains "Help shows --status" "--status" "$OUT"
 echo ""
 
-echo "--- Test: badge-mod alias ---"
-OUT=$($PHP $MOOSH badge-mod -p "$MOODLE_PATH" --run --name "Alias Mod" $SITE_BADGE_ID -o csv)
-assert_output_contains "Alias works" "Alias Mod" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # badge:delete
@@ -212,7 +199,7 @@ assert_output_contains "Badge is gone" "not found" "$OUT2"
 echo ""
 
 echo "--- Test: Delete multiple badges ---"
-OUT=$($PHP $MOOSH badge:delete -p "$MOODLE_PATH" --run $JSON_BADGE_ID $ALIAS_BADGE_ID)
+OUT=$($PHP $MOOSH badge:delete -p "$MOODLE_PATH" --run $JSON_BADGE_ID)
 echo "$OUT"
 assert_output_contains "First deleted" "Deleted" "$OUT"
 echo ""
@@ -229,11 +216,5 @@ OUT=$($PHP $MOOSH badge:delete -p "$MOODLE_PATH" --help)
 assert_output_contains "Help description" "Delete badges" "$OUT"
 echo ""
 
-echo "--- Test: badge-delete alias ---"
-# Create a temp badge to delete via alias
-TEMP=$($PHP $MOOSH badge:add -p "$MOODLE_PATH" --run "TempDel" -o csv | tail -1 | cut -d, -f1)
-OUT=$($PHP $MOOSH badge-delete -p "$MOODLE_PATH" --run $TEMP)
-assert_output_contains "Alias works" "Deleted" "$OUT"
-echo ""
 
 print_summary

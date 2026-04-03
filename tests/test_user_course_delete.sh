@@ -83,10 +83,6 @@ assert_output_contains "Help description" "Delete users" "$OUT"
 assert_output_contains "Help shows --id" "--id" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH user-delete -p "$MOODLE_PATH" student06 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # course:delete
@@ -144,9 +140,5 @@ OUT=$($PHP $MOOSH course:delete -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Delete courses" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH course-delete -p "$MOODLE_PATH" 5 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

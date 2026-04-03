@@ -30,7 +30,6 @@ class QuestionExportCommand extends BaseCommand
     {
         $this
             ->setName('question:export')
-            ->setAliases(['question-export'])
             ->setDescription('Export questions from a category')
             ->setHelp(<<<'HELP'
                 Exports questions from a question category in Moodle XML or GIFT format.

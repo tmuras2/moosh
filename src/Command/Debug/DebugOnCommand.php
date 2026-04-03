@@ -21,7 +21,7 @@ class DebugOnCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('debug:on')->setAliases(['debug-on'])
+        $this->setName('debug:on')
             ->setDescription('Enable developer debug mode')
             ->setHelp('Enables full developer debugging: debug display, SMTP debug, performance debug, string IDs, theme designer mode, disables JS cache.');
     }

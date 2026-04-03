@@ -30,7 +30,6 @@ class TaskRunCommand extends BaseCommand
     {
         $this
             ->setName('task:run')
-            ->setAliases(['task-run'])
             ->setDescription('Execute a scheduled task immediately')
             ->setHelp(<<<'HELP'
                 Runs a scheduled task immediately.

@@ -37,7 +37,6 @@ class RoleDeleteCommand extends BaseCommand
     {
         $this
             ->setName('role:delete')
-            ->setAliases(['role-delete'])
             ->setDescription('Delete one or more roles')
             ->setHelp(<<<'HELP'
                 Deletes roles by shortname or ID. Requires --run to execute.

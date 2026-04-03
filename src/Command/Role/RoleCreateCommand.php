@@ -37,7 +37,6 @@ class RoleCreateCommand extends BaseCommand
     {
         $this
             ->setName('role:create')
-            ->setAliases(['role-create'])
             ->setDescription('Create a new role')
             ->setHelp(<<<'HELP'
                 Creates a new role with the given shortname.

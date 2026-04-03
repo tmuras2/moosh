@@ -70,10 +70,6 @@ assert_output_contains "Help description" "Enrol users" "$OUT"
 assert_output_contains "Help shows --role" "--role" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH course-enrol -p "$MOODLE_PATH" 2 student06 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # course:unenrol
@@ -112,9 +108,5 @@ assert_output_contains "Help description" "Unenrol users" "$OUT"
 assert_output_contains "Help shows --plugin" "--plugin" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH course-unenrol -p "$MOODLE_PATH" 2 4 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

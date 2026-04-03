@@ -21,7 +21,7 @@ class SessionKillCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('session:kill')->setAliases(['session-kill'])
+        $this->setName('session:kill')
             ->setDescription('Destroy all user sessions')
             ->setHelp('Destroys all active sessions, forcing all users to re-login. Requires --run.');
     }

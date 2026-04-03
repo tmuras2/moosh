@@ -70,10 +70,6 @@ assert_output_contains "Help description" "Get Moodle configuration" "$OUT"
 assert_output_contains "Help shows --plugin" "--plugin" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH config-get -p "$MOODLE_PATH" theme 2>&1)
-assert_output_contains "Alias works" "boost" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # config:set
@@ -111,9 +107,5 @@ assert_output_contains "Help description" "Set a Moodle configuration" "$OUT"
 assert_output_contains "Help shows --plugin" "--plugin" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH config-set -p "$MOODLE_PATH" forcelogin 0 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

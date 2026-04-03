@@ -30,7 +30,6 @@ class EventFireCommand extends BaseCommand
     {
         $this
             ->setName('event:fire')
-            ->setAliases(['event-fire'])
             ->setDescription('Trigger a Moodle event')
             ->setHelp(<<<'HELP'
                 Fires a Moodle event with custom data for testing.

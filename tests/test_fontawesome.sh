@@ -95,10 +95,6 @@ assert_output_contains "Help description" "List and search Font Awesome icon map
 assert_output_contains "Help shows --component" "--component" "$OUT"
 echo ""
 
-echo "--- Test: fontawesome-maplist alias ---"
-OUT=$($PHP $MOOSH fontawesome-maplist -p "$MOODLE_PATH" search -o csv)
-assert_output_contains "Alias works" "magnifying-glass" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # fontawesome:refresh-cache
@@ -124,9 +120,5 @@ OUT=$($PHP $MOOSH fontawesome:refresh-cache -p "$MOODLE_PATH" --help)
 assert_output_contains "Help description" "Refresh the Font Awesome icon mapping cache" "$OUT"
 echo ""
 
-echo "--- Test: fontawesome-refresh-cache alias ---"
-OUT=$($PHP $MOOSH fontawesome-refresh-cache -p "$MOODLE_PATH" --run)
-assert_output_contains "Alias works" "refreshed" "$OUT"
-echo ""
 
 print_summary

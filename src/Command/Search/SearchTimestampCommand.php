@@ -38,7 +38,6 @@ class SearchTimestampCommand extends BaseCommand
     {
         $this
             ->setName('search:timestamp')
-            ->setAliases(['search-timestamp'])
             ->setDescription('Search for a timestamp across all database tables')
             ->setHelp(
                 "Searches all integer columns containing 'time' in their name across all Moodle tables.\n" .

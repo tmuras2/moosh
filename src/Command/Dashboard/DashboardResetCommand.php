@@ -21,7 +21,7 @@ class DashboardResetCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('dashboard:reset')->setAliases(['dashboard-reset', 'dashboard-reset-all'])
+        $this->setName('dashboard:reset')
             ->setDescription('Reset all user dashboards to default')
             ->setHelp('Resets all user dashboard pages to the site default layout.');
         $this->handler->configureCommand($this);

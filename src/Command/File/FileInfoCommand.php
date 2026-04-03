@@ -30,7 +30,6 @@ class FileInfoCommand extends BaseCommand
     {
         $this
             ->setName('file:info')
-            ->setAliases(['file-info', 'file-path'])
             ->setDescription('Show detailed file information')
             ->setHelp(<<<'HELP'
                 Show file details including physical path.

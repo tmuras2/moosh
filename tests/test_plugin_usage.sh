@@ -159,9 +159,5 @@ echo ""
 
 # ── plugin-usage alias ───────────────────────────────────────────
 
-echo "--- Test: plugin-usage alias ---"
-OUT=$($PHP $MOOSH plugin-usage -p "$MOODLE_PATH" --type format -o csv)
-assert_output_contains "Alias works" "format,topics" "$OUT"
-echo ""
 
 print_summary

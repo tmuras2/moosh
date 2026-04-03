@@ -38,7 +38,6 @@ class CourseInfoCommand extends BaseCommand
     {
         $this
             ->setName('course:info')
-            ->setAliases(['course-info'])
             ->setDescription('Show detailed information about a course')
             ->setHelp('Displays comprehensive statistics for a single course: contexts, roles, groups, sections, grades, files, logs, badges, and cache build time.');
 

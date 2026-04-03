@@ -43,7 +43,6 @@ class UserListCommand extends BaseCommand
     {
         $this
             ->setName('user:list')
-            ->setAliases(['user-list'])
             ->setDescription('List Moodle users')
             ->setHelp('Lists users matching optional search criteria with configurable output fields and format.');
 

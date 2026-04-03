@@ -30,7 +30,6 @@ class FileStatsCommand extends BaseCommand
     {
         $this
             ->setName('file:stats')
-            ->setAliases(['file-stats'])
             ->setDescription('Show file storage statistics')
             ->setHelp(<<<'HELP'
                 Show storage stats.

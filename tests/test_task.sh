@@ -60,7 +60,7 @@ assert_output_contains "No running tasks" "No tasks found" "$OUT"
 echo ""
 
 echo "--- Test: ID-only ---"
-OUT=$($PHP $MOOSH task:list --id-only -p "$MOODLE_PATH" 2>&1)
+OUT=$($PHP $MOOSH task:list --classname-only -p "$MOODLE_PATH" 2>&1)
 assert_output_not_empty "ID-only not empty" "$OUT"
 assert_output_contains "Shows task classname" "task" "$OUT"
 echo ""
@@ -82,15 +82,7 @@ assert_output_contains "Help shows --running" "--running" "$OUT"
 assert_output_contains "Help shows --failed" "--failed" "$OUT"
 echo ""
 
-echo "--- Test: task-schedule alias ---"
-OUT=$($PHP $MOOSH task-schedule -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "classname" "$OUT"
-echo ""
 
-echo "--- Test: task-lock-check alias ---"
-OUT=$($PHP $MOOSH task-lock-check --running -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Lock check alias works" "No tasks found" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  task:mod
@@ -155,10 +147,6 @@ assert_output_contains "Help shows --reset" "--reset" "$OUT"
 assert_output_contains "Help shows --clear-fail" "--clear-fail" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH task-mod "$TASK_CLASS" --enabled 1 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  task:run
@@ -186,10 +174,6 @@ OUT=$($PHP $MOOSH task:run -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Execute a scheduled task" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH task-run "$TASK_CLASS" -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Executing" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  task:adhoc
@@ -245,9 +229,5 @@ assert_output_contains "Help shows --clean" "--clean" "$OUT"
 assert_output_contains "Help shows --count" "--count" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH task-adhoc --count -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Total adhoc tasks" "$OUT"
-echo ""
 
 print_summary

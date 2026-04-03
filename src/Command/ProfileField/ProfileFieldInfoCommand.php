@@ -32,7 +32,6 @@ class ProfileFieldInfoCommand extends BaseCommand
     {
         $this
             ->setName('profilefield:info')
-            ->setAliases(['profilefield-info'])
             ->setDescription('Show detailed information about a user profile field')
             ->setHelp('Displays field properties, category, data statistics, and usage information.');
 

@@ -21,7 +21,7 @@ class RecycleBinRestoreCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('recyclebin:restore')->setAliases(['recyclebin-restore'])
+        $this->setName('recyclebin:restore')
             ->setDescription('Restore an item from the recycle bin')
             ->setHelp("Restores a deleted activity from the course recycle bin.\n\nExamples:\n  recyclebin:restore 5 2 --run");
         $this->handler->configureCommand($this);

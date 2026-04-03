@@ -137,9 +137,5 @@ echo ""
 
 # ── report-concurrency alias ─────────────────────────────────────
 
-echo "--- Test: report-concurrency alias ---"
-OUT=$($PHP $MOOSH report-concurrency -p "$MOODLE_PATH" -o csv)
-assert_output_contains "Alias works" "Active users" "$OUT"
-echo ""
 
 print_summary

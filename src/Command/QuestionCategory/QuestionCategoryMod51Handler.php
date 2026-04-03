@@ -22,11 +22,10 @@ class QuestionCategoryMod51Handler extends BaseHandler
     public function configureCommand(Command $command): void
     {
         $command
-            ->addArgument('id', InputArgument::REQUIRED, 'Question category ID')
+            ->addArgument('categoryid', InputArgument::REQUIRED, 'Question category ID')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Set category name')
             ->addOption('info', null, InputOption::VALUE_REQUIRED, 'Set description')
-            ->addOption('idnumber', null, InputOption::VALUE_REQUIRED, 'Set ID number')
-            ->addOption('delete', null, InputOption::VALUE_NONE, 'Delete the category');
+            ->addOption('idnumber', null, InputOption::VALUE_REQUIRED, 'Set ID number');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -37,11 +36,10 @@ class QuestionCategoryMod51Handler extends BaseHandler
         $runMode = $input->getOption('run');
         $format = $input->getOption('output');
 
-        $catId = (int) $input->getArgument('id');
+        $catId = (int) $input->getArgument('categoryid');
         $newName = $input->getOption('name');
         $newInfo = $input->getOption('info');
         $newIdnumber = $input->getOption('idnumber');
-        $doDelete = $input->getOption('delete');
 
         require_once $CFG->libdir . '/questionlib.php';
 
@@ -51,20 +49,9 @@ class QuestionCategoryMod51Handler extends BaseHandler
             return Command::FAILURE;
         }
 
-        if (!$doDelete && $newName === null && $newInfo === null && $newIdnumber === null) {
-            $output->writeln('<error>No modifications specified. Use --name, --info, --idnumber, or --delete.</error>');
+        if ($newName === null && $newInfo === null && $newIdnumber === null) {
+            $output->writeln('<error>No modifications specified. Use --name, --info, or --idnumber.</error>');
             return Command::FAILURE;
-        }
-
-        if ($doDelete) {
-            if (!$runMode) {
-                $output->writeln("<info>Dry run — would delete question category '{$cat->name}' (ID=$catId) (use --run to execute).</info>");
-                return Command::SUCCESS;
-            }
-            $manager = new \core_question\category_manager();
-            $manager->delete_category($catId);
-            $output->writeln("Deleted question category '{$cat->name}' (ID=$catId).");
-            return Command::SUCCESS;
         }
 
         if (!$runMode) {

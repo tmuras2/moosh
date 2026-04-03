@@ -32,7 +32,6 @@ class CourseLastVisitedCommand extends BaseCommand
     {
         $this
             ->setName('course:last-visited')
-            ->setAliases(['course-last-visited'])
             ->setDescription('Show when a course was last visited')
             ->setHelp('Reports when each specified course was last accessed by any user.');
         $this->handler->configureCommand($this);

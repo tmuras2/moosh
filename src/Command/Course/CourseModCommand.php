@@ -37,7 +37,6 @@ class CourseModCommand extends BaseCommand
     {
         $this
             ->setName('course:mod')
-            ->setAliases(['course-mod', 'course-move', 'course-config-set', 'course-enableguest', 'course-enableselfenrol'])
             ->setDescription('Modify course properties, move to category, or toggle enrolment methods')
             ->setHelp(<<<'HELP'
                 Modifies course settings, moves a course to a different category,

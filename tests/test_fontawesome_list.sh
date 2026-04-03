@@ -96,9 +96,5 @@ assert_output_contains "Help description" "List all Font Awesome icons" "$OUT"
 assert_output_contains "Help shows --style" "--style" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH fontawesome-list -p "$MOODLE_PATH" house -o csv 2>&1)
-assert_output_contains "Alias works" "house" "$OUT"
-echo ""
 
 print_summary

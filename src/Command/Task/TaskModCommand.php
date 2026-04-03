@@ -30,7 +30,6 @@ class TaskModCommand extends BaseCommand
     {
         $this
             ->setName('task:mod')
-            ->setAliases(['task-mod'])
             ->setDescription('Modify a scheduled task')
             ->setHelp(<<<'HELP'
                 Modifies schedule, enables/disables, resets, or clears fail delay.

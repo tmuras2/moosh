@@ -38,7 +38,6 @@ class SqlSelectCommand extends BaseCommand
     {
         $this
             ->setName('sql:select')
-            ->setAliases(['sql-select'])
             ->setDescription('Run a SELECT query against the Moodle database')
             ->setHelp(
                 "Executes a SQL SELECT query using Moodle's database API and outputs results.\n" .

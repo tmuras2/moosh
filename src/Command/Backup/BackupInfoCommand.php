@@ -38,7 +38,6 @@ class BackupInfoCommand extends BaseCommand
     {
         $this
             ->setName('backup:info')
-            ->setAliases(['backup-info'])
             ->setDescription('Show detailed information about a Moodle backup file')
             ->setHelp('Displays comprehensive information about a .mbz backup file: course details, Moodle version, activities, sections, users, files, enrolments, and backup settings.');
 

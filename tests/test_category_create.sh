@@ -109,9 +109,5 @@ echo ""
 
 # ── category-create alias ────────────────────────────────────────
 
-echo "--- Test: category-create alias ---"
-OUT=$($PHP $MOOSH category-create -p "$MOODLE_PATH" --run "Alias Cat" -o csv)
-assert_output_contains "Alias works" "Alias Cat" "$OUT"
-echo ""
 
 print_summary

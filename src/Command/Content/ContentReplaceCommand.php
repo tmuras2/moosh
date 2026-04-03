@@ -21,7 +21,7 @@ class ContentReplaceCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('content:replace')->setAliases(['content-replace'])
+        $this->setName('content:replace')
             ->setDescription('Find and replace text across the entire database')
             ->setHelp("Performs database-wide text replacement. Useful for domain migrations.\n\nExamples:\n  content:replace 'http://old.example.com' 'https://new.example.com' --run\n  content:replace 'old-domain.com' 'new-domain.com' --skip-tables=mdl_config,mdl_config_log --run");
         $this->handler->configureCommand($this);

@@ -31,7 +31,6 @@ class CourseRestoreCommand extends BaseCommand
     {
         $this
             ->setName('course:restore')
-            ->setAliases(['course-restore'])
             ->setDescription('Restore a course from a backup file')
             ->setHelp('Restores a course from a .mbz backup file into a category or existing course. Requires --run to execute.');
         $this->handler->configureCommand($this);

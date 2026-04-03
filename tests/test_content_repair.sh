@@ -46,10 +46,6 @@ assert_output_contains "Help description" "Find and replace" "$OUT"
 assert_output_contains "Help shows --skip-tables" "--skip-tables" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH content-replace 'a' 'b' -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  content:https-replace
@@ -78,10 +74,6 @@ assert_output_contains "Help description" "Replace HTTP URLs" "$OUT"
 assert_output_contains "Help shows --list" "--list" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH content-https-replace --list -p "$MOODLE_PATH" 2>&1)
-assert_output_not_empty "Alias works" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  course:repair
@@ -121,10 +113,6 @@ assert_output_contains "Help description" "Check and repair" "$OUT"
 assert_output_contains "Help shows --all" "--all" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH course-repair 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "integrity" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  recyclebin:list / recyclebin:restore / recyclebin:purge
@@ -182,9 +170,5 @@ OUT=$($PHP $MOOSH recyclebin:purge -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Empty the recycle bin" "$OUT"
 echo ""
 
-echo "--- Test: recyclebin-list alias ---"
-OUT=$($PHP $MOOSH recyclebin-list 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_not_empty "Alias works" "$OUT"
-echo ""
 
 print_summary

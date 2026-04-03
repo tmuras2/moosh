@@ -26,7 +26,7 @@ class ContextFreeze51Handler extends BaseHandler
     public function configureCommand(Command $command): void
     {
         $command->addArgument(
-            'id',
+            'contextid',
             InputArgument::REQUIRED | InputArgument::IS_ARRAY,
             'Context ID(s), or instance ID(s) when --level is used',
         );
@@ -52,7 +52,7 @@ class ContextFreeze51Handler extends BaseHandler
 
         $verbose = new VerboseLogger($output);
         $runMode = $input->getOption('run');
-        $ids = $input->getArgument('id');
+        $ids = $input->getArgument('contextid');
         $level = $input->getOption('level');
         $withChildren = $input->getOption('children');
 

@@ -37,7 +37,6 @@ class SqlDumpCommand extends BaseCommand
     {
         $this
             ->setName('sql:dump')
-            ->setAliases(['sql-dump'])
             ->setDescription('Dump the Moodle database')
             ->setHelp(<<<'HELP'
                 Creates a SQL dump of the Moodle database using native tools

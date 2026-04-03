@@ -37,7 +37,6 @@ class AuditBruteforceCommand extends BaseCommand
     {
         $this
             ->setName('audit:bruteforce')
-            ->setAliases(['audit-bruteforce', 'security-check-bruteforce'])
             ->setDescription('Detect brute-force login attempts and potential breaches')
             ->setHelp(<<<'HELP'
                 Analyzes failed login attempts from the log store and cross-references

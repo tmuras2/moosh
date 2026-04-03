@@ -21,7 +21,7 @@ class DatabaseCheckCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('database:check')->setAliases(['database-check'])
+        $this->setName('database:check')
             ->setDescription('Check database schema consistency')
             ->setHelp('Verifies the database schema matches the expected Moodle schema and reports mismatches.');
     }

@@ -37,7 +37,6 @@ class CacheCreateCommand extends BaseCommand
     {
         $this
             ->setName('cache:create')
-            ->setAliases(['cache-create', 'cache-add-mem-store', 'cache-add-redis-store'])
             ->setDescription('Create a cache store instance')
             ->setHelp(<<<'HELP'
                 Creates a new cache store instance for redis, memcached, apcu, or file backends.

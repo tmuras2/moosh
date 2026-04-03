@@ -30,7 +30,6 @@ class EventListCommand extends BaseCommand
     {
         $this
             ->setName('event:list')
-            ->setAliases(['event-list'])
             ->setDescription('List all available Moodle events')
             ->setHelp(<<<'HELP'
                 Lists all event classes with component, CRUD type, and education level.

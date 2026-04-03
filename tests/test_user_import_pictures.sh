@@ -268,10 +268,6 @@ assert_output_contains "Help shows --report" "--report" "$OUT"
 assert_output_contains "Help shows --report-missing" "--report-missing" "$OUT"
 echo ""
 
-echo "--- Test: user-import-pictures alias ---"
-OUT=$($PHP $MOOSH user-import-pictures -p "$MOODLE_PATH" --report-missing -o csv 2>&1 | head -3)
-assert_output_contains "Alias works" "username" "$OUT"
-echo ""
 
 # ── Report after import ──────────────────────────────────────────
 

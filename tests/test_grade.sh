@@ -74,10 +74,6 @@ assert_output_contains "Help shows name" "name" "$OUT"
 assert_output_contains "Help shows --aggregation" "--aggregation" "$OUT"
 echo ""
 
-echo "--- Test: gradecategory-create alias ---"
-OUT=$($PHP $MOOSH gradecategory-create "Alias Test" 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  gradecategory:list
@@ -122,10 +118,6 @@ OUT=$($PHP $MOOSH gradecategory:list -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "List grade categories" "$OUT"
 echo ""
 
-echo "--- Test: gradecategory-list alias ---"
-OUT=$($PHP $MOOSH gradecategory-list 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Assignments" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  gradecategory:mod
@@ -180,11 +172,11 @@ assert_exit_code "Exit code 1 for invalid ID" 1 $EC
 assert_output_contains "Error for invalid ID" "not found" "$OUT"
 echo ""
 
-echo "--- Test: Delete category ---"
+echo "--- Test: gradecategory:delete ---"
 # Create a temporary category to delete
 DEL_OUT=$($PHP $MOOSH gradecategory:create "ToDelete" 2 -p "$MOODLE_PATH" --run -o csv 2>&1)
 DEL_ID=$(echo "$DEL_OUT" | tail -1 | cut -d, -f1)
-OUT=$($PHP $MOOSH gradecategory:mod $DEL_ID --delete -p "$MOODLE_PATH" --run 2>&1)
+OUT=$($PHP $MOOSH gradecategory:delete $DEL_ID -p "$MOODLE_PATH" --run 2>&1)
 EC=$?
 assert_exit_code "Delete exit code 0" 0 $EC
 assert_output_contains "Shows deleted" "Deleted" "$OUT"
@@ -192,15 +184,10 @@ echo ""
 
 echo "--- Test: gradecategory:mod help ---"
 OUT=$($PHP $MOOSH gradecategory:mod -p "$MOODLE_PATH" --help 2>&1)
-assert_output_contains "Help description" "Modify or delete" "$OUT"
+assert_output_contains "Help description" "Modify a grade category" "$OUT"
 assert_output_contains "Help shows --name" "--name" "$OUT"
-assert_output_contains "Help shows --delete" "--delete" "$OUT"
 echo ""
 
-echo "--- Test: gradecategory-mod alias ---"
-OUT=$($PHP $MOOSH gradecategory-mod $ASSIGN_CAT_ID --hidden 0 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  gradeitem:create
@@ -260,10 +247,6 @@ assert_output_contains "Help shows --grademax" "--grademax" "$OUT"
 assert_output_contains "Help shows --gradetype" "--gradetype" "$OUT"
 echo ""
 
-echo "--- Test: gradeitem-create alias ---"
-OUT=$($PHP $MOOSH gradeitem-create "Alias Test" 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  gradeitem:list
@@ -320,10 +303,6 @@ assert_output_contains "Help description" "List grade items" "$OUT"
 assert_output_contains "Help shows --itemtype" "--itemtype" "$OUT"
 echo ""
 
-echo "--- Test: gradeitem-list alias ---"
-OUT=$($PHP $MOOSH gradeitem-list 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Homework 1" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  gradeitem:mod
@@ -410,11 +389,11 @@ assert_exit_code "Exit code 1 for invalid ID" 1 $EC
 assert_output_contains "Error for invalid ID" "not found" "$OUT"
 echo ""
 
-echo "--- Test: Delete grade item ---"
+echo "--- Test: gradeitem:delete ---"
 # Create a temporary item to delete
 DEL_OUT=$($PHP $MOOSH gradeitem:create "ToDelete" 2 -p "$MOODLE_PATH" --run -o csv 2>&1)
 DEL_ITEM_ID=$(echo "$DEL_OUT" | tail -1 | cut -d, -f1)
-OUT=$($PHP $MOOSH gradeitem:mod $DEL_ITEM_ID --delete -p "$MOODLE_PATH" --run 2>&1)
+OUT=$($PHP $MOOSH gradeitem:delete $DEL_ITEM_ID -p "$MOODLE_PATH" --run 2>&1)
 EC=$?
 assert_exit_code "Delete exit code 0" 0 $EC
 assert_output_contains "Shows deleted" "Deleted" "$OUT"
@@ -422,15 +401,10 @@ echo ""
 
 echo "--- Test: gradeitem:mod help ---"
 OUT=$($PHP $MOOSH gradeitem:mod -p "$MOODLE_PATH" --help 2>&1)
-assert_output_contains "Help description" "Modify or delete" "$OUT"
+assert_output_contains "Help description" "Modify a grade item" "$OUT"
 assert_output_contains "Help shows --name" "--name" "$OUT"
 assert_output_contains "Help shows --grademax" "--grademax" "$OUT"
-assert_output_contains "Help shows --delete" "--delete" "$OUT"
 echo ""
 
-echo "--- Test: gradeitem-mod alias ---"
-OUT=$($PHP $MOOSH gradeitem-mod $HW_ITEM_ID --grademin 5 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

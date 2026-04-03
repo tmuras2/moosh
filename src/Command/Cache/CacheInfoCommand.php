@@ -37,7 +37,6 @@ class CacheInfoCommand extends BaseCommand
     {
         $this
             ->setName('cache:info')
-            ->setAliases(['cache-info', 'cache-config-get'])
             ->setDescription('Show cache configuration')
             ->setHelp(<<<'HELP'
                 Displays cache configuration: stores, definitions, mappings, and locks.

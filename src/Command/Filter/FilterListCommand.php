@@ -30,7 +30,6 @@ class FilterListCommand extends BaseCommand
     {
         $this
             ->setName('filter:list')
-            ->setAliases(['filter-list'])
             ->setDescription('List text filters and their states')
             ->setHelp(<<<'HELP'
                 Lists all installed text filters with their global state and sort order.

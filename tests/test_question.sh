@@ -71,10 +71,6 @@ OUT=$($PHP $MOOSH questioncategory:create -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Create a question category" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH questioncategory-create "Alias" 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  questioncategory:list
@@ -106,10 +102,6 @@ OUT=$($PHP $MOOSH questioncategory:list -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "List question categories" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH questioncategory-list 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Unit 1" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  questioncategory:mod
@@ -151,10 +143,10 @@ EC=$?
 assert_exit_code "Exit code 1 for no mod" 1 $EC
 echo ""
 
-echo "--- Test: Delete ---"
+echo "--- Test: questioncategory:delete ---"
 DEL_OUT=$($PHP $MOOSH questioncategory:create "ToDelete" 2 -p "$MOODLE_PATH" --run -o csv 2>&1)
 DEL_ID=$(echo "$DEL_OUT" | tail -1 | cut -d, -f1)
-OUT=$($PHP $MOOSH questioncategory:mod $DEL_ID --delete -p "$MOODLE_PATH" --run 2>&1)
+OUT=$($PHP $MOOSH questioncategory:delete $DEL_ID -p "$MOODLE_PATH" --run 2>&1)
 EC=$?
 assert_exit_code "Delete exit code 0" 0 $EC
 assert_output_contains "Shows deleted" "Deleted" "$OUT"
@@ -162,14 +154,9 @@ echo ""
 
 echo "--- Test: Help ---"
 OUT=$($PHP $MOOSH questioncategory:mod -p "$MOODLE_PATH" --help 2>&1)
-assert_output_contains "Help description" "Modify or delete" "$OUT"
-assert_output_contains "Help shows --delete" "--delete" "$OUT"
+assert_output_contains "Help description" "Modify a question category" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH questioncategory-mod $CAT_ID --info "test" -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  question:import (test before list/export to have questions)
@@ -226,10 +213,6 @@ assert_output_contains "Help description" "Import questions" "$OUT"
 assert_output_contains "Help shows --format" "--format" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH question-import "$TMPDIR/questions.gift" $CAT_ID --format gift -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  question:list
@@ -280,10 +263,6 @@ assert_output_contains "Help description" "List questions" "$OUT"
 assert_output_contains "Help shows --qtype" "--qtype" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH question-list 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Capital of France" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  question:export
@@ -324,10 +303,6 @@ OUT=$($PHP $MOOSH question:export -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Export questions" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH question-export $CAT_ID -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "quiz" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  question:delete
@@ -381,9 +356,5 @@ assert_output_contains "Help description" "Delete questions" "$OUT"
 assert_output_contains "Help shows --orphaned" "--orphaned" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH question-delete --orphaned -p "$MOODLE_PATH" 2>&1)
-assert_output_not_empty "Alias works" "$OUT"
-echo ""
 
 print_summary

@@ -91,10 +91,6 @@ assert_output_contains "Help shows description" "List all roles" "$OUT"
 assert_output_contains "Help shows --id-only" "--id-only" "$OUT"
 echo ""
 
-echo "--- Test: role-list alias ---"
-OUT=$($PHP $MOOSH role-list -p "$MOODLE_PATH" -o csv 2>&1)
-assert_output_contains "Alias works" "manager" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  role:create
@@ -261,15 +257,7 @@ assert_output_contains "Help shows --context-off" "--context-off" "$OUT"
 assert_output_contains "Help shows --name" "--name" "$OUT"
 echo ""
 
-echo "--- Test: role-update-capability alias ---"
-OUT=$($PHP $MOOSH role-update-capability -p "$MOODLE_PATH" testrole --capability "mod/forum:addnews=allow" 2>&1)
-assert_output_contains "Alias role-update-capability works" "Dry run" "$OUT"
-echo ""
 
-echo "--- Test: role-update-contextlevel alias ---"
-OUT=$($PHP $MOOSH role-update-contextlevel -p "$MOODLE_PATH" testrole --context-on=block 2>&1)
-assert_output_contains "Alias role-update-contextlevel works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  role:export

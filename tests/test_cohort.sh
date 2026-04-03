@@ -76,10 +76,6 @@ assert_output_contains "Help description" "Create a cohort" "$OUT"
 assert_output_contains "Help shows --idnumber" "--idnumber" "$OUT"
 echo ""
 
-echo "--- Test: cohort-create alias ---"
-OUT=$($PHP $MOOSH cohort-create "Alias Test" -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  cohort:list
@@ -116,10 +112,6 @@ OUT=$($PHP $MOOSH cohort:list -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "List cohorts" "$OUT"
 echo ""
 
-echo "--- Test: cohort-list alias ---"
-OUT=$($PHP $MOOSH cohort-list -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Class 2025" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  cohort:mod
@@ -211,10 +203,10 @@ assert_exit_code "Exit code 1 for no mod" 1 $EC
 assert_output_contains "Error for no mod" "No modifications" "$OUT"
 echo ""
 
-echo "--- Test: Delete cohort ---"
+echo "--- Test: cohort:delete ---"
 DEL_OUT=$($PHP $MOOSH cohort:create "ToDelete" -p "$MOODLE_PATH" --run -o csv 2>&1)
 DEL_ID=$(echo "$DEL_OUT" | tail -1 | cut -d, -f1)
-OUT=$($PHP $MOOSH cohort:mod $DEL_ID --delete -p "$MOODLE_PATH" --run 2>&1)
+OUT=$($PHP $MOOSH cohort:delete $DEL_ID -p "$MOODLE_PATH" --run 2>&1)
 EC=$?
 assert_exit_code "Delete exit code 0" 0 $EC
 assert_output_contains "Shows deleted" "Deleted" "$OUT"
@@ -222,16 +214,11 @@ echo ""
 
 echo "--- Test: cohort:mod help ---"
 OUT=$($PHP $MOOSH cohort:mod -p "$MOODLE_PATH" --help 2>&1)
-assert_output_contains "Help description" "Modify, delete, or manage members" "$OUT"
+assert_output_contains "Help description" "Modify a cohort" "$OUT"
 assert_output_contains "Help shows --add-member" "--add-member" "$OUT"
 assert_output_contains "Help shows --import" "--import" "$OUT"
-assert_output_contains "Help shows --delete" "--delete" "$OUT"
 echo ""
 
-echo "--- Test: cohort-mod alias ---"
-OUT=$($PHP $MOOSH cohort-mod $COHORT_ID --visible 1 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  cohort:enrol
@@ -295,10 +282,6 @@ assert_output_contains "Help description" "Sync a cohort to a course" "$OUT"
 assert_output_contains "Help shows --role" "--role" "$OUT"
 echo ""
 
-echo "--- Test: cohort-enrol alias ---"
-OUT=$($PHP $MOOSH cohort-enrol $COHORT_FAC_ID 4 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  cohort:unenrol
@@ -340,11 +323,5 @@ OUT=$($PHP $MOOSH cohort:unenrol -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Remove cohort enrolment sync" "$OUT"
 echo ""
 
-echo "--- Test: cohort-unsync alias ---"
-OUT=$($PHP $MOOSH cohort-unsync $COHORT_FAC_ID 2 -p "$MOODLE_PATH" 2>&1)
-EC=$?
-# May fail since we already removed it, but the alias should resolve
-assert_output_not_empty "Alias resolves" "$OUT"
-echo ""
 
 print_summary

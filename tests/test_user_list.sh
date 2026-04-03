@@ -234,9 +234,5 @@ echo ""
 
 # ── user-list alias ───────────────────────────────────────────────
 
-echo "--- Test: user-list alias ---"
-OUT=$($PHP $MOOSH user-list -p "$MOODLE_PATH" --limit 2 -o csv)
-assert_output_contains "Alias works - header present" "id,username,email" "$OUT"
-echo ""
 
 print_summary

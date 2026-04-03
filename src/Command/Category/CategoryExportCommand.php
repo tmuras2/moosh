@@ -30,7 +30,6 @@ class CategoryExportCommand extends BaseCommand
     {
         $this
             ->setName('category:export')
-            ->setAliases(['category-export'])
             ->setDescription('Export category tree to XML')
             ->setHelp(<<<'HELP'
                 Exports a category and its subcategories to XML format.

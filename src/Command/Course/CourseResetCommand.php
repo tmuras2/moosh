@@ -31,7 +31,6 @@ class CourseResetCommand extends BaseCommand
     {
         $this
             ->setName('course:reset')
-            ->setAliases(['course-reset'])
             ->setDescription('Reset course data')
             ->setHelp('Resets course user data (enrolments, grades, events, etc.) while keeping the course structure. Requires --run to execute.');
         $this->handler->configureCommand($this);

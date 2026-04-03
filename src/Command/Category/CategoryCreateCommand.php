@@ -38,7 +38,6 @@ class CategoryCreateCommand extends BaseCommand
     {
         $this
             ->setName('category:create')
-            ->setAliases(['category-create'])
             ->setDescription('Create Moodle course categories')
             ->setHelp('Creates one or more Moodle course categories. Requires --run to actually create categories.');
 

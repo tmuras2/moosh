@@ -51,11 +51,6 @@ assert_output_contains "Help description" "Enable maintenance mode" "$OUT"
 assert_output_contains "Help shows --message" "--message" "$OUT"
 echo ""
 
-echo "--- Test: maintenance-on alias ---"
-OUT=$($PHP $MOOSH maintenance-on -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "enabled" "$OUT"
-$PHP $MOOSH maintenance:off -p "$MOODLE_PATH" > /dev/null 2>&1
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  debug:on / debug:off
@@ -83,11 +78,6 @@ OUT=$($PHP $MOOSH debug:on -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Enable developer debug" "$OUT"
 echo ""
 
-echo "--- Test: debug-on alias ---"
-OUT=$($PHP $MOOSH debug-on -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "enabled" "$OUT"
-$PHP $MOOSH debug:off -p "$MOODLE_PATH" > /dev/null 2>&1
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  dashboard:reset
@@ -115,10 +105,6 @@ OUT=$($PHP $MOOSH dashboard:reset -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Reset all user dashboards" "$OUT"
 echo ""
 
-echo "--- Test: dashboard-reset-all alias ---"
-OUT=$($PHP $MOOSH dashboard-reset-all -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  system:check
@@ -151,10 +137,6 @@ assert_output_contains "Help description" "Run system health" "$OUT"
 assert_output_contains "Help shows --status" "--status" "$OUT"
 echo ""
 
-echo "--- Test: system-check alias ---"
-OUT=$($PHP $MOOSH system-check -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Summary" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  session:kill
@@ -182,10 +164,6 @@ OUT=$($PHP $MOOSH session:kill -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Destroy all user sessions" "$OUT"
 echo ""
 
-echo "--- Test: session-kill alias ---"
-OUT=$($PHP $MOOSH session-kill -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  database:check
@@ -206,10 +184,6 @@ OUT=$($PHP $MOOSH database:check -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Check database schema" "$OUT"
 echo ""
 
-echo "--- Test: database-check alias ---"
-OUT=$($PHP $MOOSH database-check -p "$MOODLE_PATH" 2>&1)
-assert_output_not_empty "Alias works" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  php:eval
@@ -244,9 +218,5 @@ OUT=$($PHP $MOOSH php:eval -p "$MOODLE_PATH" --help 2>&1)
 assert_output_contains "Help description" "Evaluate PHP code" "$OUT"
 echo ""
 
-echo "--- Test: php-eval alias ---"
-OUT=$($PHP $MOOSH php-eval 'echo 42' -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "42" "$OUT"
-echo ""
 
 print_summary

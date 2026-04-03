@@ -37,7 +37,6 @@ class GradeItemCreateCommand extends BaseCommand
     {
         $this
             ->setName('gradeitem:create')
-            ->setAliases(['gradeitem-create'])
             ->setDescription('Create a manual grade item in a course')
             ->setHelp(<<<'HELP'
                 Creates a new manual grade item in the specified course and category.

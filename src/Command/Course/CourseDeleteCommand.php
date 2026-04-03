@@ -31,7 +31,6 @@ class CourseDeleteCommand extends BaseCommand
     {
         $this
             ->setName('course:delete')
-            ->setAliases(['course-delete'])
             ->setDescription('Delete courses')
             ->setHelp('Deletes one or more courses by ID. Requires --run to execute.');
         $this->handler->configureCommand($this);

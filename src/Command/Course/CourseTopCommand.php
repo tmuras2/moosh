@@ -32,7 +32,6 @@ class CourseTopCommand extends BaseCommand
     {
         $this
             ->setName('course:top')
-            ->setAliases(['course-top'])
             ->setDescription('Show top courses by activity')
             ->setHelp('Lists the most visited courses in the last 30 days based on log data.');
         $this->handler->configureCommand($this);

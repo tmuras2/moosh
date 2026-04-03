@@ -32,7 +32,6 @@ class ProfileFieldExportCommand extends BaseCommand
     {
         $this
             ->setName('profilefield:export')
-            ->setAliases(['profilefield-export'])
             ->setDescription('Export user profile fields to CSV')
             ->setHelp('Exports all user profile field definitions and their categories to CSV format.');
 

@@ -31,7 +31,6 @@ class ActivityInfoCommand extends BaseCommand
     {
         $this
             ->setName('activity:info')
-            ->setAliases(['activity-info'])
             ->setDescription('Show detailed information about an activity module instance')
             ->setHelp('Displays comprehensive information about a course module including its settings, completion, grades, and usage statistics.');
         $this->handler->configureCommand($this);

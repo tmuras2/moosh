@@ -30,7 +30,6 @@ class QuestionImportCommand extends BaseCommand
     {
         $this
             ->setName('question:import')
-            ->setAliases(['question-import', 'questionbank-import'])
             ->setDescription('Import questions from a file into a question category')
             ->setHelp(<<<'HELP'
                 Imports questions from an XML or GIFT file into a question category.

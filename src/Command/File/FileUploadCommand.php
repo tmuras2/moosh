@@ -30,7 +30,6 @@ class FileUploadCommand extends BaseCommand
     {
         $this
             ->setName('file:upload')
-            ->setAliases(['file-upload'])
             ->setDescription('Upload a file to Moodle file storage')
             ->setHelp(<<<'HELP'
                 Upload file to storage.

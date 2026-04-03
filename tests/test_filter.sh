@@ -51,7 +51,7 @@ assert_output_contains "JSON has name" '"name": "mathjaxloader"' "$OUT"
 echo ""
 
 echo "--- Test: ID-only ---"
-OUT=$($PHP $MOOSH filter:list --id-only -p "$MOODLE_PATH" 2>&1)
+OUT=$($PHP $MOOSH filter:list --name-only -p "$MOODLE_PATH" 2>&1)
 assert_output_contains "Shows filter name" "mathjaxloader" "$OUT"
 assert_output_not_contains "No table header" "displayname" "$OUT"
 echo ""
@@ -63,10 +63,6 @@ assert_output_contains "Help shows --enabled" "--enabled" "$OUT"
 assert_output_contains "Help shows --context" "--context" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH filter-list -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "mathjaxloader" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  filter:mod
@@ -88,7 +84,7 @@ EC=$?
 assert_exit_code "Enable exit code 0" 0 $EC
 assert_output_contains "Shows modified" "Modified" "$OUT"
 # Verify
-VERIFY=$($PHP $MOOSH filter:list --enabled --id-only -p "$MOODLE_PATH" 2>&1)
+VERIFY=$($PHP $MOOSH filter:list --enabled --name-only -p "$MOODLE_PATH" 2>&1)
 assert_output_contains "Multilang now enabled" "multilang" "$VERIFY"
 echo ""
 
@@ -150,10 +146,6 @@ assert_output_contains "Help shows --apply-to-strings" "--apply-to-strings" "$OU
 assert_output_contains "Help shows --config" "--config" "$OUT"
 echo ""
 
-echo "--- Test: filter-set alias ---"
-OUT=$($PHP $MOOSH filter-set multilang --state on -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # Clean up - disable multilang
 $PHP $MOOSH filter:mod multilang --state disabled -p "$MOODLE_PATH" --run > /dev/null 2>&1

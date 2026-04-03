@@ -21,7 +21,7 @@ class MaintenanceOffCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('maintenance:off')->setAliases(['maintenance-off'])
+        $this->setName('maintenance:off')
             ->setDescription('Disable maintenance mode');
     }
 

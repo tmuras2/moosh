@@ -21,7 +21,7 @@ class RecycleBinPurgeCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('recyclebin:purge')->setAliases(['recyclebin-purge'])
+        $this->setName('recyclebin:purge')
             ->setDescription('Empty the recycle bin for a course')
             ->setHelp("Permanently deletes all items in a course's recycle bin.\n\nExamples:\n  recyclebin:purge 2 --run");
         $this->handler->configureCommand($this);

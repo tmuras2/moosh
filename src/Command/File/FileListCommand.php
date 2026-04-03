@@ -30,7 +30,6 @@ class FileListCommand extends BaseCommand
     {
         $this
             ->setName('file:list')
-            ->setAliases(['file-list'])
             ->setDescription('List files in Moodle file storage')
             ->setHelp(<<<'HELP'
                 List files filtered by context, component, filearea.

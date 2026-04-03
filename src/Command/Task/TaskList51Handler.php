@@ -27,14 +27,14 @@ class TaskList51Handler extends BaseHandler
             ->addOption('overdue', null, InputOption::VALUE_NONE, 'Show only overdue tasks')
             ->addOption('running', null, InputOption::VALUE_NONE, 'Show only currently running tasks')
             ->addOption('failed', null, InputOption::VALUE_NONE, 'Show only tasks with fail delay')
-            ->addOption('id-only', 'i', InputOption::VALUE_NONE, 'Show classnames only');
+            ->addOption('classname-only', null, InputOption::VALUE_NONE, 'Show classnames only');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
     {
         $verbose = new VerboseLogger($output);
         $format = $input->getOption('output');
-        $idOnly = $input->getOption('id-only');
+        $idOnly = $input->getOption('classname-only');
 
         $filterComponent = $input->getOption('component');
         $filterDisabled = $input->getOption('disabled');

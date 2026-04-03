@@ -193,12 +193,6 @@ echo ""
 
 # ── log-export alias ──────────────────────────────────────────────
 
-echo "--- Test: log-export alias ---"
-OUT=$($PHP $MOOSH log-export -p "$MOODLE_PATH" --from="2020-01-01" --to="2030-12-31" "$TMPDIR/alias_logs.csv" 2>&1)
-EXIT_CODE=$?
-assert_exit_code "Alias works" 0 "$EXIT_CODE"
-assert_output_contains "Alias exports" "Exported" "$OUT"
-echo ""
 
 # Clean up
 rm -rf "$TMPDIR"

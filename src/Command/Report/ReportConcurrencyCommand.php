@@ -38,7 +38,6 @@ class ReportConcurrencyCommand extends BaseCommand
     {
         $this
             ->setName('report:concurrency')
-            ->setAliases(['report-concurrency'])
             ->setDescription('Report on concurrent user activity')
             ->setHelp(
                 "Analyzes log data to report concurrent users over a time period.\n" .

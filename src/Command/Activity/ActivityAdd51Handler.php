@@ -26,7 +26,7 @@ class ActivityAdd51Handler extends BaseHandler
     {
         $command
             ->addArgument('type', InputArgument::REQUIRED, 'Activity module type (e.g. assign, forum, quiz, resource, url, page)')
-            ->addArgument('course', InputArgument::REQUIRED, 'Course ID')
+            ->addArgument('courseid', InputArgument::REQUIRED, 'Course ID')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Activity name')
             ->addOption('section', 's', InputOption::VALUE_REQUIRED, 'Section number', '1')
             ->addOption('idnumber', null, InputOption::VALUE_REQUIRED, 'Activity ID number');
@@ -41,7 +41,7 @@ class ActivityAdd51Handler extends BaseHandler
         $runMode = $input->getOption('run');
 
         $type = $input->getArgument('type');
-        $courseId = (int) $input->getArgument('course');
+        $courseId = (int) $input->getArgument('courseid');
         $name = $input->getOption('name');
         $section = (int) $input->getOption('section');
         $idnumber = $input->getOption('idnumber');

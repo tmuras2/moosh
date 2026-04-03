@@ -70,10 +70,6 @@ assert_output_contains "Help shows --type" "--type" "$OUT"
 assert_output_contains "Help shows --name-only" "--name-only" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH plugin-list --type aiplacement --name-only 2>&1 | head -3)
-assert_output_contains "Alias works" "aiplacement_" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # plugin:download
@@ -124,10 +120,6 @@ assert_output_contains "Help shows --moodle-version" "--moodle-version" "$OUT"
 assert_output_contains "Help shows --url" "--url" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH plugin-download --moodle-version 4.5 --url mod_attendance 2>&1)
-assert_output_contains "Alias works" "moodle.org" "$OUT"
-echo ""
 
 rm -rf "$DOWNLOAD_DIR"
 
@@ -177,10 +169,6 @@ assert_output_contains "Help shows --force" "--force" "$OUT"
 assert_output_contains "Help shows --delete" "--delete" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH plugin-install -p "$MOODLE_PATH" --force block_progress 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 # plugin:uninstall
@@ -220,10 +208,6 @@ OUT=$($PHP $MOOSH plugin:uninstall --help 2>&1)
 assert_output_contains "Help description" "Uninstall a plugin" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH plugin-uninstall -p "$MOODLE_PATH" xyznonexistent_plugin123 2>&1)
-assert_output_contains "Alias works" "not found" "$OUT"
-echo ""
 
 # ── Cleanup ──────────────────────────────────────────────────────
 

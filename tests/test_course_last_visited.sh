@@ -58,9 +58,5 @@ OUT=$($PHP $MOOSH course:last-visited -p "$MOODLE_PATH" --help)
 assert_output_contains "Help description" "Show when a course was last visited" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH course-last-visited -p "$MOODLE_PATH" 2 -o csv)
-assert_output_contains "Alias works" "algebrafundamentals" "$OUT"
-echo ""
 
 print_summary

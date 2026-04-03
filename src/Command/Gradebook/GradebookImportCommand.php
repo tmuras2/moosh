@@ -37,7 +37,6 @@ class GradebookImportCommand extends BaseCommand
     {
         $this
             ->setName('gradebook:import')
-            ->setAliases(['gradebook-import'])
             ->setDescription('Import grades from a CSV file into a course gradebook')
             ->setHelp(<<<'HELP'
                 Imports grades from a CSV file into a course's gradebook.

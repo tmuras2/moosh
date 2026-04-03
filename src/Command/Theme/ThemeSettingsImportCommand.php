@@ -31,7 +31,6 @@ class ThemeSettingsImportCommand extends BaseCommand
     {
         $this
             ->setName('theme:settings-import')
-            ->setAliases(['theme-settings-import'])
             ->setDescription('Import theme settings from a tar.gz archive')
             ->setHelp('Imports theme settings and associated files from an archive created by theme:settings-export.');
         $this->handler->configureCommand($this);

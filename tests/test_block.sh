@@ -57,7 +57,7 @@ echo "  Created block ID: $BLOCK_ID2"
 echo ""
 
 echo "--- Test: Create with pagetypepattern ---"
-OUT=$($PHP $MOOSH block:create html 2 -p "$MOODLE_PATH" --pagetypepattern "course-view-*" --showinsubcontexts --run 2>&1)
+OUT=$($PHP $MOOSH block:create html 2 -p "$MOODLE_PATH" --pagetypepattern "course-view-*" --showinsubcontexts 1 --run 2>&1)
 EC=$?
 assert_exit_code "Pattern create exit code 0" 0 $EC
 assert_output_contains "Shows pagetypepattern" "course-view-*" "$OUT"
@@ -134,10 +134,6 @@ assert_output_contains "Help shows --mode" "--mode" "$OUT"
 assert_output_contains "Help shows --region" "--region" "$OUT"
 echo ""
 
-echo "--- Test: block-add alias ---"
-OUT=$($PHP $MOOSH block-add calendar_month 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  block:mod
@@ -200,16 +196,16 @@ OUT=$($PHP $MOOSH block:mod $MOD_BLOCK_ID --weight 7 -p "$MOODLE_PATH" --run -o 
 assert_output_contains "JSON has blockname" '"blockname": "calendar_month"' "$OUT"
 echo ""
 
-echo "--- Test: Delete dry run ---"
-OUT=$($PHP $MOOSH block:mod $MOD_BLOCK_ID --delete -p "$MOODLE_PATH" 2>&1)
+echo "--- Test: block:delete dry run ---"
+OUT=$($PHP $MOOSH block:delete $MOD_BLOCK_ID -p "$MOODLE_PATH" 2>&1)
 EC=$?
 assert_exit_code "Delete dry run exit code 0" 0 $EC
 assert_output_contains "Shows delete dry run" "Dry run" "$OUT"
 assert_output_contains "Shows block name" "calendar_month" "$OUT"
 echo ""
 
-echo "--- Test: Delete block instance ---"
-OUT=$($PHP $MOOSH block:mod $MOD_BLOCK_ID --delete -p "$MOODLE_PATH" --run 2>&1)
+echo "--- Test: block:delete ---"
+OUT=$($PHP $MOOSH block:delete $MOD_BLOCK_ID -p "$MOODLE_PATH" --run 2>&1)
 EC=$?
 assert_exit_code "Delete exit code 0" 0 $EC
 assert_output_contains "Shows deleted" "Deleted" "$OUT"
@@ -252,17 +248,10 @@ echo ""
 
 echo "--- Test: block:mod help ---"
 OUT=$($PHP $MOOSH block:mod -p "$MOODLE_PATH" --help 2>&1)
-assert_output_contains "Help description" "Modify, move, or delete" "$OUT"
+assert_output_contains "Help description" "Modify or move" "$OUT"
 assert_output_contains "Help shows instanceid" "instanceid" "$OUT"
-assert_output_contains "Help shows --delete" "--delete" "$OUT"
 assert_output_contains "Help shows --region" "--region" "$OUT"
 echo ""
 
-echo "--- Test: block-manage alias ---"
-OUT=$($PHP $MOOSH block:create calendar_month 2 -p "$MOODLE_PATH" --run -o csv 2>&1)
-ALIAS_ID=$(echo "$OUT" | tail -1 | cut -d, -f1)
-OUT=$($PHP $MOOSH block-manage $ALIAS_ID --weight 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

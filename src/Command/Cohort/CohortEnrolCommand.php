@@ -31,7 +31,6 @@ class CohortEnrolCommand extends BaseCommand
     {
         $this
             ->setName('cohort:enrol')
-            ->setAliases(['cohort-enrol'])
             ->setDescription('Sync a cohort to a course via cohort enrolment')
             ->setHelp(<<<'HELP'
                 Creates a cohort enrolment instance linking a cohort to a course.

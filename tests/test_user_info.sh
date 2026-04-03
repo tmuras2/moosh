@@ -184,9 +184,5 @@ echo ""
 
 # ── user-info alias ───────────────────────────────────────────────
 
-echo "--- Test: user-info alias ---"
-OUT=$($PHP $MOOSH user-info -p "$MOODLE_PATH" 2)
-assert_output_contains "Alias works - shows admin" "admin" "$OUT"
-echo ""
 
 print_summary

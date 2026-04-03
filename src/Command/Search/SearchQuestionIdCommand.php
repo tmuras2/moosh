@@ -38,7 +38,6 @@ class SearchQuestionIdCommand extends BaseCommand
     {
         $this
             ->setName('search:questionid')
-            ->setAliases(['search-questionid'])
             ->setDescription('Search for a question ID across all database tables')
             ->setHelp(
                 "Finds all references to a question ID in the database: columns named 'questionid',\n" .

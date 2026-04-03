@@ -32,7 +32,6 @@ class ProfileFieldAddCommand extends BaseCommand
     {
         $this
             ->setName('profilefield:create')
-            ->setAliases(['profilefield-create', 'profilefield:add', 'profilefield-add'])
             ->setDescription('Create a user profile field')
             ->setHelp('Creates a new custom user profile field. Requires --run.');
 

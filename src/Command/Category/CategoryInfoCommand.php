@@ -37,7 +37,6 @@ class CategoryInfoCommand extends BaseCommand
     {
         $this
             ->setName('category:info')
-            ->setAliases(['category-info'])
             ->setDescription('Show detailed information about a course category')
             ->setHelp('Displays comprehensive statistics for a single category: courses, subcategories, enrolments, activities, files, and depth information.');
 

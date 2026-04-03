@@ -31,7 +31,6 @@ class CourseUnenrolCommand extends BaseCommand
     {
         $this
             ->setName('course:unenrol')
-            ->setAliases(['course-unenrol'])
             ->setDescription('Unenrol users from a course')
             ->setHelp('Unenrols one or more users from a course. Requires --run to execute.');
         $this->handler->configureCommand($this);

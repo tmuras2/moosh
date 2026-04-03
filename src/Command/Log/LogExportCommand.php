@@ -37,7 +37,6 @@ class LogExportCommand extends BaseCommand
     {
         $this
             ->setName('log:export')
-            ->setAliases(['log-export'])
             ->setDescription('Export entries from the standard log table into a CSV file')
             ->setHelp(
                 "Exports log entries from {logstore_standard_log} into a CSV file.\n" .

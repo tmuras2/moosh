@@ -34,7 +34,7 @@ class BlockCreate51Handler extends BaseHandler
             ->addOption('weight', null, InputOption::VALUE_REQUIRED, 'Sort order within region', '0')
             ->addOption('pagetypepattern', null, InputOption::VALUE_REQUIRED, 'Page type pattern (e.g. course-view-*, mod-*, *)', '*')
             ->addOption('subpagepattern', null, InputOption::VALUE_REQUIRED, 'Subpage pattern (optional)')
-            ->addOption('showinsubcontexts', null, InputOption::VALUE_NONE, 'Show block in subcontexts');
+            ->addOption('showinsubcontexts', null, InputOption::VALUE_REQUIRED, 'Set showinsubcontexts (1 or 0)');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -52,7 +52,7 @@ class BlockCreate51Handler extends BaseHandler
         $weight = (int) $input->getOption('weight');
         $pagetypepattern = $input->getOption('pagetypepattern');
         $subpagepattern = $input->getOption('subpagepattern');
-        $showinsubcontexts = $input->getOption('showinsubcontexts') ? 1 : 0;
+        $showinsubcontexts = $input->getOption('showinsubcontexts') !== null ? (int) $input->getOption('showinsubcontexts') : 0;
 
         if (!in_array($mode, self::VALID_MODES, true)) {
             $output->writeln("<error>Invalid mode '$mode'. Use one of: " . implode(', ', self::VALID_MODES) . "</error>");

@@ -25,9 +25,9 @@ class GradebookImport51Handler extends BaseHandler
     {
         $command
             ->addArgument('file', InputArgument::REQUIRED, 'Path to CSV file to import')
-            ->addArgument('course_id', InputArgument::REQUIRED, 'Course ID (or idnumber with --course-idnumber)')
+            ->addArgument('courseid', InputArgument::REQUIRED, 'Course ID (or idnumber with --course-idnumber)')
             ->addOption('map-users-by', null, InputOption::VALUE_REQUIRED, 'Map users by: email or idnumber', 'email')
-            ->addOption('course-idnumber', null, InputOption::VALUE_NONE, 'Treat course_id argument as course idnumber');
+            ->addOption('course-idnumber', null, InputOption::VALUE_NONE, 'Treat courseid argument as course idnumber');
     }
 
     public function handle(InputInterface $input, OutputInterface $output): int
@@ -37,7 +37,7 @@ class GradebookImport51Handler extends BaseHandler
         $verbose = new VerboseLogger($output);
         $runMode = $input->getOption('run');
         $filePath = $input->getArgument('file');
-        $courseArg = $input->getArgument('course_id');
+        $courseArg = $input->getArgument('courseid');
         $mapUsersBy = $input->getOption('map-users-by');
         $useIdnumber = $input->getOption('course-idnumber');
 

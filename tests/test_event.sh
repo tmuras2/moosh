@@ -51,7 +51,7 @@ assert_output_contains "Shows login event" "loggedin" "$OUT"
 echo ""
 
 echo "--- Test: ID-only ---"
-OUT=$($PHP $MOOSH event:list --search course_viewed --id-only -p "$MOODLE_PATH" 2>&1)
+OUT=$($PHP $MOOSH event:list --search course_viewed --classname-only -p "$MOODLE_PATH" 2>&1)
 assert_output_contains "Shows classname" "core" "$OUT"
 assert_output_not_contains "No table" "component" "$OUT"
 echo ""
@@ -69,10 +69,6 @@ assert_output_contains "Help shows --crud" "--crud" "$OUT"
 assert_output_contains "Help shows --search" "--search" "$OUT"
 echo ""
 
-echo "--- Test: event-list alias ---"
-OUT=$($PHP $MOOSH event-list --search course_viewed -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "course_viewed" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  event:fire
@@ -116,10 +112,6 @@ assert_output_contains "Help shows --data" "--data" "$OUT"
 assert_output_contains "Help shows --courseid" "--courseid" "$OUT"
 echo ""
 
-echo "--- Test: event-fire alias ---"
-OUT=$($PHP $MOOSH event-fire '\core\event\course_viewed' --courseid 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  event:log
@@ -180,9 +172,5 @@ assert_output_contains "Help shows --since" "--since" "$OUT"
 assert_output_contains "Help shows --eventname" "--eventname" "$OUT"
 echo ""
 
-echo "--- Test: event-log alias ---"
-OUT=$($PHP $MOOSH event-log --limit 3 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "time" "$OUT"
-echo ""
 
 print_summary

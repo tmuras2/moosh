@@ -32,7 +32,6 @@ class CourseFindBigImagesCommand extends BaseCommand
     {
         $this
             ->setName('course:find-big-images')
-            ->setAliases(['course-find-big-images'])
             ->setDescription('Find courses with oversized overview images')
             ->setHelp('Scans course overview images and reports those exceeding a size threshold.');
         $this->handler->configureCommand($this);

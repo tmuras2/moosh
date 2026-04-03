@@ -32,7 +32,6 @@ class ProfileFieldImportCommand extends BaseCommand
     {
         $this
             ->setName('profilefield:import')
-            ->setAliases(['profilefield-import'])
             ->setDescription('Import user profile fields from CSV')
             ->setHelp('Imports user profile field definitions from a CSV file (as exported by profilefield:export). Skips fields that already exist. Requires --run.');
 

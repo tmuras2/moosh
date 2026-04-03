@@ -37,7 +37,6 @@ class GradebookExportCommand extends BaseCommand
     {
         $this
             ->setName('gradebook:export')
-            ->setAliases(['gradebook-export'])
             ->setDescription('Export gradebook data for a course')
             ->setHelp(<<<'HELP'
                 Exports grade data for a course in various formats (txt, ods, xls, xml).

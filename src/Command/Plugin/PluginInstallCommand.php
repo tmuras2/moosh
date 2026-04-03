@@ -31,7 +31,6 @@ class PluginInstallCommand extends BaseCommand
     {
         $this
             ->setName('plugin:install')
-            ->setAliases(['plugin-install'])
             ->setDescription('Download and install a plugin from the moodle.org directory')
             ->setHelp('Downloads a plugin, extracts it to the correct Moodle directory, and runs the upgrade process.');
         $this->handler->configureCommand($this);

@@ -37,7 +37,6 @@ class CacheRebuildCommand extends BaseCommand
     {
         $this
             ->setName('cache:rebuild')
-            ->setAliases(['cache-rebuild', 'cache-course-rebuild'])
             ->setDescription('Rebuild course cache')
             ->setHelp(<<<'HELP'
                 Rebuilds the course cache for a specific course or all courses.

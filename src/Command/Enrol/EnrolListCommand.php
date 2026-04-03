@@ -37,7 +37,6 @@ class EnrolListCommand extends BaseCommand
     {
         $this
             ->setName('enrol:list')
-            ->setAliases(['enrol-list', 'course-enrol-list'])
             ->setDescription('List enrolment methods for a course')
             ->setHelp(<<<'HELP'
                 Lists all enrolment method instances for a course, including disabled ones.

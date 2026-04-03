@@ -21,7 +21,7 @@ class SystemCheckCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('system:check')->setAliases(['system-check'])
+        $this->setName('system:check')
             ->setDescription('Run system health and security checks')
             ->setHelp("Runs Moodle's built-in health and security checks.\n\nExamples:\n  system:check\n  system:check --status warning\n  system:check -o csv");
         $this->handler->configureCommand($this);

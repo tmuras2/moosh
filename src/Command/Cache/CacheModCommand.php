@@ -37,7 +37,6 @@ class CacheModCommand extends BaseCommand
     {
         $this
             ->setName('cache:mod')
-            ->setAliases(['cache-mod', 'cache-edit-mappings', 'cache-set'])
             ->setDescription('Modify cache mode or definition mappings')
             ->setHelp(<<<'HELP'
                 Modifies cache mode mappings (application, session, request stores)

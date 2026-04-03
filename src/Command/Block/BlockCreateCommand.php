@@ -37,7 +37,6 @@ class BlockCreateCommand extends BaseCommand
     {
         $this
             ->setName('block:create')
-            ->setAliases(['block-create', 'block:add', 'block-add'])
             ->setDescription('Add a block instance to a course, category, or site')
             ->setHelp(<<<'HELP'
                 Adds a block instance to a course, category, all courses in a category, or the site front page.
@@ -48,7 +47,7 @@ class BlockCreateCommand extends BaseCommand
                   block:create html 1 --mode category --run
                   block:create calendar_month 1 --mode categorycourses --run
                   block:create calendar_month 1 --mode site --run
-                  block:create html 2 --pagetypepattern course-view-* --showinsubcontexts --run
+                  block:create html 2 --pagetypepattern course-view-* --showinsubcontexts 1 --run
 
                 Modes:
                   course           Add to a single course (default)

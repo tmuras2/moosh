@@ -37,7 +37,6 @@ class GradeCategoryCreateCommand extends BaseCommand
     {
         $this
             ->setName('gradecategory:create')
-            ->setAliases(['gradecategory-create'])
             ->setDescription('Create a grade category in a course')
             ->setHelp(<<<'HELP'
                 Creates a new grade category in the specified course.

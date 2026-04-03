@@ -17,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Modify or delete a grade item.
+ * Modify a grade item.
  *
  * Canonical name: gradeitem:mod  |  Alias: gradeitem-mod
  */
@@ -37,10 +37,9 @@ class GradeItemModCommand extends BaseCommand
     {
         $this
             ->setName('gradeitem:mod')
-            ->setAliases(['gradeitem-mod'])
-            ->setDescription('Modify or delete a grade item')
+            ->setDescription('Modify a grade item')
             ->setHelp(<<<'HELP'
-                Modifies grade item properties or deletes it.
+                Modifies grade item properties.
 
                 Examples:
                   gradeitem:mod 5 --name "Updated Name" --run
@@ -48,7 +47,6 @@ class GradeItemModCommand extends BaseCommand
                   gradeitem:mod 5 --hidden 1 --run
                   gradeitem:mod 5 --locked 1 --run
                   gradeitem:mod 5 --category 3 --run
-                  gradeitem:mod 5 --delete --run
                 HELP);
 
         $this->handler->configureCommand($this);

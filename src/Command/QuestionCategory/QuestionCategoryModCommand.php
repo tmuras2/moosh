@@ -30,14 +30,12 @@ class QuestionCategoryModCommand extends BaseCommand
     {
         $this
             ->setName('questioncategory:mod')
-            ->setAliases(['questioncategory-mod'])
-            ->setDescription('Modify or delete a question category')
+            ->setDescription('Modify a question category')
             ->setHelp(<<<'HELP'
-                Modifies question category properties or deletes it.
+                Modifies question category properties.
 
                 Examples:
                   questioncategory:mod 5 --name "Renamed" --run
-                  questioncategory:mod 5 --delete --run
                 HELP);
         $this->handler->configureCommand($this);
     }

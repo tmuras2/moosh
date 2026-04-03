@@ -125,9 +125,5 @@ echo ""
 
 # ── Alias ─────────────────────────────────────────────────────────
 
-echo "--- Test: search-timestamp alias ---"
-OUT=$($PHP $MOOSH search-timestamp -p "$MOODLE_PATH" $KNOWN_TS -o csv --limit 2)
-assert_output_contains "Alias works" "timecreated" "$OUT"
-echo ""
 
 print_summary

@@ -66,10 +66,6 @@ assert_output_contains "Help shows --userid" "--userid" "$OUT"
 assert_output_contains "Help shows --all" "--all" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH completion-status 2 --userid $STUDENT_ID -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "student01" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  completion:mark
@@ -113,10 +109,6 @@ assert_output_contains "Help shows --cmid" "--cmid" "$OUT"
 assert_output_contains "Help shows --state" "--state" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH completion-mark 2 --userid $STUDENT_ID -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 # ═══════════════════════════════════════════════════════════════════
 #  completion:reset
@@ -151,9 +143,5 @@ assert_output_contains "Help description" "Reset completion data" "$OUT"
 assert_output_contains "Help shows --cmid" "--cmid" "$OUT"
 echo ""
 
-echo "--- Test: Alias ---"
-OUT=$($PHP $MOOSH completion-reset 2 -p "$MOODLE_PATH" 2>&1)
-assert_output_contains "Alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary

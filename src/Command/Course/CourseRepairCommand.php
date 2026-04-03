@@ -21,7 +21,7 @@ class CourseRepairCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setName('course:repair')->setAliases(['course-repair'])
+        $this->setName('course:repair')
             ->setDescription('Check and repair course module sequence integrity')
             ->setHelp("Detects and fixes broken course module sequences (duplicates, orphans, missing references).\n\nExamples:\n  course:repair 2\n  course:repair 2 --run\n  course:repair --all\n  course:repair --all --run");
         $this->handler->configureCommand($this);

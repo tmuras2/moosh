@@ -108,9 +108,5 @@ echo ""
 
 # ── user-create alias ────────────────────────────────────────────
 
-echo "--- Test: user-create alias ---"
-OUT=$($PHP $MOOSH user-create -p "$MOODLE_PATH" --run aliasuser1 -o csv)
-assert_output_contains "Alias works" "aliasuser1" "$OUT"
-echo ""
 
 print_summary

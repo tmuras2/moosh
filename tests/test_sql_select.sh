@@ -128,9 +128,5 @@ echo ""
 
 # ── sql-select alias ──────────────────────────────────────────────
 
-echo "--- Test: sql-select alias ---"
-OUT=$($PHP $MOOSH sql-select -p "$MOODLE_PATH" "SELECT username FROM {user} WHERE id = 2" -o csv)
-assert_output_contains "Alias works" "admin" "$OUT"
-echo ""
 
 print_summary

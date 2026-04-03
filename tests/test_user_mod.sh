@@ -349,19 +349,7 @@ assert_output_contains "Help shows --global-admin" "--global-admin" "$OUT"
 assert_output_contains "Help shows --suspended" "--suspended" "$OUT"
 echo ""
 
-echo "--- Test: user-mod alias ---"
-OUT=$($PHP $MOOSH user-mod -p "$MOODLE_PATH" student01 --email=alias@test.com 2>&1)
-assert_output_contains "user-mod alias works" "Dry run" "$OUT"
-echo ""
 
-echo "--- Test: user-assign-system-role alias ---"
-OUT=$($PHP $MOOSH user-assign-system-role -p "$MOODLE_PATH" student01 --assign-role=manager 2>&1)
-assert_output_contains "assign alias works" "Dry run" "$OUT"
-echo ""
 
-echo "--- Test: user-unassign-system-role alias ---"
-OUT=$($PHP $MOOSH user-unassign-system-role -p "$MOODLE_PATH" student01 --unassign-role=manager 2>&1)
-assert_output_contains "unassign alias works" "Dry run" "$OUT"
-echo ""
 
 print_summary
