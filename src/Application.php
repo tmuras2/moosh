@@ -28,6 +28,7 @@ use Moosh2\Command\Maintenance\MaintenanceOnCommand;
 use Moosh2\Command\Maintenance\MaintenanceOffCommand;
 use Moosh2\Command\Php\PhpEvalCommand;
 use Moosh2\Command\Session\SessionKillCommand;
+use Moosh2\Command\Site\SiteInfoCommand;
 use Moosh2\Command\System\SystemCheckCommand;
 use Moosh2\Command\Audit\AuditBruteforceCommand;
 use Moosh2\Command\Audit\AuditPasswordCommand;
@@ -500,6 +501,7 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new MaintenanceOffCommand($this->moodleVersion));
         $this->addCommand(new PhpEvalCommand($this->moodleVersion));
         $this->addCommand(new SessionKillCommand($this->moodleVersion));
+        $this->addCommand(new SiteInfoCommand($this->moodleVersion));
         $this->addCommand(new SystemCheckCommand($this->moodleVersion));
         $this->addCommand(new ContentReplaceCommand($this->moodleVersion));
         $this->addCommand(new ContentHttpsReplaceCommand($this->moodleVersion));
