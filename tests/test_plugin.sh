@@ -216,4 +216,39 @@ sudo rm -rf "$MOODLE_PATH/blocks/progress" 2>/dev/null
 bash "$SCRIPT_DIR/clear.sh"
 echo ""
 
+# ═══════════════════════════════════════════════════════════════════
+#  plugin:reinstall
+# ═══════════════════════════════════════════════════════════════════
+
+echo "========== plugin:reinstall =========="
+echo ""
+
+echo "--- Test: Dry run ---"
+OUT=$($PHP $MOOSH plugin:reinstall mod_forum -p "$MOODLE_PATH" 2>&1)
+EC=$?
+assert_exit_code "Dry run exit code 0" 0 $EC
+assert_output_contains "Shows dry run" "Dry run" "$OUT"
+assert_output_contains "Shows plugin name" "mod_forum" "$OUT"
+assert_output_contains "Shows directory" "mod/forum" "$OUT"
+echo ""
+
+echo "--- Test: Invalid plugin ---"
+OUT=$($PHP $MOOSH plugin:reinstall nonexistent_plugin -p "$MOODLE_PATH" 2>&1)
+EC=$?
+assert_exit_code "Exit code 1 for invalid" 1 $EC
+assert_output_contains "Not found error" "not found" "$OUT"
+echo ""
+
+echo "--- Test: Bad format ---"
+OUT=$($PHP $MOOSH plugin:reinstall badformat -p "$MOODLE_PATH" 2>&1)
+EC=$?
+assert_exit_code "Exit code 1 for bad format" 1 $EC
+assert_output_contains "Invalid name error" "Invalid plugin name" "$OUT"
+echo ""
+
+echo "--- Test: Help ---"
+OUT=$($PHP $MOOSH plugin:reinstall -p "$MOODLE_PATH" --help 2>&1)
+assert_output_contains "Help description" "Uninstall and reinstall" "$OUT"
+echo ""
+
 print_summary
