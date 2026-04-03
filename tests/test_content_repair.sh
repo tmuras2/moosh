@@ -118,6 +118,68 @@ echo ""
 #  recyclebin:list / recyclebin:restore / recyclebin:purge
 # ═══════════════════════════════════════════════════════════════════
 
+# ═══════════════════════════════════════════════════════════════════
+#  content:replace-encoded
+# ═══════════════════════════════════════════════════════════════════
+
+echo "========== content:replace-encoded =========="
+echo ""
+
+# Insert a test row with base64-encoded serialized data containing a known string
+# block_instances.configdata is a real column that stores base64(serialize(obj))
+TEST_OBJ='O:8:"stdClass":2:{s:5:"title";s:11:"Hello World";s:4:"text";s:17:"Visit example.com";}'
+TEST_B64=$(echo -n "$TEST_OBJ" | base64 -w0)
+$PHP $MOOSH sql:run "INSERT INTO {block_instances} (blockname, parentcontextid, showinsubcontexts, pagetypepattern, subpagepattern, defaultregion, defaultweight, configdata, timecreated, timemodified) VALUES ('html', 1, 0, '*', NULL, 'side-pre', 0, '$TEST_B64', UNIX_TIMESTAMP(), UNIX_TIMESTAMP())" -p "$MOODLE_PATH" --run > /dev/null 2>&1
+TEST_ID=$($PHP $MOOSH sql:select "SELECT MAX(id) AS maxid FROM {block_instances} WHERE blockname='html'" -p "$MOODLE_PATH" -o csv 2>&1 | tail -1)
+
+echo "--- Test: Dry run ---"
+OUT=$($PHP $MOOSH content:replace-encoded "example.com" "example.org" block_instances configdata -p "$MOODLE_PATH" 2>&1)
+EC=$?
+assert_exit_code "Dry run exit code 0" 0 $EC
+assert_output_contains "Shows dry run" "Dry run" "$OUT"
+assert_output_contains "Shows match count" "1 row" "$OUT"
+echo ""
+
+echo "--- Test: Run replacement ---"
+OUT=$($PHP $MOOSH content:replace-encoded "example.com" "example.org" block_instances configdata -p "$MOODLE_PATH" --run 2>&1)
+EC=$?
+assert_exit_code "Run exit code 0" 0 $EC
+assert_output_contains "Shows updated" "Updated" "$OUT"
+# Verify the replacement
+VERIFY=$($PHP $MOOSH sql:select "SELECT configdata FROM {block_instances} WHERE id=$TEST_ID" -p "$MOODLE_PATH" -o csv 2>&1 | tail -1)
+DECODED=$(echo "$VERIFY" | base64 -d 2>/dev/null)
+echo "$DECODED" | grep -q "example.org"
+if [ $? -eq 0 ]; then
+    echo "  PASS: Encoded data contains replacement"
+    ((PASS++))
+else
+    echo "  FAIL: Encoded data does not contain replacement"
+    ((FAIL++))
+fi
+echo ""
+
+echo "--- Test: No matches ---"
+OUT=$($PHP $MOOSH content:replace-encoded "zzz_nonexistent_zzz" "other" block_instances configdata -p "$MOODLE_PATH" 2>&1)
+assert_output_contains "No matches" "No matching" "$OUT"
+echo ""
+
+echo "--- Test: Invalid table ---"
+OUT=$($PHP $MOOSH content:replace-encoded "a" "b" nonexistent_table col -p "$MOODLE_PATH" 2>&1)
+EC=$?
+assert_exit_code "Exit code 1 for invalid table" 1 $EC
+assert_output_contains "Table not found" "does not exist" "$OUT"
+echo ""
+
+echo "--- Test: Help ---"
+OUT=$($PHP $MOOSH content:replace-encoded -p "$MOODLE_PATH" --help 2>&1)
+assert_output_contains "Help description" "base64-encoded" "$OUT"
+assert_output_contains "Help shows table arg" "table" "$OUT"
+assert_output_contains "Help shows column arg" "column" "$OUT"
+echo ""
+
+# Clean up test row
+$PHP $MOOSH sql:run "DELETE FROM {block_instances} WHERE id=$TEST_ID" -p "$MOODLE_PATH" --run > /dev/null 2>&1
+
 echo "========== recyclebin =========="
 echo ""
 

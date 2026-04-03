@@ -15,6 +15,7 @@ use Moosh2\Command\Activity\ActivityAddCommand;
 use Moosh2\Command\Activity\ActivityInfoCommand;
 use Moosh2\Command\Admin\AdminLoginCommand;
 use Moosh2\Command\Content\ContentReplaceCommand;
+use Moosh2\Command\Content\ContentReplaceEncodedCommand;
 use Moosh2\Command\Content\ContentHttpsReplaceCommand;
 use Moosh2\Command\Course\CourseRepairCommand;
 use Moosh2\Command\RecycleBin\RecycleBinListCommand;
@@ -504,6 +505,7 @@ final class Application extends SymfonyApplication {
         $this->addCommand(new SiteInfoCommand($this->moodleVersion));
         $this->addCommand(new SystemCheckCommand($this->moodleVersion));
         $this->addCommand(new ContentReplaceCommand($this->moodleVersion));
+        $this->addCommand(new ContentReplaceEncodedCommand($this->moodleVersion));
         $this->addCommand(new ContentHttpsReplaceCommand($this->moodleVersion));
         $this->addCommand(new CourseRepairCommand($this->moodleVersion));
         $this->addCommand(new RecycleBinListCommand($this->moodleVersion));
