@@ -8,7 +8,7 @@
 set -uo pipefail
 
 MOOSH="$(cd "$(dirname "$0")/.." && pwd)/moosh.php"
-MOODLE_DIR="/var/www/html/moodle51"
+MOODLE_DIR="${MOODLE_DIR:-/var/www/html/moodle51}"
 MOODLE_PATH="$MOODLE_DIR/public"
 PHP="${PHP:-/usr/bin/php}"
 PASS=0

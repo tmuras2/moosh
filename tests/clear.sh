@@ -1,20 +1,33 @@
 #!/bin/bash
 #
-# Clears the moodle51 database and dataroot, then restores from dump files.
-# Expects dump.sql.gz and data.tar.gz in the same directory as this script.
+# Clears the Moodle database and dataroot, then restores from dump files.
+# Supports both Moodle 5.1 and 5.2 via MOODLE_DIR environment variable.
+# Expects dump.sql.gz and data.tar.gz in the test_data_setup directory.
+#
+# Usage:
+#   bash clear.sh                                    # defaults to moodle51
+#   MOODLE_DIR=/var/www/html/moodle52 bash clear.sh  # uses moodle52
 #
 
 set -euo pipefail
 
-DB_NAME="moodle51"
+MOODLE_DIR="${MOODLE_DIR:-/var/www/html/moodle51}"
+MOODLE_BASENAME="$(basename "$MOODLE_DIR")"
+DB_NAME="$MOODLE_BASENAME"
 DB_USER="root"
 DB_PASS="a"
 DB_HOST="localhost"
-DATAROOT="/opt/data/moodle51"
+DATAROOT="/opt/data/$MOODLE_BASENAME"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-DUMP_FILE="$SCRIPT_DIR/test_data_setup/dump.sql.gz"
-DATA_FILE="$SCRIPT_DIR/test_data_setup/data.tar.gz"
+# Use test_data_setup/ for moodle51 (legacy), test_data_setup_moodle52/ for others.
+if [[ "$MOODLE_BASENAME" == "moodle51" ]]; then
+    SETUP_DIR="$SCRIPT_DIR/test_data_setup"
+else
+    SETUP_DIR="$SCRIPT_DIR/test_data_setup_${MOODLE_BASENAME}"
+fi
+DUMP_FILE="$SETUP_DIR/dump.sql.gz"
+DATA_FILE="$SETUP_DIR/data.tar.gz"
 
 # Check dump files exist.
 if [[ ! -f "$DUMP_FILE" ]]; then
@@ -28,7 +41,7 @@ fi
 
 TOTAL_START=$SECONDS
 
-echo "=== Moodle 5.1 clear & restore ==="
+echo "=== $MOODLE_BASENAME clear & restore ==="
 
 # Drop and recreate database.
 echo "Dropping and recreating database '$DB_NAME'..."

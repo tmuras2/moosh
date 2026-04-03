@@ -8,7 +8,8 @@
 
 source "$(dirname "$0")/common.sh"
 
-DATAROOT="/opt/data/moodle51"
+MOODLE_BASENAME="$(basename "${MOODLE_DIR:-/var/www/html/moodle51}")"
+DATAROOT="/opt/data/$MOODLE_BASENAME"
 
 echo "=== moosh2 data:check integration tests ==="
 echo "Moodle path: $MOODLE_PATH"

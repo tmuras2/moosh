@@ -196,7 +196,8 @@ echo "--- Test: Eval simple ---"
 OUT=$($PHP $MOOSH php:eval 'echo $CFG->wwwroot' -p "$MOODLE_PATH" 2>&1)
 EC=$?
 assert_exit_code "Eval exit code 0" 0 $EC
-assert_output_contains "Shows wwwroot" "moodle51" "$OUT"
+MOODLE_BASENAME="$(basename "${MOODLE_DIR:-/var/www/html/moodle51}")"
+assert_output_contains "Shows wwwroot" "$MOODLE_BASENAME" "$OUT"
 echo ""
 
 echo "--- Test: Eval DB query ---"
