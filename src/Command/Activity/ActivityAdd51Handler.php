@@ -68,31 +68,36 @@ class ActivityAdd51Handler extends BaseHandler
 
         $verbose->step('Loading Moodle libraries');
         require_once $CFG->dirroot . '/course/lib.php';
-        require_once $CFG->libdir . '/phpunit/classes/util.php';
-        require_once $CFG->dirroot . '/lib/testing/generator/lib.php';
+        require_once $CFG->dirroot . '/course/modlib.php';
 
         $verbose->step("Creating $type activity in course $courseId");
 
-        $moduleData = [
-            'course' => $courseId,
-            'section' => $section,
-        ];
+        $moduleRecord = $DB->get_record('modules', ['name' => $type], '*', MUST_EXIST);
 
-        if ($name !== null) {
-            $moduleData['name'] = $name;
-        }
+        $moduleInfo = new \stdClass();
+        $moduleInfo->modulename = $type;
+        $moduleInfo->module = $moduleRecord->id;
+        $moduleInfo->visible = 1;
+        $moduleInfo->section = $section;
+        $moduleInfo->name = $name ?? "New $type";
 
         if ($idnumber !== null) {
-            $moduleData['idnumber'] = $idnumber;
+            $moduleInfo->cmidnumber = $idnumber;
         }
 
-        $generator = \testing_util::get_data_generator();
-        $instance = $generator->create_module($type, (object) $moduleData);
+        // Provide intro fields expected by most activity types.
+        $moduleInfo->introeditor = [
+            'text' => '',
+            'format' => FORMAT_HTML,
+            'itemid' => 0,
+        ];
 
-        $verbose->done("Created $type with course module ID {$instance->cmid}");
+        $instance = add_moduleinfo($moduleInfo, $course);
+
+        $verbose->done("Created $type with course module ID {$instance->coursemodule}");
 
         $headers = ['cmid', 'module', 'instance', 'course', 'section'];
-        $rows = [[$instance->cmid, $type, $instance->id, $courseId, $section]];
+        $rows = [[$instance->coursemodule, $type, $instance->instance, $courseId, $section]];
 
         $formatter = new ResultFormatter($output, $format);
         $formatter->display($headers, $rows);

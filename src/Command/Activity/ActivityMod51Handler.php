@@ -117,6 +117,7 @@ class ActivityMod51Handler extends BaseHandler
         if ($newIdnumber !== null) {
             $verbose->info("Setting idnumber: $newIdnumber");
             $DB->set_field('course_modules', 'idnumber', $newIdnumber, ['id' => $cmid]);
+            rebuild_course_cache($cm->course, true);
         }
 
         // Move to different section.
